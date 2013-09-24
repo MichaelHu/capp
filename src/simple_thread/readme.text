@@ -1,0 +1,42 @@
+## 解决问题：
+
+是否熟悉POSIX多线程编程技术？如熟悉，编写程序完成如下功能：
+1）有一int型全局变量g_Flag初始值为0；
+2） 在主线称中起动线程1，打印“this is thread1”，并将g_Flag设置为1
+3） 在主线称中启动线程2，打印“this is thread2”，并将g_Flag设置为2
+4） 线程1需要在线程2退出后才能退出
+5） 主线程在检测到g_Flag从1变为2，或者从2变为1的时候退出
+
+
+## 使用的线程函数
+
+#include <pthread.h>
+ 
+int pthread_create(pthread_t *tid, const pthread_attr_t *attr, void *(*func) (void *), void *arg);
+int pthread_join (pthread_t tid, void ** status);
+pthread_t pthread_self (void);
+int pthread_detach (pthread_t tid);
+void pthread_exit (void *status);
+
+
+## 使用的线程互斥函数
+
+#include <pthread.h> 
+
+int pthread_mutex_lock(pthread_mutex_t * mptr); 
+int pthread_mutex_unlock(pthread_mutex_t * mptr); 
+//Both return: 0 if OK, positive Exxx value on error
+
+
+## 使用的线程同步函数
+
+#include <pthread.h>
+ 
+int pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr); 
+int pthread_cond_signal(pthread_cond_t *cptr); 
+//Both return: 0 if OK, positive Exxx value on error
+
+int pthread_cond_broadcast (pthread_cond_t * cptr);
+int pthread_cond_timedwait (pthread_cond_t * cptr, pthread_mutex_t *mptr, const struct timespec *abstime);
+
+
