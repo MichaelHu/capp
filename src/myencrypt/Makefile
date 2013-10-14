@@ -1,4 +1,4 @@
-all: myencrypt clean
+all: myencrypt.out clean
 
 # main: main.o myencrypt.o
 # 	gcc -o myencrypt -L/usr/lib -lc++ main.o myencrypt.o; rm *.o
@@ -14,9 +14,9 @@ all: myencrypt clean
 # myencrypt.o: myencrypt.cpp common.h myencrypt.h
 # 	gcc -c $< 
 
-myencrypt: main.o myencrypt.o
+myencrypt.out: main.o myencrypt.o
 	gcc -o $@ -L/usr/lib -lc++ $^
-..c.o:
+..cpp.o:
 	gcc -c $<
 
 clean: 

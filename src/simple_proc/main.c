@@ -38,6 +38,7 @@ int main(int argc, char **argv){
             exit(errno);
         }
         else{
+            // 等待子进程完成，完成的子进程信息填写在rtn中
             wait(&rtn);
             // printf("child process return %d\n", rtn);
             printf("exit status: %d\n", rtn);

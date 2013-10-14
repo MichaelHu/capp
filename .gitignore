@@ -2,6 +2,12 @@
 *.bak
 *.dSYM/
 
+*.out
+
+# Compiled Intermediate files
+*.i
+*.s
+
 # Compiled Object files
 *.slo
 *.lo

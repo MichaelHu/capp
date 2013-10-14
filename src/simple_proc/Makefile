@@ -1,6 +1,6 @@
-all:simple_proc clean
+all:simple_proc.out clean
 
-simple_proc:args.o main.o
+simple_proc.out:args.o main.o
 	gcc -o $@ -lc $^
 
 ..c.o:

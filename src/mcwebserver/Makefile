@@ -1,5 +1,5 @@
 webserv.out: webserv.o helper.o servreq.o reqhead.o resphead.o resource.o
-	gcc -o $@ $^ -Wall; rm *.o
+	gcc -o webserv webserv.o helper.o servreq.o reqhead.o resphead.o resource.o -Wall; rm *.o
 
 webserv.o: webserv.c helper.h servreq.h
 	gcc -o webserv.o webserv.c -c -ansi -pedantic -Wall

@@ -1,5 +1,4 @@
 /*
-
   WEBSERV.C
   =========
   (c) Copyright Paul Griffiths 1999
@@ -10,7 +9,6 @@
 */
 
 
-
 #include <sys/socket.h>       /*  socket definitions        */
 #include <sys/types.h>        /*  socket types              */
 #include <sys/wait.h>         /*  for waitpid()             */
@@ -19,7 +17,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "resource.h"
 #include "helper.h"
 #include "servreq.h"
 
@@ -33,6 +33,26 @@ int main(int argc, char *argv[]) {
     int    listener, conn;
     pid_t  pid;
     struct sockaddr_in servaddr;
+
+    char *doc_root = NULL;
+    int port = 0;
+
+    if(2 == argc){
+        doc_root = argv[1];
+    }
+
+    if(3 == argc){
+        doc_root = argv[1];
+        port = strtod(argv[2], NULL);
+    }
+
+    if(doc_root){
+        SetDocRoot(doc_root);
+    }
+
+    if(!port){
+        port = SERVER_PORT;
+    }
     
 
     /*  Create socket  */
@@ -46,7 +66,7 @@ int main(int argc, char *argv[]) {
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family      = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port        = htons(SERVER_PORT);
+    servaddr.sin_port        = htons(port);
 
 
     /*  Assign socket address to socket  */ 
