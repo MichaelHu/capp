@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 
 #include "reqhead.h"
 #include "servreq.h"
@@ -44,6 +45,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 
         if ( !strncmp(buffer, "GET ", 4) ) {
             reqinfo->method = GET;
+            fprintf(stderr, "> %s\n", buffer);
             buffer += 4;
         }
         else if ( !strncmp(buffer, "HEAD ", 5) ) {
