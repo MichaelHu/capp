@@ -30,7 +30,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
     static int first_header = 1;
     char      *temp;
     char      *endptr;
-    int        len;
+    int        len, has_qs = 1;
 
 
     if ( first_header == 1 ) {
@@ -67,11 +67,19 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 
         /*  Calculate string length of resource...  */
 
-        endptr = strchr(buffer, ' ');
-        if ( endptr == NULL )
+        endptr = strchr(buffer, '?');
+        if(NULL == endptr){
+            has_qs = 0;
+            endptr = strchr(buffer, ' ');
+        }
+
+        if ( endptr == NULL ){
             len = strlen(buffer);
-        else
+        } 
+        else{
             len = endptr - buffer;
+        }
+
         if ( len == 0 ) {
             reqinfo->status = 400;
             return -1;
@@ -81,8 +89,29 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 
         reqinfo->resource = calloc(len + 1, sizeof(char));
         strncpy(reqinfo->resource, buffer, len);
+        CleanURL(reqinfo->resource);
 
-        
+        if(0 == strcmp(GetFileExt(reqinfo->resource), ".php")){
+            reqinfo->cgi = PHP;
+        }
+
+        if(has_qs){
+            /* skip ? */
+            buffer = endptr + 1;
+            endptr = strchr(buffer, ' ');
+
+            if ( endptr == NULL ){
+                len = strlen(buffer);
+            } 
+            else{
+                len = endptr - buffer;
+            }
+
+            reqinfo->querystring = calloc(len + 1, sizeof(char));
+            strncpy(reqinfo->querystring, buffer, len);
+            CleanURL(reqinfo->querystring);
+        }
+
         /*  Test to see if we have any HTTP version information.
             If there isn't, this is a simple HTTP request, and we
             should not try to read any more headers. For simplicity,
@@ -226,8 +255,10 @@ void InitReqInfo(struct ReqInfo * reqinfo) {
     reqinfo->useragent = NULL;
     reqinfo->referer   = NULL;
     reqinfo->resource  = NULL;
+    reqinfo->querystring  = NULL;
     reqinfo->method    = UNSUPPORTED;
     reqinfo->status    = 200;          
+    reqinfo->cgi    = NONE;          
 }
 
 
@@ -242,4 +273,7 @@ void FreeReqInfo(struct ReqInfo * reqinfo) {
 
     if ( reqinfo->resource )
         free(reqinfo->resource);
+
+    if ( reqinfo->querystring )
+        free(reqinfo->querystring);
 }

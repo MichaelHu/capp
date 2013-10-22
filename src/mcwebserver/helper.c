@@ -28,6 +28,11 @@ void Error_Quit(char const * msg) {
     exit(EXIT_FAILURE);
 }
 
+char * GetFileExt(char const * name){
+    char *ext = strrchr(name, '.');
+    return ext;
+}
+
  
 /*  Read a line from a socket  */
 

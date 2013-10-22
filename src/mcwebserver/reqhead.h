@@ -18,13 +18,16 @@
 
 enum Req_Method { GET, HEAD, UNSUPPORTED };
 enum Req_Type   { SIMPLE, FULL };
+enum CGI_Type   { NONE, PHP };
 
 struct ReqInfo {
     enum Req_Method method;
     enum Req_Type   type;
+    enum CGI_Type   cgi;
     char           *referer;
     char           *useragent;
     char           *resource;
+    char           *querystring;
     int             status;
 };
 

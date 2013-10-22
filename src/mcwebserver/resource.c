@@ -28,11 +28,17 @@
 /*
 static char server_root[1000] = "/home/httpd/html";
 */
-static char server_root[1000] = ".";
+static char server_root[500] = ".";
+static char resource_path[1000] = "";
 
 void SetDocRoot(char *path){
     memset(server_root, 0, strlen(server_root)); 
     strcpy(server_root, path);
+    fprintf(stderr, "SetDocRoot: %s\n", path);
+}
+
+char *GetDocRoot(){
+    return server_root;
 }
 
 /*  Returns a resource  */
@@ -67,8 +73,8 @@ int Check_Resource(struct ReqInfo * reqinfo) {
     
     /*  Concatenate resource name to server root, and try to open  */
 
-    strcat(server_root, reqinfo->resource);
-    return open(server_root, O_RDONLY);
+    sprintf(resource_path, "%s/%s", server_root, reqinfo->resource);
+    return open(resource_path, O_RDONLY);
 }
 
 

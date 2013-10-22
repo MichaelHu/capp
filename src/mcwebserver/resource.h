@@ -20,6 +20,7 @@
 /*  Function prototypes  */
 
 void SetDocRoot(char *path);
+char *GetDocRoot();
 int Return_Resource (int conn, int resource, struct ReqInfo * reqinfo);
 int Check_Resource  (struct ReqInfo * reqinfo);
 int Return_Error_Msg(int conn, struct ReqInfo * reqinfo);

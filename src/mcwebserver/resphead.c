@@ -49,17 +49,21 @@ int Output_HTTP_Headers(int conn, struct ReqInfo * reqinfo) {
 
     Writeline(conn, "Server: PGWebServ v0.1\r\n", 24);
 
-    if(reqinfo->status == 200){
-        mime = Get_MIME_Type(reqinfo->resource);
-        memset(buffer, 0, strlen(buffer));
-        sprintf(buffer, "Content-Type: %s\r\n", mime);
-        Writeline(conn, buffer, strlen(buffer));
-    }
-    else{
-        Writeline(conn, "Content-Type: text/html\r\n", 25);
-    }
+    if(reqinfo->cgi == NONE){
 
-    Writeline(conn, "\r\n", 2);
+        if(reqinfo->status == 200){
+            mime = Get_MIME_Type(reqinfo->resource);
+            memset(buffer, 0, strlen(buffer));
+            sprintf(buffer, "Content-Type: %s\r\n", mime);
+            Writeline(conn, buffer, strlen(buffer));
+        }
+        else{
+            Writeline(conn, "Content-Type: text/html\r\n", 25);
+        }
+
+        Writeline(conn, "\r\n", 2);
+
+    }
 
     return 0;
 }
