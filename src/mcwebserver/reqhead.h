@@ -16,7 +16,7 @@
 
 /*  User-defined data types  */
 
-enum Req_Method { GET, HEAD, UNSUPPORTED };
+enum Req_Method { GET, HEAD, POST, UNSUPPORTED };
 enum Req_Type   { SIMPLE, FULL };
 enum CGI_Type   { NONE, PHP };
 
@@ -26,8 +26,12 @@ struct ReqInfo {
     enum CGI_Type   cgi;
     char           *referer;
     char           *useragent;
+    int            contentlength;
+
     char           *resource;
     char           *querystring;
+    char           *body;
+
     int             status;
 };
 
@@ -35,6 +39,7 @@ struct ReqInfo {
 /*  Global macros/variables  */
 
 #define MAX_REQ_LINE         (1024)
+#define MAX_REQ_BODY         (1024 * 1024)
 
 
 /*  Function prototypes  */

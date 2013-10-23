@@ -124,7 +124,7 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         SetEnv("CONTENT_TYPE", "application/x-www-form-urlencoded");
 
         memset(output, 0, 10000);
-        sprintf(output, "%d", (int)strlen(reqinfo.querystring));
+        sprintf(output, "%d", reqinfo.contentlength);
         SetEnv("CONTENT_LENGTH", output);
     }
 
@@ -139,13 +139,13 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         /** 
          * 子进程从标准输入中获取POST数据
          */
-        if(reqinfo.querystring
+        if(reqinfo.contentlength
             && write(
                 pfd1[1], 
-                reqinfo.querystring, 
-                strlen(reqinfo.querystring)
+                reqinfo.body, 
+                reqinfo.contentlength
             ) 
-            != strlen(reqinfo.querystring)){
+            != reqinfo.contentlength){
             Error_Quit("Write Error");
         }
 

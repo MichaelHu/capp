@@ -56,6 +56,8 @@ ssize_t Readline(
     char    c, *buffer;
 
     buffer = vptr;
+    /* initialize to an empty string */
+    *buffer = 0;
 
     for ( n = 1; n < maxlen; n++ ) {
 	
@@ -82,6 +84,40 @@ ssize_t Readline(
     return n;
 }
 
+ssize_t Readblock(
+    int sockd, 
+    void *vptr, 
+    size_t maxlen) {
+
+    ssize_t n, rc;
+    char    c, *buffer;
+
+    buffer = vptr;
+    /* initialize to an empty string */
+    *buffer = 0;
+
+    for ( n = 1; n < maxlen; n++ ) {
+	
+        if ( (rc = read(sockd, &c, 1)) == 1 ) {
+            *buffer++ = c;
+        }
+        else if ( rc == 0 ) {
+            if ( n == 1 )
+                return 0;
+            else
+                break;
+        }
+        else {
+            if ( errno == EINTR )
+                continue;
+            Error_Quit("Error in Readblock()");
+        }
+
+    }
+
+    *buffer = 0;
+    return n;
+}
 
 /*  Write a line to a socket  */
 

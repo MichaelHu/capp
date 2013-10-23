@@ -25,6 +25,7 @@ int     Trim      (char * buffer);
 int     StrUpper  (char * buffer);
 void    CleanURL  (char * buffer);
 ssize_t Readline  (int sockd, void *vptr, size_t maxlen);
+ssize_t Readblock (int sockd, void *vptr, size_t maxlen);
 ssize_t Writeline (int sockd, const void *vptr, size_t n);
 char *  GetFileExt(char const * name);
 

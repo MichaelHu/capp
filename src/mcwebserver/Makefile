@@ -1,6 +1,6 @@
 all:webserv.out clean
 
-webserv.out: webserv.o helper.o servreq.o reqhead.o resphead.o resource.o
+webserv.out: webserv.o helper.o servreq.o reqhead.o reqbody.o resphead.o resource.o
 	gcc $^ -o $@ -g
 
 ..c.o:

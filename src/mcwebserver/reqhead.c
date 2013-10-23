@@ -18,6 +18,7 @@
 #include <stdio.h>
 
 #include "reqhead.h"
+#include "reqbody.h"
 #include "servreq.h"
 #include "helper.h"
 
@@ -50,6 +51,10 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
         }
         else if ( !strncmp(buffer, "HEAD ", 5) ) {
             reqinfo->method = HEAD;
+            buffer += 5;
+        }
+        else if ( !strncmp(buffer, "POST ", 5) ) {
+            reqinfo->method = POST;
             buffer += 5;
         }
         else {
@@ -176,13 +181,16 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 	    reqinfo->referer = malloc( strlen(buffer) + 1 );
 	    strcpy(reqinfo->referer, buffer);
     }
+    else if ( !strcmp(temp, "CONTENT-LENGTH") ) {
+        sscanf(buffer, "%d", &reqinfo->contentlength);
+    }
 
     free(temp);
     return 0;
 }
 
 
-/*  Gets request headers. A CRLF terminates a HTTP header line,
+/*  Gets request headers and body if any. A CRLF terminates a HTTP header line,
     but if one is never sent we would wait forever. Therefore,
     we use select() to set a maximum length of time we will
     wait for the next complete header. If we timeout before
@@ -236,18 +244,26 @@ int Get_Request(int conn, struct ReqInfo * reqinfo) {
             Readline(conn, buffer, MAX_REQ_LINE - 1);
             Trim(buffer);
 
-            if ( buffer[0] == '\0' )
+            if ( buffer[0] == '\0' ){
                 break;
+            }
 
-            if ( Parse_HTTP_Header(buffer, reqinfo) )
+            if ( Parse_HTTP_Header(buffer, reqinfo) ){
+                fprintf(stderr, "Parse_HTTP_Header\n");
                 break;
+            }
         }
 
     } while ( reqinfo->type != SIMPLE );
 
+    /* get request body if any */
+    if(reqinfo->contentlength){
+        fprintf(stderr, "Content-Length: %d\n", reqinfo->contentlength);
+        Get_Request_Body(conn, reqinfo, reqinfo->contentlength);
+    }
+
     return 0;
 }
-
 
 /*  Initialises a request information structure  */
 
@@ -256,6 +272,8 @@ void InitReqInfo(struct ReqInfo * reqinfo) {
     reqinfo->referer   = NULL;
     reqinfo->resource  = NULL;
     reqinfo->querystring  = NULL;
+    reqinfo->contentlength  = 0;
+    reqinfo->body  = NULL;
     reqinfo->method    = UNSUPPORTED;
     reqinfo->status    = 200;          
     reqinfo->cgi    = NONE;          
@@ -276,4 +294,7 @@ void FreeReqInfo(struct ReqInfo * reqinfo) {
 
     if ( reqinfo->querystring )
         free(reqinfo->querystring);
+
+    if ( reqinfo->body )
+        free(reqinfo->body);
 }
