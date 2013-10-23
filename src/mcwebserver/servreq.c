@@ -105,27 +105,28 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         Error_Quit("Can not open pipe.");
     }
 
-    setenv("QUERY_STRING", reqinfo.querystring, 1);
+    SetEnv("DOCUMENT_ROOT", GetDocRoot());
+    SetEnv("QUERY_STRING", reqinfo.querystring);
 
     memset(output, 0, 10000);
     sprintf(output, "%d", reqinfo.status);
-    setenv("REDIRECT_STATUS", output, 1);
-
-    setenv("REQUEST_METHOD", "POST", 1);
+    SetEnv("REDIRECT_STATUS", output);
 
     memset(output, 0, 10000);
     sprintf(output, "%s/%s", GetDocRoot(), reqinfo.resource);
-    setenv("SCRIPT_FILENAME", output, 1);
+    SetEnv("SCRIPT_FILENAME", output);
 
-    /*
-    setenv("SCRIPT_NAME", reqinfo.resource, 1);
-    */
-    setenv("DOCUMENT_ROOT", GetDocRoot(), 1);
-    setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
+    if(reqinfo.method == GET){
+        SetEnv("REQUEST_METHOD", "GET");
+    }
+    else{
+        SetEnv("REQUEST_METHOD", "POST");
+        SetEnv("CONTENT_TYPE", "application/x-www-form-urlencoded");
 
-    memset(output, 0, 10000);
-    sprintf(output, "%d", (int)strlen(reqinfo.querystring));
-    setenv("CONTENT_LENGTH", output, 1);
+        memset(output, 0, 10000);
+        sprintf(output, "%d", (int)strlen(reqinfo.querystring));
+        SetEnv("CONTENT_LENGTH", output);
+    }
 
     if((pid = fork()) < 0){
         Error_Quit("Can not fork.");
@@ -138,7 +139,8 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         /** 
          * 子进程从标准输入中获取POST数据
          */
-        if(write(
+        if(reqinfo.querystring
+            && write(
                 pfd1[1], 
                 reqinfo.querystring, 
                 strlen(reqinfo.querystring)

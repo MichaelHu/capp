@@ -19,6 +19,7 @@
 
 /*  Function prototypes  */
 
+void    SetEnv(const char *name, const char *value);
 void    Error_Quit(char const * msg);
 int     Trim      (char * buffer);
 int     StrUpper  (char * buffer);
