@@ -24,6 +24,7 @@
 #include "resphead.h"
 #include "resource.h"
 
+void DoRewrite(struct ReqInfo *reqinfo);
 void ProcessPHP(int conn, struct ReqInfo reqinfo);
 
 /*  Service an HTTP request  */
@@ -38,8 +39,15 @@ int Service_Request(int conn) {
     
     /*  Get HTTP request  */
     if ( Get_Request(conn, &reqinfo) < 0 ){
+        fprintf(stderr, "error get request\n");
         return -1;
     }
+
+    /*
+    PrintReqInfo(&reqinfo);
+    */
+
+    DoRewrite(&reqinfo);
     
     /**
      * Check whether resource exists, whether we have permission
@@ -154,6 +162,7 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
             Writeline(conn, &c, 1);
         }
 
+        fprintf(stderr, "\n");
         if(waitpid(pid, NULL, 0) < 0){
             Error_Quit("waitpid error.");
         }
@@ -206,4 +215,20 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
 
 }
 
+void DoRewrite(struct ReqInfo *reqinfo){
+    char *res = reqinfo->resource,
+         *replace = "/smartnews/data/news.php";
+
+    if(res == strstr(res, "/news")){
+        fprintf(stderr, 
+            "    rewrite: %s => %s\n", res, replace);
+
+        reqinfo->resource = realloc(res, 
+            strlen(replace) + 1);
+
+        strcpy(reqinfo->resource, replace);
+        reqinfo->cgi = PHP;
+    }
+
+}
 

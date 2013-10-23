@@ -41,7 +41,7 @@ void Error_Quit(char const * msg) {
 
 char * GetFileExt(char const * name){
     char *ext = strrchr(name, '.');
-    return ext;
+    return ext ? ext : "";
 }
 
  

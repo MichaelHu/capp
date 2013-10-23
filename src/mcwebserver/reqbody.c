@@ -59,7 +59,7 @@ int Get_Request_Body(int conn, struct ReqInfo * reqinfo, int maxlen) {
             /*  We have an input line waiting, so retrieve it  */
 
             /* todo: when len > MAX_REQ_BODY */
-            len = Readblock(conn, buffer, left);
+            len = Readblock(conn, buffer, left + 1/* max buffer size, including terminated character*/);
 
             if(len == 0){
                 break;
@@ -79,13 +79,14 @@ int Get_Request_Body(int conn, struct ReqInfo * reqinfo, int maxlen) {
             else{
                 body = calloc(len + 1, 1);
                 strcpy(body, buffer);
+                *(body + len) = 0;
             }
 
         }
 
-    } while ( left );
+    } while ( left > 0 );
 
-    fprintf(stderr, "body: %s\n", body);
+    fprintf(stderr, "    body: %s\n", body);
     reqinfo->body = body;
 
     return 0;

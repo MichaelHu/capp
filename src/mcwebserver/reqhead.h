@@ -48,5 +48,6 @@ int  Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo);
 int  Get_Request      (int conn, struct ReqInfo * reqinfo);
 void InitReqInfo      (struct ReqInfo * reqinfo);
 void FreeReqInfo      (struct ReqInfo * reqinfo);
+void PrintReqInfo     (struct ReqInfo * reqinfo);
 
 #endif  /*  PG_REQHEAD_H  */

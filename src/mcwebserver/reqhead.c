@@ -33,7 +33,6 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
     char      *endptr;
     int        len, has_qs = 1;
 
-
     if ( first_header == 1 ) {
 
         /*  If first_header is 0, this is the first line of
@@ -55,6 +54,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
         }
         else if ( !strncmp(buffer, "POST ", 5) ) {
             reqinfo->method = POST;
+            fprintf(stderr, "> %s\n", buffer);
             buffer += 5;
         }
         else {
@@ -96,6 +96,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
         strncpy(reqinfo->resource, buffer, len);
         CleanURL(reqinfo->resource);
 
+        /* strcmp(s1, s2): note!! s1 or s2 can not be NULL  */
         if(0 == strcmp(GetFileExt(reqinfo->resource), ".php")){
             reqinfo->cgi = PHP;
         }
@@ -130,9 +131,9 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
             reqinfo->type = SIMPLE;
 
         first_header = 0;
+
         return 0;
     }
-
 
     /*  If we get here, we have further headers aside from the
 	request line to parse, so this is a "full" HTTP request.  */
@@ -258,7 +259,7 @@ int Get_Request(int conn, struct ReqInfo * reqinfo) {
 
     /* get request body if any */
     if(reqinfo->contentlength){
-        fprintf(stderr, "Content-Length: %d\n", reqinfo->contentlength);
+        fprintf(stderr, "    Content-Length: %d\n", reqinfo->contentlength);
         Get_Request_Body(conn, reqinfo, reqinfo->contentlength);
     }
 
@@ -279,6 +280,25 @@ void InitReqInfo(struct ReqInfo * reqinfo) {
     reqinfo->cgi    = NONE;          
 }
 
+void PrintReqInfo(struct ReqInfo * reqinfo){
+    /*
+    fprintf(stderr
+        ,"\tUser-Agent: %s\n"
+        ,reqinfo->useragent ? reqinfo->useragent : "");    
+
+    fprintf(stderr
+        ,"\tReferer: %s\n"
+        ,reqinfo->referer ? reqinfo->referer : "");    
+    */
+
+    fprintf(stderr
+        ,"    Resource: %s\n"
+        ,reqinfo->resource ? reqinfo->resource : "");    
+
+    fprintf(stderr
+        ,"    QueryString: %s\n"
+        ,reqinfo->querystring ? reqinfo->querystring : "");    
+}
 
 /*  Frees memory allocated for a request information structure  */
 
