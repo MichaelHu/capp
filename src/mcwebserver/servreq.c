@@ -24,6 +24,8 @@
 #include "resphead.h"
 #include "resource.h"
 
+#define PIPE_BUF_SIZE (16)
+
 void DoRewrite(struct ReqInfo *reqinfo);
 void ProcessPHP(int conn, struct ReqInfo reqinfo);
 
@@ -98,13 +100,13 @@ int Service_Request(int conn) {
 }
 
 void ProcessPHP(int conn, struct ReqInfo reqinfo){
-    /*
-    FILE *fp;
-    */
     char output[10000] = {0};
     int pfd1[2], pfd2[2];
     pid_t pid;
     char c;
+
+    int count_of_bytes;
+    char buffer[PIPE_BUF_SIZE];
 
     /**
      * 使用双管道达到父子进程间双工通信
@@ -157,12 +159,23 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
             Error_Quit("Write Error");
         }
 
+        /*
         while(read(pfd2[0], &c, 1) > 0){
-            fprintf(stderr, "%c", c);
             Writeline(conn, &c, 1);
         }
+        */
 
+        while((count_of_bytes = read(pfd2[0], buffer, PIPE_BUF_SIZE)) > 0){
+            write(conn, buffer, count_of_bytes);
+
+            if(count_of_bytes < PIPE_BUF_SIZE){
+                break;
+            }
+        }
+
+        /*
         fprintf(stderr, "\n");
+        */
         if(waitpid(pid, NULL, 0) < 0){
             Error_Quit("waitpid error.");
         }

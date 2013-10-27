@@ -20,6 +20,7 @@
 #include "reqhead.h"
 #include "helper.h"
 
+#define RES_BUF_SIZE (4096)
 
 /*  Change this string to change the root directory that
     the server will use, i.e. /index.html will translate
@@ -45,14 +46,29 @@ char *GetDocRoot(){
 
 int Return_Resource(int conn, int resource, struct ReqInfo * reqinfo) {
 
-    char c;
     int  i;
 
+    /*
+    char c;
     while ( (i = read(resource, &c, 1)) ) {
-	if ( i < 0 )
-	    Error_Quit("Error reading from file.");
-	if ( write(conn, &c, 1) < 1 )
-	    Error_Quit("Error sending file.");
+        if ( i < 0 )
+            Error_Quit("Error reading from file.");
+        if ( write(conn, &c, 1) < 1 )
+            Error_Quit("Error sending file.");
+    }
+    */
+
+    char buffer[RES_BUF_SIZE];
+    while((i = read(resource, buffer, RES_BUF_SIZE)) > 0){
+        if(i < 0)
+            Error_Quit("Error reading from file.");
+
+        if ( write(conn, buffer, i) < i )
+            Error_Quit("Error sending file.");
+
+        if(i < RES_BUF_SIZE){
+            break;
+        }
     }
 
     return 0;
