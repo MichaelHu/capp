@@ -22,7 +22,9 @@ char *Get_MIME_Type(char *name){
     char *ext = strrchr(name, '.');
 
     if (!ext) return NULL;
-    if (strcmp(ext, ".html") == 0 || strcmp(ext, ".htm") == 0) return "text/html";
+    if (strcmp(ext, ".html") == 0 
+        || strcmp(ext, ".htm") == 0
+        || strcmp(ext, ".tpl") == 0) return "text/html";
     if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0) return "image/jpeg";
     if (strcmp(ext, ".gif") == 0) return "image/gif";
     if (strcmp(ext, ".png") == 0) return "image/png";
