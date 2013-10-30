@@ -165,12 +165,23 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         }
         */
 
-        while((count_of_bytes = read(pfd2[0], buffer, PIPE_BUF_SIZE)) > 0){
-            write(conn, buffer, count_of_bytes);
+        /**
+         * 注意所有状态的检测，避免输出不完全导致客户端Pending
+         */
+        while(1){
 
-            if(count_of_bytes < PIPE_BUF_SIZE){
+            if((count_of_bytes = read(pfd2[0], buffer, PIPE_BUF_SIZE)) > 0){
+                write(conn, buffer, count_of_bytes);
+            }
+            /* EOF */
+            else if(count_of_bytes == 0){
                 break;
             }
+            /* Read Error */
+            else{
+                Error_Quit("Error when read output of child precess");
+            }
+
         }
 
         /*
