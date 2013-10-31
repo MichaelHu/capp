@@ -36,8 +36,20 @@ char *Get_MIME_Type(char *name){
     if (strcmp(ext, ".mpeg") == 0 || strcmp(ext, ".mpg") == 0) return "video/mpeg";
     if (strcmp(ext, ".mp3") == 0) return "audio/mpeg";
 
+
+    /* for .apk */
+    if (strcmp(ext, ".apk") == 0) return "application/vnd.android.package-archive";
+
     /*return NULL;*/
     return "text/plain";
+}
+
+char *Get_FileName(char *name){
+    char *ext = strrchr(name, '/');
+    if(!ext || *(ext + 1) == '\0'){
+        return "";
+    }
+    return ext + 1;
 }
 
 /*  Outputs HTTP response headers  */
@@ -58,6 +70,15 @@ int Output_HTTP_Headers(int conn, struct ReqInfo * reqinfo) {
             memset(buffer, 0, strlen(buffer));
             sprintf(buffer, "Content-Type: %s\r\n", mime);
             Writeline(conn, buffer, strlen(buffer));
+
+            /* for .apk archive */
+            if(strcmp(mime, "application/vnd.android.package-archive") == 0){
+                memset(buffer, 0, strlen(buffer));
+                sprintf(buffer
+                    , "Content-Disposition: attachment;filename=%s\r\n"
+                    , Get_FileName(reqinfo->resource));
+                Writeline(conn, buffer, strlen(buffer));
+            }
         }
         else{
             Writeline(conn, "Content-Type: text/html\r\n", 25);
