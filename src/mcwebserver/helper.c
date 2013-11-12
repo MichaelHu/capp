@@ -132,9 +132,9 @@ ssize_t Writeline(int sockd, const void *vptr, size_t n) {
     while ( nleft > 0 ) {
         if ( (nwritten = write(sockd, buffer, nleft)) <= 0 ) {
             if ( errno == EINTR )
-            nwritten = 0;
+                nwritten = 0;
             else
-            Error_Quit("Error in Writeline()");
+                Error_Quit("Error in Writeline()");
         }
         nleft  -= nwritten;
         buffer += nwritten;

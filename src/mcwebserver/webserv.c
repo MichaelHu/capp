@@ -87,8 +87,9 @@ int main(int argc, char *argv[]) {
 
         /*  Wait for connection  */
 
-        if ( (conn = accept(listener, NULL, NULL)) < 0 )
+        if ( (conn = accept(listener, NULL, NULL)) < 0 ){
             Error_Quit("Error calling accept()");
+        }
 
 
         /*  Fork child process to service connection  */
@@ -98,16 +99,19 @@ int main(int argc, char *argv[]) {
             /*  This is now the forked child process, so
             close listening socket and service request   */
 
-            if ( close(listener) < 0 )
-            Error_Quit("Error closing listening socket in child.");
+            if ( close(listener) < 0 ){
+                Error_Quit("Error closing listening socket in child.");
+            }
             
             Service_Request(conn);
 
 
             /*  Close connected socket and exit  */
 
-            if ( close(conn) < 0 )
-            Error_Quit("Error closing connection socket.");
+            if ( close(conn) < 0 ){
+                Error_Quit("Error closing connection socket.");
+            }
+
             exit(EXIT_SUCCESS);
         }
 

@@ -171,7 +171,7 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         while(1){
 
             if((count_of_bytes = read(pfd2[0], buffer, PIPE_BUF_SIZE)) > 0){
-                write(conn, buffer, count_of_bytes);
+                Writeline(conn, buffer, count_of_bytes);
             }
             /* EOF */
             else if(count_of_bytes == 0){
