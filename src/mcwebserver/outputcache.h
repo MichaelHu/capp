@@ -11,6 +11,8 @@
 #include "reqhead.h"
 #include "response.h"
 
+#define CACHE_BUF_SIZE (64)
+
 int Is_Cachable(struct ReqInfo reqinfo);
 int Is_Cached(struct ReqInfo reqinfo);
 

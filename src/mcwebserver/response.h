@@ -31,6 +31,10 @@ void Response_Output_All(int conn, Response *resp);
 void Response_Output_Header(int conn, Response *resp);
 void Response_Output_Body(int conn, Response *resp);
 
+void Response_OutputToFile_All(FILE *file, Response *resp);
+void Response_OutputToFile_Header(FILE *file, Response *resp);
+void Response_OutputToFile_Body(FILE *file, Response *resp);
+
 void Response_Free(Response *resp);
 void OutputBody_Free(OutputBody *ob);
 

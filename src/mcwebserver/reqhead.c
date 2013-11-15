@@ -93,6 +93,8 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
         /*  ...and store it in the request information structure.  */
 
         reqinfo->resource = calloc(len + 1, sizeof(char));
+        reqinfo->originalresource = reqinfo->resource;
+
         strncpy(reqinfo->resource, buffer, len);
         CleanURL(reqinfo->resource);
 
@@ -272,6 +274,7 @@ void InitReqInfo(struct ReqInfo * reqinfo) {
     reqinfo->useragent = NULL;
     reqinfo->referer   = NULL;
     reqinfo->resource  = NULL;
+    reqinfo->originalresource  = NULL;
     reqinfo->querystring  = NULL;
     reqinfo->contentlength  = 0;
     reqinfo->body  = NULL;
@@ -309,8 +312,14 @@ void FreeReqInfo(struct ReqInfo * reqinfo) {
     if ( reqinfo->referer )
         free(reqinfo->referer);
 
-    if ( reqinfo->resource )
+    if ( reqinfo->resource == reqinfo->originalresource){
         free(reqinfo->resource);
+    }
+    else{
+        free(reqinfo->resource);
+        free(reqinfo->originalresource);
+    }
+
 
     if ( reqinfo->querystring )
         free(reqinfo->querystring);

@@ -130,6 +130,58 @@ void Response_Output_All(int conn, Response *resp){
 
 
 
+void Response_OutputToFile_All(FILE *file, Response *resp){
+    if(!file) {
+        return;
+    }
+
+    Response_OutputToFile_Header(file, resp);
+    Response_OutputToFile_Body(file, resp);
+}
+
+
+void Response_OutputToFile_Header(FILE *file, Response *resp){
+    int i;
+    char buffer[100];
+
+    if(!file) {
+        return;
+    }
+
+    for(i=0; i<20; i++){
+        if(resp->headers[i]){
+            sprintf(
+                buffer
+                , "%s\r\n"
+                , resp->headers[i]
+            );
+            /* todo: error handle */
+            fwrite((void *)buffer, 1, strlen(buffer), file);
+        }
+        else{
+            break;
+        }
+    }
+}
+
+
+void Response_OutputToFile_Body(FILE *file, Response *resp){
+    int i;
+
+    if(!file) {
+        return;
+    }
+
+    /* todo: error handle */
+    fwrite(
+        (void *)resp->body->buffer
+        , 1
+        , resp->body->length 
+        , file
+    );
+}
+
+
 void OutputBody_Free(OutputBody *ob){
     if(ob){
         if(ob->buffer){

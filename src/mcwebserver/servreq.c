@@ -37,7 +37,7 @@ int Service_Request(int conn) {
 
     struct ReqInfo  reqinfo;
     int             resource = 0;
-    char            cachefile[33] = {0};
+    char            cachefile[64] = {0};
     Response        resp;
 
 
@@ -89,8 +89,13 @@ int Service_Request(int conn) {
     if ( reqinfo.status == 200 ) {
         if(resource > 0){
             if(reqinfo.cgi == PHP){
-                Response_Output_Header(conn, &resp);
-                ProcessPHP(conn, reqinfo, &resp);
+                if(Is_Cached(reqinfo)){
+                    Get_Cache(cachefile, &resp);
+                }
+                else{
+                    Response_Output_Header(conn, &resp);
+                    ProcessPHP(conn, reqinfo, &resp);
+                }
             }  
             else if( Return_Resource(conn, resource, &reqinfo, &resp) ){
                 Error_Quit("Something wrong returning resource.");
@@ -111,10 +116,20 @@ int Service_Request(int conn) {
         }
     }
 
+    /* non-cgi */
     if(reqinfo.cgi == NONE){
         Response_Output_Header(conn, &resp);
         Writeline(conn, "\r\n", 2);
     }  
+    /* cgi */
+    else{
+        if(!Is_Cached(reqinfo)){
+            if(cachefile){
+                Write_Cache(cachefile, resp);
+            }
+        }
+    }
+
     Response_Output_Body(conn, &resp);
 
     FreeReqInfo(&reqinfo);
@@ -273,9 +288,18 @@ void DoRewrite(struct ReqInfo *reqinfo){
     if(res == strstr(res, "/news")){
         fprintf(stderr, 
             "    rewrite: %s => %s\n", res, replace);
-
-        reqinfo->resource = realloc(res, 
-            strlen(replace) + 1);
+        
+        /* first rewrite */
+        if(reqinfo->resource == reqinfo->originalresource){
+            reqinfo->resource = (char *)calloc(
+                strlen(replace) + 1, 1
+            );
+        }
+        /* multiple rewrite */
+        else{
+            reqinfo->resource = (char *)realloc(res, 
+                strlen(replace) + 1);
+        }
 
         strcpy(reqinfo->resource, replace);
         reqinfo->cgi = PHP;

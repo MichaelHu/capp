@@ -29,6 +29,7 @@ struct ReqInfo {
     int            contentlength;
 
     char           *resource;
+    char           *originalresource;
     char           *querystring;
     char           *body;
 
