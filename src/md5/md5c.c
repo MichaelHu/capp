@@ -23,6 +23,9 @@ These notices must be retained in any copies of any part of this
 documentation and/or software.
  */
 
+#include <stdio.h>
+#include <string.h>
+
 #include "global.h"
 #include "md5.h"
 
@@ -184,6 +187,30 @@ MD5_CTX *context;                                       /* context */
 */
   MD5_memset ((POINTER)context, 0, sizeof (*context));
 }
+
+void MD5String (unsigned char *in_str
+    , unsigned char out_str[33]){
+
+    int len = 0, i = 0;
+    MD5_CTX context;
+    unsigned char digest[16];
+
+    len = strlen((const char *)in_str);
+
+    MD5Init( &context );
+    MD5Update( &context, in_str, len ); 
+    MD5Final (digest, &context);
+
+    for(i=0; i<16; i++){
+        sprintf(
+            (char *)(out_str + 2 * i)
+            , "%02x"
+            , digest[i]
+        );
+    } 
+
+}
+
 
 /* MD5 basic transformation. Transforms state based on block.
  */
