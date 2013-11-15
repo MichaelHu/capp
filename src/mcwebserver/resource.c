@@ -44,7 +44,7 @@ char *GetDocRoot(){
 
 /*  Returns a resource  */
 
-int Return_Resource(int conn, int resource, struct ReqInfo * reqinfo) {
+int Return_Resource(int conn, int resource, struct ReqInfo * reqinfo, Response * resp) {
 
     int  i;
 
@@ -63,8 +63,12 @@ int Return_Resource(int conn, int resource, struct ReqInfo * reqinfo) {
         if(i < 0)
             Error_Quit("Error reading from file.");
 
+        /*
         if ( write(conn, buffer, i) < i )
             Error_Quit("Error sending file.");
+        */
+
+        Response_Append_Body(resp, buffer, i);
 
         if(i < RES_BUF_SIZE){
             break;

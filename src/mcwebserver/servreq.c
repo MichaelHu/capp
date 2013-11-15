@@ -22,12 +22,14 @@
 #include "helper.h"
 #include "reqhead.h"
 #include "resphead.h"
+#include "response.h"
 #include "resource.h"
+#include "outputcache.h"
 
 #define PIPE_BUF_SIZE (16)
 
 void DoRewrite(struct ReqInfo *reqinfo);
-void ProcessPHP(int conn, struct ReqInfo reqinfo);
+void ProcessPHP(int conn, struct ReqInfo reqinfo, Response *resp);
 
 /*  Service an HTTP request  */
 
@@ -35,14 +37,28 @@ int Service_Request(int conn) {
 
     struct ReqInfo  reqinfo;
     int             resource = 0;
+    char            cachefile[33] = {0};
+    Response        resp;
 
 
     InitReqInfo(&reqinfo);
+
+    Response_Init(&resp);
+
+    /*
+    Response_Add_Header(&resp, "TESTNAME: testvalue");
+    Response_Append_Body(&resp, "Hello, World!!", 14);
+    */
     
     /*  Get HTTP request  */
     if ( Get_Request(conn, &reqinfo) < 0 ){
         fprintf(stderr, "error get request\n");
         return -1;
+    }
+
+    Get_Cache_FilePath(cachefile, reqinfo);
+    if(cachefile){
+        fprintf(stderr, "Resource MD5: %s\n", cachefile);
     }
 
     /*
@@ -66,16 +82,17 @@ int Service_Request(int conn) {
 
     /*  Output HTTP response headers if we have a full request  */
     if ( reqinfo.type == FULL ){
-        Output_HTTP_Headers(conn, &reqinfo);
+        Output_HTTP_Headers(conn, &reqinfo, &resp);
     }
 
     /*  Service the HTTP request  */
     if ( reqinfo.status == 200 ) {
         if(resource > 0){
             if(reqinfo.cgi == PHP){
-                ProcessPHP(conn, reqinfo);
+                Response_Output_Header(conn, &resp);
+                ProcessPHP(conn, reqinfo, &resp);
             }  
-            else if( Return_Resource(conn, resource, &reqinfo) ){
+            else if( Return_Resource(conn, resource, &reqinfo, &resp) ){
                 Error_Quit("Something wrong returning resource.");
             }
             
@@ -94,12 +111,19 @@ int Service_Request(int conn) {
         }
     }
 
+    if(reqinfo.cgi == NONE){
+        Response_Output_Header(conn, &resp);
+        Writeline(conn, "\r\n", 2);
+    }  
+    Response_Output_Body(conn, &resp);
+
     FreeReqInfo(&reqinfo);
+    Response_Free(&resp);
 
     return 0;
 }
 
-void ProcessPHP(int conn, struct ReqInfo reqinfo){
+void ProcessPHP(int conn, struct ReqInfo reqinfo, Response *resp){
     char output[10000] = {0};
     int pfd1[2], pfd2[2];
     pid_t pid;
@@ -171,7 +195,10 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo){
         while(1){
 
             if((count_of_bytes = read(pfd2[0], buffer, PIPE_BUF_SIZE)) > 0){
+                /*
                 Writeline(conn, buffer, count_of_bytes);
+                */
+                Response_Append_Body(resp, buffer, count_of_bytes);
             }
             /* EOF */
             else if(count_of_bytes == 0){

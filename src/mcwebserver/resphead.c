@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "response.h"
 #include "resphead.h"
 #include "helper.h"
 
@@ -54,38 +55,58 @@ char *Get_FileName(char *name){
 
 /*  Outputs HTTP response headers  */
 
-int Output_HTTP_Headers(int conn, struct ReqInfo * reqinfo) {
+int Output_HTTP_Headers(int conn, struct ReqInfo * reqinfo, Response *resp) {
 
-    char buffer[100], *mime;
+    char buffer[100] = {0}, *mime;
 
+    /*
     sprintf(buffer, "HTTP/1.0 %d OK\r\n", reqinfo->status);
     Writeline(conn, buffer, strlen(buffer));
+    */
+    sprintf(buffer, "HTTP/1.0 %d OK", reqinfo->status);
+    Response_Add_Header(resp, buffer);
 
     // Writeline(conn, "Server: PGWebServ v0.1\r\n", 24);
-    Writeline(conn, "Server: MCWebServ v0.1\r\n", 24);
+    Response_Add_Header(resp, "Server: MCWebServ v0.1");
 
     if(reqinfo->cgi == NONE){
 
         if(reqinfo->status == 200){
             mime = Get_MIME_Type(reqinfo->resource);
             memset(buffer, 0, strlen(buffer));
+            /*
             sprintf(buffer, "Content-Type: %s\r\n", mime);
             Writeline(conn, buffer, strlen(buffer));
+            */
+            sprintf(buffer, "Content-Type: %s", mime);
+            Response_Add_Header(resp, buffer);
 
             /* for .apk archive */
             if(strcmp(mime, "application/vnd.android.package-archive") == 0){
                 memset(buffer, 0, strlen(buffer));
+                /*
                 sprintf(buffer
                     , "Content-Disposition: attachment;filename=%s\r\n"
                     , Get_FileName(reqinfo->resource));
                 Writeline(conn, buffer, strlen(buffer));
+                */
+
+                sprintf(buffer
+                    , "Content-Disposition: attachment;filename=%s"
+                    , Get_FileName(reqinfo->resource));
+                Response_Add_Header(resp, buffer);
             }
         }
         else{
+            /*
             Writeline(conn, "Content-Type: text/html\r\n", 25);
+            */
+            Response_Add_Header(resp, "Content-Type: text/html");
         }
 
+        /*
         Writeline(conn, "\r\n", 2);
+        */
 
     }
 
