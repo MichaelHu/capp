@@ -32,6 +32,23 @@ void OutputBody_Init(OutputBody *ob){
 }
 
 
+int Response_Is_CGI_Fail(Response *resp){
+    int i;
+
+    for(i=0; i<20; i++){
+        if(resp->headers[i]){
+            if(!strcmp(resp->headers[i], "MC-CGI-INFO: Error")){
+                return 1;
+            }
+        }
+        else{
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
 
 void Response_Add_Header(Response *resp, char *header){
     int i;
@@ -41,9 +58,21 @@ void Response_Add_Header(Response *resp, char *header){
 
     strcpy(new_header, header);
 
+    /* avoid duplicated headers */
+    for(i=0; i<20; i++){
+        if(resp->headers[i]){
+            if(!strcmp(resp->headers[i], new_header)){
+                return;
+            }
+        }
+    }
+
     for(i=0; i<20; i++){
         if(!resp->headers[i]){
             resp->headers[i] = new_header;
+            /*
+            fprintf(stderr, "add header: %s\n", new_header);
+            */
             break;
         }
     }
@@ -89,11 +118,13 @@ void Response_Output_Header(int conn, Response *resp){
 
     for(i=0; i<20; i++){
         if(resp->headers[i]){
+            /*
             fprintf(
                 stderr
-                , "%s\r\n"
+                , "\t%s\r\n"
                 , resp->headers[i]
             );
+            */
             sprintf(
                 buffer
                 , "%s\r\n"
@@ -113,7 +144,7 @@ void Response_Output_Body(int conn, Response *resp){
 
     fprintf(
         stderr
-        , "body: [size: %d], [length: %d] \r\n"
+        , "\tBody: [size: %d], [length: %d] \r\n"
         , (int)resp->body->size
         , (int)resp->body->length
     );
@@ -136,6 +167,9 @@ void Response_OutputToFile_All(FILE *file, Response *resp){
     }
 
     Response_OutputToFile_Header(file, resp);
+
+    fwrite("\r\n", 1, 2, file);
+
     Response_OutputToFile_Body(file, resp);
 }
 
@@ -186,7 +220,9 @@ void OutputBody_Free(OutputBody *ob){
     if(ob){
         if(ob->buffer){
             free(ob->buffer);
+            ob->buffer = NULL;
         }
+        ob->length = ob->size = 0;
     }
 }
 
@@ -207,5 +243,67 @@ void Response_Free(Response *resp){
 
     OutputBody_Free(resp->body);
 }
+
+
+/**
+ *  Parse from byte stream 
+ *  note that buf maybe resp->body->buffer self
+ */
+void Response_Parse_From_Stream(char *buf, int length, Response *resp){
+    char *begin, *end, tmp[100] = {0}; 
+    int len, total = length;
+
+    begin = end = buf;
+    while( (end = strstr(begin, "\r\n") ) ){
+        len = end - begin; 
+        total -= ( len + 2 );
+
+        /*
+        fprintf(stderr, "len: %d\n", len);
+        */
+
+        /* to header end  */
+        if(0 == len
+            /* to buf end */
+            || 0 == total){
+            break;
+        }
+
+        /* prevent buffer overflow */
+        if(len > 99){
+            continue;
+        }
+
+        memset(tmp, 0, 100);
+        strncpy(tmp, begin, len);
+
+        /*
+        fprintf(stderr, "tmp: %s\n", tmp);
+        */
+
+        Response_Add_Header(resp, tmp);
+        begin = end + 2;
+    }
+
+    /* to buf end */
+    if(0 == total){
+        fprintf(stderr, "0 = total; header 1: %s\n", resp->headers[0]);
+        OutputBody_Free(resp->body); 
+        return;
+    }
+
+    /* to header end  */
+    begin = end + 2;
+
+    if(buf == resp->body->buffer){
+        OutputBody_Init(resp->body);
+        Response_Append_Body(resp, begin, total);
+        free(buf);
+    }
+    else{
+        Response_Append_Body(resp, begin, total);
+    }
+}
+
 
 

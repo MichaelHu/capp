@@ -82,6 +82,10 @@ void Get_Cache_FilePath(char *file, struct ReqInfo reqinfo){
 
 void Write_Cache(char *file, Response resp){
     FILE *cache_file;
+
+    if(Response_Is_CGI_Fail(&resp)){
+        return;
+    }
     
     if( !(cache_file = fopen(file, "w") ) ){
         return;

@@ -57,9 +57,11 @@ int Service_Request(int conn) {
     }
 
     Get_Cache_FilePath(cachefile, reqinfo);
+    /*
     if(cachefile){
-        fprintf(stderr, "Resource MD5: %s\n", cachefile);
+        fprintf(stderr, "\tCache MD5: %s\n", cachefile);
     }
+    */
 
     /*
     PrintReqInfo(&reqinfo);
@@ -93,9 +95,16 @@ int Service_Request(int conn) {
                     Get_Cache(cachefile, &resp);
                 }
                 else{
-                    Response_Output_Header(conn, &resp);
                     ProcessPHP(conn, reqinfo, &resp);
                 }
+
+                /* reparse body to make sure body contain no header */
+                Response_Parse_From_Stream(
+                    resp.body->buffer
+                    , resp.body->length 
+                    , &resp
+                );
+
             }  
             else if( Return_Resource(conn, resource, &reqinfo, &resp) ){
                 Error_Quit("Something wrong returning resource.");
@@ -116,21 +125,17 @@ int Service_Request(int conn) {
         }
     }
 
-    /* non-cgi */
-    if(reqinfo.cgi == NONE){
-        Response_Output_Header(conn, &resp);
-        Writeline(conn, "\r\n", 2);
-    }  
-    /* cgi */
-    else{
-        if(!Is_Cached(reqinfo)){
-            if(cachefile){
-                Write_Cache(cachefile, resp);
-            }
+    Response_Output_Header(conn, &resp);
+    Writeline(conn, "\r\n", 2);
+    Response_Output_Body(conn, &resp);
+
+    if(Is_Cachable(reqinfo)
+        && !Is_Cached(reqinfo)){
+        if(cachefile){
+            Write_Cache(cachefile, resp);
         }
     }
 
-    Response_Output_Body(conn, &resp);
 
     FreeReqInfo(&reqinfo);
     Response_Free(&resp);
