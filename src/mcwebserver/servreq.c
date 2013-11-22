@@ -93,6 +93,7 @@ int Service_Request(int conn) {
             if(reqinfo.cgi == PHP){
                 if(Is_Cached(reqinfo)){
                     Get_Cache(cachefile, &resp);
+                    fprintf(stderr, "\tRead cache: %s\n", cachefile);
                 }
                 else{
                     ProcessPHP(conn, reqinfo, &resp);

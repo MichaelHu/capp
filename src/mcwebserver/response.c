@@ -296,6 +296,9 @@ void Response_Parse_From_Stream(char *buf, int length, Response *resp){
     begin = end + 2;
 
     if(buf == resp->body->buffer){
+        /*
+        fprintf(stderr, "\t## buf is reps->body self\n");
+        */
         OutputBody_Init(resp->body);
         Response_Append_Body(resp, begin, total);
         free(buf);

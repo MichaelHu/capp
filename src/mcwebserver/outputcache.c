@@ -25,10 +25,13 @@ int Is_Cachable(struct ReqInfo reqinfo){
 
 int Is_Cached(struct ReqInfo reqinfo){
     char cachefile[64] = {0};
+    FILE *cache_file;
 
     Get_Cache_FilePath(cachefile, reqinfo);
 
-    if(fopen(cachefile, "r")){
+    if( ( cache_file = fopen(cachefile, "r") ) ){
+        /* note: must close the file */
+        fclose(cache_file);
         return 1;
     }    
     return 0;
@@ -91,6 +94,7 @@ void Write_Cache(char *file, Response resp){
         return;
     }
 
+    fprintf(stderr, "\tWrite cache: %s\n", file);
     Response_OutputToFile_All(cache_file, &resp);
 
     fclose(cache_file);
