@@ -86,7 +86,7 @@ int Get_Request_Body(int conn, struct ReqInfo * reqinfo, int maxlen) {
 
     } while ( left > 0 );
 
-    fprintf(stderr, "    body: %s\n", body);
+    fprintf(stderr, "  Request Body: %s\n", body);
     reqinfo->body = body;
 
     return 0;

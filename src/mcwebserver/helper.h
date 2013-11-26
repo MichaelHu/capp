@@ -14,6 +14,7 @@
 #define PG_HELPER_H
 
 
+#include <stdarg.h>          /*  for va_list */
 #include <unistd.h>          /*  for ssize_t data type  */
 
 
@@ -28,6 +29,8 @@ ssize_t Readline  (int sockd, void *vptr, size_t maxlen);
 ssize_t Readblock (int sockd, void *vptr, size_t maxlen);
 ssize_t Writeline (int sockd, const void *vptr, size_t n);
 char *  GetFileExt(char const * name);
+
+void    Console(const char *fmt, ...);
 
 
 /*  Global macros/variables  */

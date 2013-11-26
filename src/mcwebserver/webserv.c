@@ -22,6 +22,7 @@
 #include "resource.h"
 #include "helper.h"
 #include "servreq.h"
+#include "conf.h"
 
 #define SERVER_PORT            (8080)
 
@@ -36,6 +37,7 @@ int main(int argc, char *argv[]) {
 
     char *doc_root = NULL;
     int port = 0;
+    char *debug = NULL;
 
     if(2 == argc){
         doc_root = argv[1];
@@ -46,12 +48,25 @@ int main(int argc, char *argv[]) {
         port = strtod(argv[2], NULL);
     }
 
+    if(4 == argc){
+        doc_root = argv[1];
+        port = strtod(argv[2], NULL);
+        debug = argv[3];
+    }
+
     if(doc_root){
         SetDocRoot(doc_root);
     }
 
     if(!port){
         port = SERVER_PORT;
+    }
+
+    if(debug){
+        if(!strcmp(debug, "debug")){
+            /* only affects the main process */
+            Conf_Enable_Debug();
+        }
     }
     
 

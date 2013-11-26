@@ -81,6 +81,9 @@ void Response_Add_Header(Response *resp, char *header){
 
 
 void Response_Append_Body(Response *resp, char *body, size_t length){
+    size_t increase_size = 0,
+           block_size = OUTPUT_BUFFER_BLOCK_SIZE;
+
     if(!body || !length){
         return;
     }
@@ -88,13 +91,17 @@ void Response_Append_Body(Response *resp, char *body, size_t length){
     if(resp->body->size == 0
         || resp->body->length + length > resp->body->size){
 
+        increase_size = length > block_size
+            ? (length / block_size + 1) * block_size
+            : block_size;
+
         resp->body->buffer 
             = realloc(
                 resp->body->buffer
-                , resp->body->size + OUTPUT_BUFFER_BLOCK_SIZE
+                , resp->body->size + increase_size
             );
 
-        resp->body->size += OUTPUT_BUFFER_BLOCK_SIZE;
+        resp->body->size += increase_size;
     }
 
     /*
@@ -144,7 +151,7 @@ void Response_Output_Body(int conn, Response *resp){
 
     fprintf(
         stderr
-        , "\tBody: [size: %d], [length: %d] \r\n"
+        , "  Response Body: [size: %d], [length: %d]\n"
         , (int)resp->body->size
         , (int)resp->body->length
     );
@@ -190,7 +197,10 @@ void Response_OutputToFile_Header(FILE *file, Response *resp){
                 , resp->headers[i]
             );
             /* todo: error handle */
+            Console("File Pos (before output header): %ld", ftell(file));
             fwrite((void *)buffer, 1, strlen(buffer), file);
+            Console("File Pos (after output header): %ld", ftell(file));
+            Console("Header Size: %ld", strlen(resp->headers[i]));
         }
         else{
             break;
@@ -206,6 +216,7 @@ void Response_OutputToFile_Body(FILE *file, Response *resp){
         return;
     }
 
+    Console("File Pos (before output body): %ld", ftell(file));
     /* todo: error handle */
     fwrite(
         (void *)resp->body->buffer
@@ -213,6 +224,8 @@ void Response_OutputToFile_Body(FILE *file, Response *resp){
         , resp->body->length 
         , file
     );
+    Console("File Pos (after output body): %ld", ftell(file));
+    Console("Body Size: %ld", resp->body->length);
 }
 
 
@@ -287,7 +300,7 @@ void Response_Parse_From_Stream(char *buf, int length, Response *resp){
 
     /* to buf end */
     if(0 == total){
-        fprintf(stderr, "0 = total; header 1: %s\n", resp->headers[0]);
+        fprintf(stderr, "Empty CGI body\n");
         OutputBody_Free(resp->body); 
         return;
     }

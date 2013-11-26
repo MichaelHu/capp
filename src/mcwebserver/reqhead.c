@@ -45,7 +45,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 
         if ( !strncmp(buffer, "GET ", 4) ) {
             reqinfo->method = GET;
-            fprintf(stderr, "> %s\n", buffer);
+            fprintf(stderr, "\n> %s\n", buffer);
             buffer += 4;
         }
         else if ( !strncmp(buffer, "HEAD ", 5) ) {
@@ -54,7 +54,7 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
         }
         else if ( !strncmp(buffer, "POST ", 5) ) {
             reqinfo->method = POST;
-            fprintf(stderr, "> %s\n", buffer);
+            fprintf(stderr, "\n> %s\n", buffer);
             buffer += 5;
         }
         else {
@@ -252,7 +252,7 @@ int Get_Request(int conn, struct ReqInfo * reqinfo) {
             }
 
             if ( Parse_HTTP_Header(buffer, reqinfo) ){
-                fprintf(stderr, "Parse_HTTP_Header\n");
+                fprintf(stderr, "Error in Parse_HTTP_Header\n");
                 break;
             }
         }
@@ -261,7 +261,7 @@ int Get_Request(int conn, struct ReqInfo * reqinfo) {
 
     /* get request body if any */
     if(reqinfo->contentlength){
-        fprintf(stderr, "    Content-Length: %d\n", reqinfo->contentlength);
+        fprintf(stderr, "  Request Content-Length: %d\n", reqinfo->contentlength);
         Get_Request_Body(conn, reqinfo, reqinfo->contentlength);
     }
 
@@ -294,12 +294,10 @@ void PrintReqInfo(struct ReqInfo * reqinfo){
         ,reqinfo->referer ? reqinfo->referer : "");    
     */
 
-    fprintf(stderr
-        ,"    Resource: %s\n"
-        ,reqinfo->resource ? reqinfo->resource : "");    
+    Console("Request Resource: %s"
+        , reqinfo->resource ? reqinfo->resource : "");    
 
-    fprintf(stderr
-        ,"    QueryString: %s\n"
+    Console("Request QueryString: %s"
         ,reqinfo->querystring ? reqinfo->querystring : "");    
 }
 

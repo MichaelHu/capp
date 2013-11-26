@@ -94,9 +94,10 @@ void Write_Cache(char *file, Response resp){
         return;
     }
 
-    fprintf(stderr, "\tWrite cache: %s\n", file);
+    Console("Write cache: %s", file);
     Response_OutputToFile_All(cache_file, &resp);
 
+    Console("File Pos: %ld", ftell(cache_file));
     fclose(cache_file);
 }
 

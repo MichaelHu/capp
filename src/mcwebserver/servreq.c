@@ -52,7 +52,7 @@ int Service_Request(int conn) {
     
     /*  Get HTTP request  */
     if ( Get_Request(conn, &reqinfo) < 0 ){
-        fprintf(stderr, "error get request\n");
+        fprintf(stderr, "Error occur when get request\n");
         return -1;
     }
 
@@ -93,7 +93,7 @@ int Service_Request(int conn) {
             if(reqinfo.cgi == PHP){
                 if(Is_Cached(reqinfo)){
                     Get_Cache(cachefile, &resp);
-                    fprintf(stderr, "\tRead cache: %s\n", cachefile);
+                    Console("Read cache: %s", cachefile);
                 }
                 else{
                     ProcessPHP(conn, reqinfo, &resp);
@@ -292,8 +292,7 @@ void DoRewrite(struct ReqInfo *reqinfo){
          *replace = "/smartnews/data/news.php";
 
     if(res == strstr(res, "/news")){
-        fprintf(stderr, 
-            "    rewrite: %s => %s\n", res, replace);
+        fprintf(stderr, "  Rewrite: %s => %s\n", res, replace);
         
         /* first rewrite */
         if(reqinfo->resource == reqinfo->originalresource){

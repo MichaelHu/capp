@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "conf.h"
 #include "helper.h"
 
 
@@ -193,3 +194,24 @@ void CleanURL(char * buffer) {
         ++i;
     }
 }
+
+void Console(const char *fmt, ...){
+    va_list arg_ptr;
+
+    if(!Conf_Is_Debug()){
+        return;
+    }
+
+    fprintf(stderr, "\t");
+
+    va_start(arg_ptr, fmt);
+    /* vfprintf not fprintf */
+    vfprintf(stderr, fmt, arg_ptr); 
+    va_end(arg_ptr);
+
+    fprintf(stderr, "\n");
+}
+
+
+
+
