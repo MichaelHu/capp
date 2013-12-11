@@ -10,6 +10,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "../md5/global.h"  /* for UINT4 */
 #include "../md5/md5.h"     /* for MD5String */
@@ -65,13 +66,14 @@ void Get_Cache_FilePath(char *file, struct ReqInfo reqinfo){
     }
 
     if(reqinfo.querystring){
-        strcpy(str + strlen(reqinfo.originalresource)
+        /* @note: 避免strlen(null)，行为未定义 */
+        strcpy(str + strlen(reqinfo.originalresource ? reqinfo.originalresource : "")
             , reqinfo.querystring);
     }
 
     if(reqinfo.body){
-        strcpy(str + strlen(reqinfo.originalresource) 
-                + strlen(reqinfo.querystring)
+        strcpy(str + strlen(reqinfo.originalresource ? reqinfo.originalresource : "")
+                + strlen(reqinfo.querystring ? reqinfo.querystring : "")
             , reqinfo.body);
     }
 

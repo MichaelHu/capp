@@ -282,25 +282,27 @@ void Response_Parse_From_Stream(char *buf, int length, Response *resp){
             break;
         }
 
+        memset(tmp, 0, 100);
+
         /* prevent buffer overflow */
         if(len > 99){
+            begin = end + 2;
             continue;
         }
 
-        memset(tmp, 0, 100);
         strncpy(tmp, begin, len);
+        begin = end + 2;
 
         /*
         fprintf(stderr, "tmp: %s\n", tmp);
         */
 
         Response_Add_Header(resp, tmp);
-        begin = end + 2;
     }
 
     /* to buf end */
     if(0 == total){
-        fprintf(stderr, "Empty CGI body\n");
+        fprintf(stderr, "  Empty CGI body\n");
         OutputBody_Free(resp->body); 
         return;
     }
