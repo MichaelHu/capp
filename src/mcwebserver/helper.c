@@ -26,11 +26,15 @@ void SetEnv(const char *name, const char *value){
     char *val = "";
 
     /**
-     * value字段不能为NULL，否则设置不成功且退出程序，奇怪的是也捕获不到errno
+     * @note: value字段不能为NULL，否则设置不成功且退出程序，奇怪的是也捕获不到errno
      */
     if(-1 == setenv(name, value ? value : val, 1)){
         fprintf(stderr, "SetEnv: %s\n", strerror(errno));
     }
+}
+
+char * GetEnv(const char *name){
+    return getenv(name);
 }
 
 /*  Prints an error message and quits  */
@@ -43,6 +47,15 @@ void Error_Quit(char const * msg) {
 char * GetFileExt(char const * name){
     char *ext = strrchr(name, '.');
     return ext ? ext : "";
+}
+
+char * GetFileName(char * path){
+    char *name = strrchr(path, '/');
+    if(!name 
+        || name - path + 1 >= strlen(path)){
+        name = path;
+    }
+    return name;
 }
 
  

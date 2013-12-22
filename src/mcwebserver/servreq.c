@@ -155,9 +155,15 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo, Response *resp){
     int pfd1[2], pfd2[2];
     pid_t pid;
     char c;
+    char *php_cgi = NULL;
 
     int count_of_bytes;
     char buffer[PIPE_BUF_SIZE];
+
+    php_cgi = GetEnv("PHP_CGI");
+    if(!php_cgi){
+        Error_Quit("Environment variable PHP_CGI is not set");
+    }
 
     /**
      * 使用双管道达到父子进程间双工通信
@@ -273,10 +279,9 @@ void ProcessPHP(int conn, struct ReqInfo reqinfo, Response *resp){
         printf("/usr/bin/php test.php");
         */
 
-        if(execl("/usr/bin/php-cgi", "php-cgi", (char *)0 ) < 0){
+        if(execl(php_cgi, GetFileName(php_cgi), (char *)0 ) < 0){
             Error_Quit("Error in execl");
         }
-
     }
 
 

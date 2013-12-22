@@ -21,6 +21,7 @@
 /*  Function prototypes  */
 
 void    SetEnv(const char *name, const char *value);
+char *  GetEnv(const char *name);
 void    Error_Quit(char const * msg);
 int     Trim      (char * buffer);
 int     StrUpper  (char * buffer);
@@ -28,7 +29,9 @@ void    CleanURL  (char * buffer);
 ssize_t Readline  (int sockd, void *vptr, size_t maxlen);
 ssize_t Readblock (int sockd, void *vptr, size_t maxlen);
 ssize_t Writeline (int sockd, const void *vptr, size_t n);
+
 char *  GetFileExt(char const * name);
+char *  GetFileName(char * path);
 
 void    Console(const char *fmt, ...);
 
