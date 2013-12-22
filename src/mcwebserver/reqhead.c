@@ -117,7 +117,6 @@ int Parse_HTTP_Header(char * buffer, struct ReqInfo * reqinfo) {
 
             reqinfo->querystring = calloc(len + 1, sizeof(char));
             strncpy(reqinfo->querystring, buffer, len);
-            CleanURL(reqinfo->querystring);
         }
 
         /*  Test to see if we have any HTTP version information.

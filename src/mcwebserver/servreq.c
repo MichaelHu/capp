@@ -68,6 +68,12 @@ int Service_Request(int conn) {
     */
 
     DoRewrite(&reqinfo);
+
+    /* do not decode querystring while cgi */
+    if(reqinfo.cgi == NONE
+        && reqinfo.querystring){
+        CleanURL(reqinfo.querystring);
+    } 
     
     /**
      * Check whether resource exists, whether we have permission

@@ -173,11 +173,19 @@ int StrUpper(char * buffer) {
 }
 
 
-/*  Cleans up url-encoded string  */
+/**
+ * Cleans up url-encoded string  
+ *     ASCII: %61%62%63 => abc 
+ *            %E7%99%BE%E5%BA%A6 => 百度
+ */
 	
 void CleanURL(char * buffer) {
     char asciinum[3] = {0};
     int i = 0, c;
+
+    /*
+    Console("Before CleanURL: %s", buffer);
+    */
     
     while ( buffer[i] ) {
         if ( buffer[i] == '+' )
@@ -193,6 +201,11 @@ void CleanURL(char * buffer) {
         }
         ++i;
     }
+
+    /*
+    Console("After CleanURL: %s", buffer);
+    */
+    
 }
 
 void Console(const char *fmt, ...){
