@@ -1,5 +1,9 @@
 .DS_Store
 
+*.y.c
+*.y.h
+*.lex.c
+
 *.swp
 *.bak
 *.dSYM/

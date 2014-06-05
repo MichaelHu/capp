@@ -1,10 +1,12 @@
+    /*=== definitions section  ===*/
 %{
     int wordCount = 0;
 %}
-
+    /* substitution */
 chars [A-Za-z\_\-\.]
 numbers ([0-9])+
-delim [ \n\t]
+newline \n
+delim [ {newline}\t]
 other [^A-Za-z\_\-\.0-9 \n\t]
 whitespace {delim}+
 words {chars}{2,}
@@ -13,33 +15,37 @@ others {other}+
 
 
 %%
+    /*=== rules section  ===*/
 
 
 {words} { 
     wordCount++; 
     printf(
-        "[%d] %s (%d)\n"
+        "[%d] %s (line%d, %d chars)\n"
         , wordCount
         , yytext
+        , yylineno
         , (int)yyleng
     );
 }
 
-{whitespace} {}
+{newline} yylineno++;
 
+    /* do nothing use {} */
 {numbers} {} 
-
-{singlechar} {}
-
-{other}  
+    /* do nothing use empty */
+{whitespace} 
+    /* do nothing use semi-colon */
+{singlechar} ; 
+{other}
 
 
 %%
+    /*=== subroutines section  ===*/
 
 int main(int argc, char **argv) {
     FILE *f;
-    int a;
-    char s[100], *inputFile = NULL;
+    char *inputFile = NULL;
 
     if(argc == 2){
         inputFile = argv[1];
@@ -59,6 +65,8 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+    /* wrapup, return 1 if done, 0 if not done */
 int yywrap(){
     return 1;
 }
+
