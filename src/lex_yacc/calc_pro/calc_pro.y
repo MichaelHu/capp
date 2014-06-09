@@ -57,7 +57,7 @@ stmt:
       ';'               { $$ = opr(';', 2, NULL, NULL); }
     | expr ';'          { $$ = $1; }
     | PRINT expr ';'    { $$ = opr(PRINT, 1, $2); }
-    | VARIABLE '=' expr ';'     { $$ = opr(EQ, 2, id($1), $3); } 
+    | VARIABLE '=' expr ';'     { $$ = opr('=', 2, id($1), $3); } 
     | WHILE '(' expr ')' stmt   { $$ = opr(WHILE, 2, $3, $5); }
     | IF '(' expr ')' stmt %prec IFX    { $$ = opr(IF, 2, $3, $5); }
     | IF '(' expr ')' stmt ELSE stmt    { $$ = opr(IF, 3, $3, $5, $7); }
@@ -99,7 +99,6 @@ nodeType *con(int value) {
     /* copy information */
     p->type = typeCon;
     p->con.value = value;
-    printf("\tvalue: %d\n", value);
     return p; 
 }
 
@@ -131,7 +130,6 @@ nodeType *opr(int oper, int nops, ...) {
     for (i = 0; i < nops; i++)
         p->opr.op[i] = va_arg(ap, nodeType*);
     va_end(ap);
-    printf("\toper %d, nops %d\n", oper, nops);
     return p; 
 }
 
