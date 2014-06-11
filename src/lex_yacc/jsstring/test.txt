@@ -1,0 +1,19 @@
+var a = 'docinfo_start';
+var b = {
+    "json-key": 'json-value'
+    , 'json-key1': "json-value1"
+};
+
+var str = "hello, \"Sweety\"!";
+var str2 = 'hello, \'Sweety\'!';
+
+var pat = /ab"inner pattern"/;
+
+// var pat1 = /cd"inner pattern"/;
+
+/**
+ * var str2 = 'hello, \'Sweety\'!'; 
+ */
+
+var special = '\t\r\n';
+
