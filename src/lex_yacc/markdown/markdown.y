@@ -26,7 +26,7 @@ FILE *yyin;
 %%
 
 markdownfile: 
-    lines                       { printf("output: %s\n", $1); }
+    lines                       { printf("%s\n", $1); }
     ;
 
 lines:
@@ -42,7 +42,7 @@ line:
     | H4 TEXT LINEBREAK                  { $$ = create_hn($2, 4); }  
     | H5 TEXT LINEBREAK                  { $$ = create_hn($2, 5); }  
     | H6 TEXT LINEBREAK                  { $$ = create_hn($2, 6); }   
-    | inlineelements LINEBREAK            { $$ = $1; } 
+    | inlineelements LINEBREAK            { $$ = str_format("<p>%s</p>", $1); } 
     ;
 
 inlineelements:  
@@ -54,6 +54,9 @@ inlineelement:
     TEXT                                 { $$ = $1; }
     | LEFTSQUARE TEXT RIGHTSQUARE LEFTPARENTHESES TEXT RIGHTPARENTHESES {
                                  $$ = create_link($2, $5);
+                                } 
+    | EXCLAMATION LEFTSQUARE TEXT RIGHTSQUARE LEFTPARENTHESES TEXT RIGHTPARENTHESES {
+                                 $$ = create_image($3, $6);
                                 } 
 
 %%
