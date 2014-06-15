@@ -1,0 +1,61 @@
+[echo ...Configuring for [markdown]
+Looking for cpp
+CPP=[/usr/bin/cpp], CPPFLAGS=[]
+looking for install
+ (/usr/bin/install)
+checking out the C compiler
+ngc1680.c:2:1: warning: type specifier missing, defaults to 'int' [-Wimplicit-int]
+main()
+^~~~
+1 warning generated.
+checking for "volatile" keyword
+checking for "const" keyword
+Checking for "inline" keyword
+defining WORD & DWORD scalar types
+ngc1680.c:28:2: warning: implicitly declaring library function 'exit' with type 'void (int) __attribute__((noreturn))'
+        exit(1);
+        ^
+ngc1680.c:28:2: note: please include the header <stdlib.h> or explicitly provide a declaration for 'exit'
+1 warning generated.
+looking for header pwd.h
+looking for the getpwuid function
+looking for the srandom function
+looking for the bzero function
+ngc1680.c:4:5: warning: implicitly declaring library function 'bzero' with type 'void (void *, unsigned long)'
+    bzero((char*)0,0);
+    ^
+ngc1680.c:4:5: note: please include the header <strings.h> or explicitly provide a declaration for 'bzero'
+1 warning generated.
+looking for the random function
+looking for the strcasecmp function
+ngc1680.c:1:6: warning: incompatible redeclaration of library function 'strcasecmp' [-Wincompatible-library-redeclaration]
+void strcasecmp();
+     ^
+ngc1680.c:1:6: note: 'strcasecmp' is a builtin with type 'int (const char *, const char *)'
+1 warning generated.
+looking for the strncasecmp function
+ngc1680.c:1:6: warning: incompatible redeclaration of library function 'strncasecmp' [-Wincompatible-library-redeclaration]
+void strncasecmp();
+     ^
+ngc1680.c:1:6: note: 'strncasecmp' is a builtin with type 'int (const char *, const char *, unsigned long)'
+1 warning generated.
+looking for the fchdir function
+looking for header malloc.h
+test failed:  command was cc -Wno-implicit-int -c -o ngc1680.o ngc1680.c
+output:
+ngc1680.c:2:10: fatal error: 'malloc.h' file not found
+#include <malloc.h>
+         ^
+1 error generated.
+offending sources:
+ngc1680.c:
+/* AC_CHECK_HEADERS */
+#include <malloc.h>
+main() { }
+find is /usr/bin/find
+/bin/ln exists, and ln -s works
+	total     4037.18
+sed is /usr/bin/sed
+generating Makefile
+generating version.c
+generating mkdio.h

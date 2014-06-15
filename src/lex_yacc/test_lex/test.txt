@@ -1,0 +1,15 @@
+# h1 text
+## h2 text
+### h3 text
+#### h4 text
+##### h5 text
+###### h6 text
+
+a / b;
+// comment
+var c = a / 5;
+////////
+/^\s+|\s+$/.test("   hello, world!   ");
+a/b/c
+
+
