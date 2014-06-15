@@ -2,14 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "htmltags.h" 
 
 /* prototypes */
 int yylex(void);
 void yyerror(char *s);
 FILE *yyin;
-char *str_concat(char *s1, char *s2);
-char *create_str(char *s, char *format);
-
 %}
 
 
@@ -23,7 +21,7 @@ char *create_str(char *s, char *format);
 %token EXCLAMATION DOT MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN 
 
-%type <text> lines line
+%type <text> lines line inlineelements inlineelement
 
 %%
 
@@ -38,32 +36,27 @@ lines:
 
 line:
       BLANKLINE                { $$ = ""; }
-    | H1 TEXT                  { $$ = create_str($2, "<h1>%s</h1>"); }  
-    | H2 TEXT                  { $$ = create_str($2, "<h2>%s</h2>"); }   
-    | H3 TEXT                  { $$ = create_str($2, "<h3>%s</h3>"); }   
-    | H4 TEXT                  { $$ = create_str($2, "<h4>%s</h4>"); }  
-    | H5 TEXT                  { $$ = create_str($2, "<h5>%s</h5>"); }  
-    | H6 TEXT                  { $$ = create_str($2, "<h6>%s</h6>"); }   
+    | H1 TEXT LINEBREAK                  { $$ = create_hn($2, 1); }  
+    | H2 TEXT LINEBREAK                  { $$ = create_hn($2, 2); }   
+    | H3 TEXT LINEBREAK                  { $$ = create_hn($2, 3); }   
+    | H4 TEXT LINEBREAK                  { $$ = create_hn($2, 4); }  
+    | H5 TEXT LINEBREAK                  { $$ = create_hn($2, 5); }  
+    | H6 TEXT LINEBREAK                  { $$ = create_hn($2, 6); }   
+    | inlineelements LINEBREAK            { $$ = $1; } 
     ;
 
+inlineelements:  
+    inlineelements inlineelement        { $$ = str_concat($1, $2); }
+    | /* NULL */                { $$ = ""; }
+    ;
+
+inlineelement:
+    TEXT                                 { $$ = $1; }
+    | LEFTSQUARE TEXT RIGHTSQUARE LEFTPARENTHESES TEXT RIGHTPARENTHESES {
+                                 $$ = create_link($2, $5);
+                                } 
 
 %%
-
-char *str_concat(char *s1, char *s2){
-    char *_str;
-
-    _str = (char *)malloc(strlen(s1) + strlen(s2) + 1);     
-    sprintf(_str, "%s%s", s1, s2); 
-    return _str;
-}
-
-char *create_str(char *s, char *format){
-    char *_str;
-
-    _str = (char *)malloc(strlen(s) + strlen(format) + 1);     
-    sprintf(_str, format, s); 
-    return _str;
-}
 
 void yyerror(char *s) {
     fprintf(stdout, "%s\n", s);

@@ -33,7 +33,9 @@ blankline ^[ \t]*\n
 ")"                                     { return RIGHTPARENTHESES; }
 "+"                                     { return PLUS; }
 "-"                                     { return MINUS; }
-"."                                     { return DOT; }
+    /*
+    "."                                     { return DOT; }
+    */
 "!"                                     { return EXCLAMATION; }
 
 
@@ -44,8 +46,8 @@ blankline ^[ \t]*\n
 ^#####                   { return H5; }
 ^######                  { return H6; }
 
-[^#!.\-+()\[\]{}_*`\\>\n]+  { yylval.text = strdup(yytext); return TEXT; }
-\n                       ;
+[^#!\-+()\[\]{}_*`\\>\n]+  { yylval.text = strdup(yytext); return TEXT; }
+\n                       { return LINEBREAK; }
 
 
 %%
