@@ -4,6 +4,14 @@
 #include <stdarg.h>
 #include "htmltags.h" 
 
+char *str_concat(char *s1, char *s2){
+    char *_str;
+
+    _str = (char *)malloc(strlen(s1) + strlen(s2) + 1);     
+    sprintf(_str, "%s%s", s1, s2); 
+    return _str;
+}
+
 char *str_format(char *format, ...){
     char *_str = NULL;
     va_list args; 
@@ -59,7 +67,7 @@ char *create_link(char *title, char *href){
 
 char *create_hn(char *s, int level){
     char *_str,
-        *format = "<h%d>%s</h%d>";
+        *format = "<h%d>%s</h%d>\n";
 
     _str = (char *)malloc(
         strlen(s) 
@@ -70,13 +78,30 @@ char *create_hn(char *s, int level){
     return _str;
 }
 
-char *str_concat(char *s1, char *s2){
-    char *_str;
+char *create_emphasis(char *s){
+    char *_str,
+        *format = "<em>%s</em>";
 
-    _str = (char *)malloc(strlen(s1) + strlen(s2) + 1);     
-    sprintf(_str, "%s%s", s1, s2); 
+    _str = (char *)malloc(
+        strlen(s) 
+        + strlen(format) - 2 
+        + 1
+    );     
+    sprintf(_str, format, s); 
     return _str;
 }
 
+char *create_strong(char *s){
+    char *_str,
+        *format = "<strong>%s</strong>";
+
+    _str = (char *)malloc(
+        strlen(s) 
+        + strlen(format) - 2 
+        + 1
+    );     
+    sprintf(_str, format, s); 
+    return _str;
+}
 
 

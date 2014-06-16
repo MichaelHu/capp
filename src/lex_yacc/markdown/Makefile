@@ -1,7 +1,7 @@
 all: clean doyacc dolex markdown.out
 
 doyacc:
-	yacc -d -o markdown.y.c markdown.y
+	yacc -r all -d -o markdown.y.c markdown.y
 
 dolex:
 	lex -o markdown.lex.c markdown.lex

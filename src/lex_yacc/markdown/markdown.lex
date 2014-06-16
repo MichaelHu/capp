@@ -19,8 +19,8 @@ blankline ^[ \t]*\n
 ^>                                      { return LARGERTHAN; }
 
 \\                                      { BEGIN ESCAPE; }
-<ESCAPE>[\\`*_{}()#+\-.!]               { BEGIN INITIAL; yylval.text = strdup(yytext); return TEXT; }
-<ESCAPE>.                               { BEGIN INITIAL; yylval.text = strdup(yytext); return TEXT; }
+<ESCAPE>[\\`*_{}()#+\-.!]               { BEGIN INITIAL; yylval.text = strdup(yytext); return SPECIALCHAR; }
+<ESCAPE>.                               { BEGIN INITIAL; yylval.text = strdup(yytext); return SPECIALCHAR; }
 
 "`"                                     { return BACKTICK; }
 "*"                                     { return STAR; }
@@ -33,6 +33,10 @@ blankline ^[ \t]*\n
 ")"                                     { return RIGHTPARENTHESES; }
 "+"                                     { return PLUS; }
 "-"                                     { return MINUS; }
+
+__                                      { return DOUBLEUNDERSCORE; }
+\*\*                                    { return DOUBLESTAR; }
+
     /*
     "."                                     { return DOT; }
     */
