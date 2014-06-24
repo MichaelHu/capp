@@ -1,0 +1,145 @@
+Grammar
+
+    0 $accept: p $end
+
+    1 p: s
+
+    2 s: s e
+    3  | e
+
+    4 e: T
+    5  | K s K
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+T (258) 4
+K (259) 5
+KX (260)
+
+
+Nonterminals, with rules where they appear
+
+$accept (6)
+    on left: 0
+p (7)
+    on left: 1, on right: 0
+s (8)
+    on left: 2 3, on right: 1 2 5
+e (9)
+    on left: 4 5, on right: 2 3
+
+
+state 0
+
+    0 $accept: . p $end
+    1 p: . s
+    2 s: . s e
+    3  | . e
+    4 e: . T
+    5  | . K s K
+
+    T  shift, and go to state 1
+    K  shift, and go to state 2
+
+    p  go to state 3
+    s  go to state 4
+    e  go to state 5
+
+
+state 1
+
+    4 e: T .
+
+    $default  reduce using rule 4 (e)
+
+
+state 2
+
+    2 s: . s e
+    3  | . e
+    4 e: . T
+    5  | . K s K
+    5  | K . s K
+
+    T  shift, and go to state 1
+    K  shift, and go to state 2
+
+    s  go to state 6
+    e  go to state 5
+
+
+state 3
+
+    0 $accept: p . $end
+
+    $end  shift, and go to state 7
+
+
+state 4
+
+    1 p: s .  [$end]
+    2 s: s . e
+    4 e: . T
+    5  | . K s K
+
+    T  shift, and go to state 1
+    K  shift, and go to state 2
+
+    $default  reduce using rule 1 (p)
+
+    e  go to state 8
+
+
+state 5
+
+    3 s: e .
+
+    $default  reduce using rule 3 (s)
+
+
+state 6
+
+    2 s: s . e
+    4 e: . T
+    5  | . K s K
+    5  | K s . K
+
+    T  shift, and go to state 1
+    K  shift, and go to state 9
+
+    e  go to state 8
+
+
+state 7
+
+    0 $accept: p $end .
+
+    $default  accept
+
+
+state 8
+
+    2 s: s e .
+
+    $default  reduce using rule 2 (s)
+
+
+state 9
+
+    2 s: . s e
+    3  | . e
+    4 e: . T
+    5  | . K s K  [$end, T, K]
+    5  | K . s K  [$end, T, K]
+    5  | K s K .  [$end, T, K]
+
+    $default  reduce using rule 5 (e)
+
+    s  go to state 6
+    e  go to state 5
+
+    Conflict between rule 5 and token T resolved as reduce (T < KX).
+    Conflict between rule 5 and token K resolved as reduce (K < KX).

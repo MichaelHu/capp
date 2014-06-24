@@ -24,6 +24,9 @@ FILE *yyin;
 
 %type <text> lines line inlineelements inlineelement plaintext text_list
 
+%nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE
+%nonassoc STARX
+
 %%
 
 markdownfile: 
@@ -48,12 +51,6 @@ line:
 
 inlineelements:  
     inlineelements inlineelement                        { $$ = str_concat($1, $2); }
-
-    | STAR inlineelements STAR                          { $$ = create_emphasis($2); } 
-    | UNDERSCORE inlineelements UNDERSCORE              { $$ = create_emphasis($2); } 
-    | DOUBLESTAR inlineelements DOUBLESTAR              { $$ = create_strong($2); }
-    | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE  { $$ = create_strong($2); }
-
     | inlineelement                     { $$ = $1; }
     ;
 
@@ -61,10 +58,10 @@ inlineelement:
     TEXT                                { $$ = $1; }
     | SPECIALCHAR                       { $$ = $1; }
 
-    | STAR inlineelement STAR                          { $$ = create_emphasis($2); } 
-    | UNDERSCORE inlineelement UNDERSCORE              { $$ = create_emphasis($2); } 
-    | DOUBLESTAR inlineelement DOUBLESTAR              { $$ = create_strong($2); }
-    | DOUBLEUNDERSCORE inlineelement DOUBLEUNDERSCORE  { $$ = create_strong($2); }
+    | STAR inlineelements STAR %prec STARX              { $$ = create_emphasis($2); } 
+    | UNDERSCORE inlineelements UNDERSCORE %prec STARX             { $$ = create_emphasis($2); } 
+    | DOUBLESTAR inlineelements DOUBLESTAR %prec STARX              { $$ = create_strong($2); }
+    | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE %prec STARX  { $$ = create_strong($2); }
 
     | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_link($2, $5);

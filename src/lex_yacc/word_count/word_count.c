@@ -736,7 +736,7 @@ YY_RULE_SETUP
     printf(
         "[%d] %s (line%d, %d chars)\n"
         , wordCount
-        , yylval
+        , yytext
         , yylineno
         , (int)yyleng
     );
@@ -760,22 +760,23 @@ YY_RULE_SETUP
 #line 37 "word_count.lex"
 
 	YY_BREAK
+/* do nothing use semi-colon */
 case 5:
 YY_RULE_SETUP
-#line 38 "word_count.lex"
-
+#line 39 "word_count.lex"
+; 
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 39 "word_count.lex"
+#line 40 "word_count.lex"
 
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 42 "word_count.lex"
+#line 43 "word_count.lex"
 ECHO;
 	YY_BREAK
-#line 779 "word_count.c"
+#line 780 "word_count.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1772,7 +1773,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 42 "word_count.lex"
+#line 43 "word_count.lex"
 
 
     /*=== subroutines section  ===*/
