@@ -1,26 +1,12 @@
-tttt
+*tttt*
 
+ttt
 
-k
-    ttt
-k
++ttt+
 
-
-k
-
++
     tt
-
-    k
-        t
-    k
-
-    t
-
-k
-
-
-k
-    t
-    tttttt
-k
-
+    *t
+    +tttt*ttt*+
+    *
++

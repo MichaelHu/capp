@@ -8,28 +8,33 @@ Grammar
     3  | e
 
     4 e: T
-    5  | K s K
+    5  | E s E
+    6  | P s P
+    7  | error '\n'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-error (256)
+'\n' (10) 7
+error (256) 7
 T (258) 4
-K (259) 5
-KX (260)
+E (259) 5
+P (260) 6
+PX (261)
+EX (262)
 
 
 Nonterminals, with rules where they appear
 
-$accept (6)
+$accept (9)
     on left: 0
-p (7)
+p (10)
     on left: 1, on right: 0
-s (8)
-    on left: 2 3, on right: 1 2 5
-e (9)
-    on left: 4 5, on right: 2 3
+s (11)
+    on left: 2 3, on right: 1 2 5 6
+e (12)
+    on left: 4 5 6 7, on right: 2 3
 
 
 state 0
@@ -39,107 +44,199 @@ state 0
     2 s: . s e
     3  | . e
     4 e: . T
-    5  | . K s K
+    5  | . E s E
+    6  | . P s P
+    7  | . error '\n'
 
-    T  shift, and go to state 1
-    K  shift, and go to state 2
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 3
+    P      shift, and go to state 4
 
-    p  go to state 3
-    s  go to state 4
-    e  go to state 5
+    p  go to state 5
+    s  go to state 6
+    e  go to state 7
 
 
 state 1
+
+    7 e: error . '\n'
+
+    '\n'  shift, and go to state 8
+
+
+state 2
 
     4 e: T .
 
     $default  reduce using rule 4 (e)
 
 
-state 2
+state 3
 
     2 s: . s e
     3  | . e
     4 e: . T
-    5  | . K s K
-    5  | K . s K
+    5  | . E s E
+    5  | E . s E
+    6  | . P s P
+    7  | . error '\n'
 
-    T  shift, and go to state 1
-    K  shift, and go to state 2
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 3
+    P      shift, and go to state 4
 
-    s  go to state 6
-    e  go to state 5
-
-
-state 3
-
-    0 $accept: p . $end
-
-    $end  shift, and go to state 7
+    s  go to state 9
+    e  go to state 7
 
 
 state 4
 
-    1 p: s .  [$end]
-    2 s: s . e
+    2 s: . s e
+    3  | . e
     4 e: . T
-    5  | . K s K
+    5  | . E s E
+    6  | . P s P
+    6  | P . s P
+    7  | . error '\n'
 
-    T  shift, and go to state 1
-    K  shift, and go to state 2
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 3
+    P      shift, and go to state 4
 
-    $default  reduce using rule 1 (p)
-
-    e  go to state 8
+    s  go to state 10
+    e  go to state 7
 
 
 state 5
+
+    0 $accept: p . $end
+
+    $end  shift, and go to state 11
+
+
+state 6
+
+    1 p: s .  [$end]
+    2 s: s . e
+    4 e: . T
+    5  | . E s E
+    6  | . P s P
+    7  | . error '\n'
+
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 3
+    P      shift, and go to state 4
+
+    $end  reduce using rule 1 (p)
+
+    e  go to state 12
+
+
+state 7
 
     3 s: e .
 
     $default  reduce using rule 3 (s)
 
 
-state 6
+state 8
+
+    7 e: error '\n' .
+
+    $default  reduce using rule 7 (e)
+
+
+state 9
 
     2 s: s . e
     4 e: . T
-    5  | . K s K
-    5  | K s . K
+    5  | . E s E
+    5  | E s . E
+    6  | . P s P
+    7  | . error '\n'
 
-    T  shift, and go to state 1
-    K  shift, and go to state 9
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 13
+    P      shift, and go to state 4
 
-    e  go to state 8
+    e  go to state 12
 
 
-state 7
+state 10
+
+    2 s: s . e
+    4 e: . T
+    5  | . E s E
+    6  | . P s P
+    6  | P s . P
+    7  | . error '\n'
+
+    error  shift, and go to state 1
+    T      shift, and go to state 2
+    E      shift, and go to state 3
+    P      shift, and go to state 14
+
+    e  go to state 12
+
+
+state 11
 
     0 $accept: p $end .
 
     $default  accept
 
 
-state 8
+state 12
 
     2 s: s e .
 
     $default  reduce using rule 2 (s)
 
 
-state 9
+state 13
 
     2 s: . s e
     3  | . e
     4 e: . T
-    5  | . K s K  [$end, T, K]
-    5  | K . s K  [$end, T, K]
-    5  | K s K .  [$end, T, K]
+    5  | . E s E  [$end, error, T, E, P]
+    5  | E . s E  [$end, error, T, E, P]
+    5  | E s E .  [$end, error, T, E, P]
+    6  | . P s P
+    7  | . error '\n'
 
     $default  reduce using rule 5 (e)
 
-    s  go to state 6
-    e  go to state 5
+    s  go to state 9
+    e  go to state 7
 
-    Conflict between rule 5 and token T resolved as reduce (T < KX).
-    Conflict between rule 5 and token K resolved as reduce (K < KX).
+    Conflict between rule 5 and token error resolved as reduce (error < EX).
+    Conflict between rule 5 and token T resolved as reduce (T < EX).
+    Conflict between rule 5 and token E resolved as reduce (E < EX).
+    Conflict between rule 5 and token P resolved as reduce (P < EX).
+
+
+state 14
+
+    2 s: . s e
+    3  | . e
+    4 e: . T
+    5  | . E s E
+    6  | . P s P  [$end, error, T, E, P]
+    6  | P . s P  [$end, error, T, E, P]
+    6  | P s P .  [$end, error, T, E, P]
+    7  | . error '\n'
+
+    $default  reduce using rule 6 (e)
+
+    s  go to state 10
+    e  go to state 7
+
+    Conflict between rule 6 and token error resolved as reduce (error < PX).
+    Conflict between rule 6 and token T resolved as reduce (T < PX).
+    Conflict between rule 6 and token E resolved as reduce (E < PX).
+    Conflict between rule 6 and token P resolved as reduce (P < PX).

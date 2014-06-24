@@ -6,6 +6,7 @@
 
 /* prototypes */
 int yylex(void);
+int yylineno;
 void yyerror(char *s);
 char *str_concat(char *s1, char *s2);
 FILE *yyin;
@@ -16,16 +17,16 @@ FILE *yyin;
     char *text;        /* symbol table index */
 };
 
-%token <text> T K
+%token <text> T E
 %type <text> p s e
 
-%nonassoc T K
-%nonassoc KX
+%nonassoc T E P error
+%nonassoc EX PX
 
 %%
 
 p:
-    s                   { printf("<%s>\n", $1); }
+    s                   { printf("%s\n", $1); }
     ;
 
 s:
@@ -35,14 +36,16 @@ s:
 
 e:
     T                   { $$ = $1; }
-    | K s K %prec KX    { $$ = str_concat($1, str_concat($2, $3)); }
+    | E s E %prec EX    { $$ = str_concat("<em>", str_concat($2, "</em>")); }
+    | P s P %prec PX    { $$ = str_concat("<strong>", str_concat($2, "</strong>\n")); }
+    | error '\n'        { $$ = ""; }
     ;
 
 
 %%
 
 void yyerror(char *s) {
-    fprintf(stdout, "%s\n", s);
+    fprintf(stdout, "line %d: %s\n", yylineno, s);
 }
 
 char *str_concat(char *s1, char *s2){
