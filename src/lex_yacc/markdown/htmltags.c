@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include "htmltags.h" 
 
+
 char *str_concat(char *s1, char *s2){
     char *_str;
 
@@ -116,5 +117,6 @@ char *create_codespan(char *s){
     sprintf(_str, format, s); 
     return _str;
 }
+
 
 

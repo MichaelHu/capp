@@ -6,7 +6,7 @@ doyacc:
 dolex:
 	lex -o markdown.lex.c markdown.lex
 
-markdown.out: markdown.lex.o markdown.y.o htmltags.o
+markdown.out: markdown.lex.o markdown.y.o htmltags.o tagstack.o
 	gcc $^ -o $@ -g
 
 ..c.o:

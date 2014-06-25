@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "htmltags.h" 
+#include "tagstack.h" 
 
 /* prototypes */
 int yylex(void);
@@ -32,7 +33,7 @@ int yylineno;
 %%
 
 markdownfile: 
-    lines                       { printf("%s\n", $1); }
+    lines                       { printf("%s%s\n", $1, tag_check_stack(TAG_OTHER)); }
     ;
 
 lines:
@@ -41,16 +42,26 @@ lines:
     ;
 
 line:
-      BLANKLINE                { $$ = ""; }
+      BLANKLINE                { $$ = str_format("%s", tag_check_stack(TAG_OTHER)); }
     | H1 plaintext LINEBREAK                  { $$ = create_hn($2, 1); }  
     | H2 plaintext LINEBREAK                  { $$ = create_hn($2, 2); }   
     | H3 plaintext LINEBREAK                  { $$ = create_hn($2, 3); }   
     | H4 plaintext LINEBREAK                  { $$ = create_hn($2, 4); }  
     | H5 plaintext LINEBREAK                  { $$ = create_hn($2, 5); }  
     | H6 plaintext LINEBREAK                  { $$ = create_hn($2, 6); }   
-    | inlineelements LINEBREAK            { $$ = str_format("<p>%s</p>\n", $1); } 
-    | OLSTART inlineelements LINEBREAK            { $$ = str_format("<li>%s</li>\n", $2); } 
-    | ULSTART inlineelements LINEBREAK            { $$ = str_format("<li>%s</li>\n", $2); } 
+
+    | inlineelements LINEBREAK            { 
+            $$ = str_format("%s%s\n", tag_check_stack(TAG_P), $1); 
+        } 
+
+    | OLSTART inlineelements LINEBREAK            { 
+            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_OL), $2); 
+        } 
+
+    | ULSTART inlineelements LINEBREAK            { 
+            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_UL), $2); 
+        } 
+
     | error LINEBREAK                     { $$ = ""; }
     ;
 
