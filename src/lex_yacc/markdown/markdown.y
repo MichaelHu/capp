@@ -8,6 +8,7 @@
 int yylex(void);
 void yyerror(char *s);
 FILE *yyin;
+int yylineno;
 %}
 
 
@@ -16,15 +17,16 @@ FILE *yyin;
 };
 
     /* bind with terminater */
-%token <text> TEXT SPECIALCHAR
+%token <text> TEXT SPECIALCHAR CODETEXT
 %token H1 H2 H3 H4 H5 H6 
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
-%token DOUBLESTAR DOUBLEUNDERSCORE
+%token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK
 
 %type <text> lines line inlineelements inlineelement plaintext text_list
+%type <text> codespan code_list 
 
-%nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE
+%nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE BACKTICK DOUBLEBACKTICK
 %nonassoc STARX
 
 %%
@@ -47,6 +49,9 @@ line:
     | H5 plaintext LINEBREAK                  { $$ = create_hn($2, 5); }  
     | H6 plaintext LINEBREAK                  { $$ = create_hn($2, 6); }   
     | inlineelements LINEBREAK            { $$ = str_format("<p>%s</p>\n", $1); } 
+    | OLSTART inlineelements LINEBREAK            { $$ = str_format("<li>%s</li>\n", $2); } 
+    | ULSTART inlineelements LINEBREAK            { $$ = str_format("<li>%s</li>\n", $2); } 
+    | error LINEBREAK                     { $$ = ""; }
     ;
 
 inlineelements:  
@@ -63,6 +68,9 @@ inlineelement:
     | DOUBLESTAR inlineelements DOUBLESTAR %prec STARX              { $$ = create_strong($2); }
     | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE %prec STARX  { $$ = create_strong($2); }
 
+    | BACKTICK codespan BACKTICK        { $$ = create_codespan($2); }
+    | DOUBLEBACKTICK codespan DOUBLEBACKTICK        { $$ = create_codespan($2); }
+
     | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_link($2, $5);
                                 } 
@@ -77,14 +85,24 @@ plaintext:
     ;
 
 text_list:
-    TEXT                            { $$ = $1; }
-    | SPECIALCHAR                   { $$ = $1; }
+    TEXT                        { $$ = str_format("%s", $1); }
+    | SPECIALCHAR                   { $$ = str_format("%s", $1); }
+    ;
+
+codespan:
+    codespan code_list             { $$ = str_concat($1, $2); }
+    | code_list                     { $$ = $1; }
+    ;
+
+code_list:
+    CODETEXT                        { $$ = str_format("%s", $1); }
+    | SPECIALCHAR                   { $$ = str_format("%s", $1); }
     ;
 
 %%
 
 void yyerror(char *s) {
-    fprintf(stdout, "%s\n", s);
+    fprintf(stdout, "line %d: %s\n", yylineno, s);
 }
 
 int main(int argc, char **argv){

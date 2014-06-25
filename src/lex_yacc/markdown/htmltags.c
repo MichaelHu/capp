@@ -104,4 +104,17 @@ char *create_strong(char *s){
     return _str;
 }
 
+char *create_codespan(char *s){
+    char *_str,
+        *format = "<code>%s</code>";
+
+    _str = (char *)malloc(
+        strlen(s) 
+        + strlen(format) - 2 
+        + 1
+    );     
+    sprintf(_str, format, s); 
+    return _str;
+}
+
 

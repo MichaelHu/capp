@@ -5,24 +5,41 @@
 
 /* prototypes */
 void yyerror(char *s);
+int yylineno;
 
 %}
 
-%x ESCAPE
+%x ESCAPE CODESPAN XCODESPAN
 
 blankline ^[ \t]*\n
 
 %%
 
-{blankline}                             { return BLANKLINE; }
+{blankline}                             { yylineno++; return BLANKLINE; }
 
 ^>                                      { return LARGERTHAN; }
+
 
 \\                                      { BEGIN ESCAPE; }
 <ESCAPE>[\\`*_{}()#+\-.!]               { BEGIN INITIAL; yylval.text = strdup(yytext); return SPECIALCHAR; }
 <ESCAPE>.                               { BEGIN INITIAL; yylval.text = strdup(yytext); return SPECIALCHAR; }
 
-"`"                                     { return BACKTICK; }
+
+"`"                                     { BEGIN CODESPAN; return BACKTICK; }
+<CODESPAN>\\`                           { yylval.text = strdup(yytext); return SPECIALCHAR; }
+<CODESPAN>`                             { BEGIN INITIAL; return BACKTICK; }
+<CODESPAN>[^`\n]+                       { yylval.text = strdup(yytext); return CODETEXT; }
+
+
+"``"                                     { BEGIN XCODESPAN; return DOUBLEBACKTICK; }
+<XCODESPAN>``                             { BEGIN INITIAL; return DOUBLEBACKTICK; }
+<XCODESPAN>.                              { yylval.text = strdup(yytext); return CODETEXT; }
+
+
+^[*+][ ]+                               { return ULSTART; }
+^[1-9][0-9]*\.[ ]+                      { return OLSTART; }
+
+
 "*"                                     { return STAR; }
 "_"                                     { return UNDERSCORE; }
 "{"                                     { return LEFTCURLY; }
@@ -50,8 +67,11 @@ __                                      { return DOUBLEUNDERSCORE; }
 ^#####                   { return H5; }
 ^######                  { return H6; }
 
-[^#!\-+()\[\]{}_*`\\>\n]+  { yylval.text = strdup(yytext); return TEXT; }
-\n                       { return LINEBREAK; }
+
+
+[^#!\-+()\[\]{}_*`\\>\n.]+  { yylval.text = strdup(yytext); return TEXT; }
+"."                         { yylval.text = strdup(yytext); return TEXT; }
+\n                       { yylineno++; return LINEBREAK; }
 
 
 %%

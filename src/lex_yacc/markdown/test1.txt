@@ -34,6 +34,43 @@ __ **25 8i** __
 UNIQUE      shift, and go to state 1703 **[\\baidu news](http://m.baidu.com)** 241 alter_table_cmd: ADD_P . opt_column columnDef
 
 
+*   Red
+*   Green
+*   Blue
+
+
++   Red
++   Green
++   Blue
 
 
 
+* <a href="url"\>text</a\>
+* <img src="url"\>
+
+
+* This is [an \`example](http://example.com/ "Title") inline link.
+* [This link \< ](http://example.net/) has no title attribute.
+
+10. abc
+
+1.  Bird
+2.  McHale
+3.  Parish
+
+
+1.  Bird
+1.  McHale
+1.  Parish
+
+
+3. Bird
+1. McHale
+8. Parish
+
+`printf("%s", "hello, world!")`
+
+Use the `printf()` function.
+
+
+``There is a literal backtick (`) here.``
