@@ -1,5 +1,5 @@
 
-typedef enum {TAG_NULL, TAG_P, TAG_UL, TAG_OL, TAG_OTHER} t_tag; 
+typedef enum {TAG_NULL, TAG_P, TAG_UL, TAG_OL, TAG_PRE, TAG_OTHER} t_tag; 
 typedef struct { 
     int size;
     t_tag arr[10];

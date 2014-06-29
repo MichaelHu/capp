@@ -9,7 +9,7 @@ int yylineno;
 
 %}
 
-%x ESCAPE CODESPAN XCODESPAN
+%x ESCAPE CODESPAN XCODESPAN CODEBLOCK
 
 blankline ^[ \t]*\n
 
@@ -40,6 +40,11 @@ blankline ^[ \t]*\n
 ^[1-9][0-9]*\.[ ]+                      { return OLSTART; }
 
 
+^(\t|[ ]{4})+                           { BEGIN CODEBLOCK; yylval.text = strdup(yytext); return INDENT; }
+<CODEBLOCK>.+                           { yylval.text = strdup(yytext); return CODETEXT; }
+<CODEBLOCK>\n                           { BEGIN INITIAL; }
+
+
 "*"                                     { return STAR; }
 "_"                                     { return UNDERSCORE; }
 "{"                                     { return LEFTCURLY; }
@@ -49,7 +54,9 @@ blankline ^[ \t]*\n
 "("                                     { return LEFTPARENTHESES; }
 ")"                                     { return RIGHTPARENTHESES; }
 "+"                                     { return PLUS; }
-"-"                                     { return MINUS; }
+    /*
+    "-"                                     { return MINUS; }
+    */
 
 __                                      { return DOUBLEUNDERSCORE; }
 \*\*                                    { return DOUBLESTAR; }
@@ -69,9 +76,9 @@ __                                      { return DOUBLEUNDERSCORE; }
 
 
 
-[^#!\-+()\[\]{}_*`\\>\n.]+  { yylval.text = strdup(yytext); return TEXT; }
-"."                         { yylval.text = strdup(yytext); return TEXT; }
-\n                       { yylineno++; return LINEBREAK; }
+[^#!+()\[\]{}_*`\\\n\t" ".]+  { yylval.text = strdup(yytext); return TEXT; }
+[.\t" "]                        { yylval.text = strdup(yytext); return TEXT; }
+\n                              { yylineno++; return LINEBREAK; }
 
 
 %%

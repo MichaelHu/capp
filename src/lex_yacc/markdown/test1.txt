@@ -1,3 +1,13 @@
+The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra (unwanted) <p> tags around HTML block-level tags.
+
+
+[abc]
+
+{def}
+
+
+this is H2
+----------
 
 # \<h1 text\>
 ## h\2 text
@@ -76,3 +86,28 @@ Use the `printf()` function.
 
 
 ``There is a literal backtick (`) here.``
+
+<script type="text/javascript">
+    document.title = 'hello, markdown.';
+</script>
+
+    <script type="text/javascript">
+        document.title = 'hello, markdown.';
+    </script>
+
+      1 #include <stdlib.h>                      
+      2 #include <stdio.h>                       
+      3 #include <string.h>                      
+      4 #include <stdarg.h>
+      5 #include "htmltags.h" 
+      6 
+      7 
+      8 char *str_concat(char *s1, char *s2){    
+      9     char *_str;                          
+     10 
+     11     _str = (char *)malloc(strlen(s1) + strlen(s2) + 1);     
+     12     sprintf(_str, "%s%s", s1, s2);       
+     13     return _str;                         
+     14 }
+
+

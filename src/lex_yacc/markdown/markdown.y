@@ -18,7 +18,7 @@ int yylineno;
 };
 
     /* bind with terminater */
-%token <text> TEXT SPECIALCHAR CODETEXT
+%token <text> TEXT SPECIALCHAR CODETEXT INDENT
 %token H1 H2 H3 H4 H5 H6 
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
@@ -62,7 +62,12 @@ line:
             $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_UL), $2); 
         } 
 
+    | INDENT CODETEXT                     { $$ = str_format("%s%s", tag_check_stack(TAG_PRE), $2); }  
+
     | error LINEBREAK                     { $$ = ""; }
+    | error RIGHTPARENTHESES              { $$ = ""; }
+    | error RIGHTCURLY                    { $$ = ""; }
+    | error RIGHTSQUARE                   { $$ = ""; }
     ;
 
 inlineelements:  
