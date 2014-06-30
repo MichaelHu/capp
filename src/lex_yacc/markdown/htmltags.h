@@ -9,5 +9,6 @@ char *create_emphasis(char *s);
 char *create_strong(char *s);
 char *create_codespan(char *s);
 
+char *html_escape(char *s);
 
 

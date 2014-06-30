@@ -120,3 +120,58 @@ char *create_codespan(char *s){
 
 
 
+
+
+
+
+/**
+ * < : &lt;
+ * & : &amp;
+ */
+char *html_escape(char *s){
+    int extra_size = 0, 
+        len = strlen(s);
+    char *ret = NULL,
+         *s2 = NULL,
+         *s1 = s;
+
+    while(*s1++){
+        if('<' == *s1){
+            extra_size += 3;
+        }
+        else if('&' == *s1){
+            extra_size += 4;
+        }
+    }
+
+
+    ret = s2 = (char *)malloc(len + extra_size + 1);
+    s1 = s;
+
+    /* 
+    printf("escape target: %s\n", s1);
+    */
+
+    while(*s1){
+        if('<' == *s1){
+            strncpy(s2, "&lt;", 4);
+            s2 += 4;
+        }
+        else if('&' == *s1){
+            strncpy(s2, "&amp;", 5);
+            s2 += 5;
+        }
+        else{
+            *s2++ = *s1;
+        }
+        s1++;
+    }
+    *s2 = '\0';
+
+    /* 
+    printf("escape result: %s\n", ret);
+    */
+    return ret;
+}
+
+

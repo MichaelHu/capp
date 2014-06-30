@@ -27,7 +27,7 @@ int yylineno;
 %type <text> lines line inlineelements inlineelement plaintext text_list
 %type <text> codespan code_list 
 
-%nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE BACKTICK DOUBLEBACKTICK
+%nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE BACKTICK DOUBLEBACKTICK error
 %nonassoc STARX
 
 %%
@@ -62,12 +62,9 @@ line:
             $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_UL), $2); 
         } 
 
-    | INDENT CODETEXT                     { $$ = str_format("%s%s", tag_check_stack(TAG_PRE), $2); }  
-
-    | error LINEBREAK                     { $$ = ""; }
-    | error RIGHTPARENTHESES              { $$ = ""; }
-    | error RIGHTCURLY                    { $$ = ""; }
-    | error RIGHTSQUARE                   { $$ = ""; }
+    | INDENT CODETEXT                     { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_PRE), html_escape($2) ); 
+        }  
     ;
 
 inlineelements:  
@@ -84,7 +81,7 @@ inlineelement:
     | DOUBLESTAR inlineelements DOUBLESTAR %prec STARX              { $$ = create_strong($2); }
     | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE %prec STARX  { $$ = create_strong($2); }
 
-    | BACKTICK codespan BACKTICK        { $$ = create_codespan($2); }
+    | BACKTICK codespan BACKTICK        { $$ = create_codespan( html_escape($2) ); }
     | DOUBLEBACKTICK codespan DOUBLEBACKTICK        { $$ = create_codespan($2); }
 
     | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
@@ -93,6 +90,11 @@ inlineelement:
     | EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_image($3, $6);
                                 } 
+
+    | error LINEBREAK                     { $$ = ""; }
+    | error RIGHTPARENTHESES              { $$ = ""; }
+    | error RIGHTCURLY                    { $$ = ""; }
+    | error RIGHTSQUARE                   { $$ = ""; }
     ;
 
 plaintext:
@@ -118,7 +120,7 @@ code_list:
 %%
 
 void yyerror(char *s) {
-    fprintf(stdout, "line %d: %s\n", yylineno, s);
+    fprintf(stderr, "line %d: %s\n", yylineno, s);
 }
 
 int main(int argc, char **argv){

@@ -42,7 +42,7 @@ blankline ^[ \t]*\n
 
 ^(\t|[ ]{4})+                           { BEGIN CODEBLOCK; yylval.text = strdup(yytext); return INDENT; }
 <CODEBLOCK>.+                           { yylval.text = strdup(yytext); return CODETEXT; }
-<CODEBLOCK>\n                           { BEGIN INITIAL; }
+<CODEBLOCK>\n                           { BEGIN INITIAL; yylineno++; }
 
 
 "*"                                     { return STAR; }
@@ -77,7 +77,7 @@ __                                      { return DOUBLEUNDERSCORE; }
 
 
 [^#!+()\[\]{}_*`\\\n\t" ".]+  { yylval.text = strdup(yytext); return TEXT; }
-[.\t" "]                        { yylval.text = strdup(yytext); return TEXT; }
+[.\t" "]                       { yylval.text = strdup(yytext); return TEXT; }
 \n                              { yylineno++; return LINEBREAK; }
 
 

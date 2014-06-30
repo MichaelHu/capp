@@ -55,7 +55,7 @@ The only restrictions are that block-level HTML elements — e.g. <div>, <table>
 &lt;
 &amp;
 
-http://images.google.com/images?num=30&amp;q=larry+bird
+http://images.google.com/images?num=30&amp;q=larry\+bird
 
 4 < 5
 
