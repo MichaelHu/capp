@@ -13,7 +13,7 @@ this is H2
 
 
 
-The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra (unwanted) <p> tags around HTML block-level tags.
+The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra \(unwanted\) <p> tags around HTML block-level tags.
 
 
 
@@ -85,7 +85,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 > 
 > Here's some example code:
 > 
->     return shell_exec("echo $input | $markdown_script");
+>     return shell_exec\("echo $input | $markdown_script"\);
 
 
 *   Red
@@ -228,17 +228,19 @@ end tell
 Regular Markdown syntax is not processed within code blocks. E.g., asterisks are just literal asterisks within a code block.
 
 
+## to be implemented
+
 <hr />
 
-* * *
+    * * *
 
-***
+    ***
 
-*****
+    *****
 
-- - -
+    - - -
 
----------------------------------------
+    ---------------------------------------
 
 
 
@@ -258,30 +260,30 @@ title attribute.</p>
 
 
 
+## to be implemented
 
+    This is [an example][id] reference-style link.
+    This is [an example] [id] reference-style link.
 
-This is [an example][id] reference-style link.
-This is [an example] [id] reference-style link.
-
-[id]: http://example.com/  "Optional Title Here"
-
-
-
-
-[foo]: http://example.com/  "Optional Title Here"
-[foo]: http://example.com/  'Optional Title Here'
-[foo]: http://example.com/  (Optional Title Here)
-
-
-[id]: http://example.com/longish/path/to/resource/here
-    "Optional Title Here"
+    [id]: http://example.com/  "Optional Title Here"
 
 
 
 
-[Google][]
+    [foo]: http://example.com/  "Optional Title Here"
+    [foo]: http://example.com/  'Optional Title Here'
+    [foo]: http://example.com/  (Optional Title Here)
 
-[Google]: http://google.com/
+
+    [id]: http://example.com/longish/path/to/resource/here
+        "Optional Title Here"
+
+
+
+
+    [Google][]
+
+    [Google]: http://google.com/
 
 
 
@@ -325,12 +327,12 @@ un*frigging*believable
 Use the `printf()` function.
 
 
-<p>Use the <code>printf()</code> function.</p>
+    <p>Use the <code>printf()</code> function.</p>
 
 
 ``There is a literal backtick (`) here.``
 
-<p><code>There is a literal backtick (`) here.</code></p>
+    <p><code>There is a literal backtick (`) here.</code></p>
 
 
 
@@ -342,9 +344,9 @@ A single backtick in a code span: `` ` ``
 A backtick-delimited string in a code span: `` `foo` ``
 
 
-<p>A single backtick in a code span: <code>`</code></p>
+    <p>A single backtick in a code span: <code>`</code></p>
 
-<p>A backtick-delimited string in a code span: <code>`foo`</code></p>
+    <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
 
 
 
@@ -379,9 +381,11 @@ inline images:
 
 reference images:
 
-![Alt text][id]
+## to be implemented
 
-[id]: url/to/image  "Optional title attribute"
+    ![Alt text][id]
+
+    [id]: url/to/image  "Optional title attribute"
 
 
 
@@ -420,14 +424,14 @@ reference images:
 
 
 
+## to be implemented
 
-
-a / b;
-// comment
-var c = a / 5;
-////////
-/^\s+|\s+$/.test("   hello, world!   ");
-a/b/c
+    a / b;
+    // comment
+    var c = a / 5;
+    ////////
+    /^\s+|\s+$/.test("   hello, world!   ");
+    a/b/c
 
 
 

@@ -20,9 +20,10 @@ int yylineno;
     /* bind with terminater */
 %token <text> TEXT SPECIALCHAR CODETEXT INDENT
 %token H1 H2 H3 H4 H5 H6 
+%token QUOTEH1 QUOTEH2 QUOTEH3 QUOTEH4 QUOTEH5 QUOTEH6 
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
-%token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK
+%token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK QUOTEBLANKLINE QUOTEOLSTART QUOTEULSTART
 
 %type <text> lines line inlineelements inlineelement plaintext text_list
 %type <text> codespan code_list 
@@ -43,23 +44,61 @@ lines:
 
 line:
       BLANKLINE                { $$ = str_format("%s", tag_check_stack(TAG_OTHER)); }
+    | QUOTEBLANKLINE           { $$ = str_format("%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE)); }
+
     | H1 plaintext LINEBREAK                  { $$ = create_hn($2, 1); }  
+    | QUOTEH1 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 1)); 
+        }   
+
     | H2 plaintext LINEBREAK                  { $$ = create_hn($2, 2); }   
+    | QUOTEH2 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 2)); 
+        }   
+
     | H3 plaintext LINEBREAK                  { $$ = create_hn($2, 3); }   
+    | QUOTEH3 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 3)); 
+        }   
+
     | H4 plaintext LINEBREAK                  { $$ = create_hn($2, 4); }  
+    | QUOTEH4 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 4)); 
+        }   
+
     | H5 plaintext LINEBREAK                  { $$ = create_hn($2, 5); }  
+    | QUOTEH5 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 5)); 
+        }   
+
     | H6 plaintext LINEBREAK                  { $$ = create_hn($2, 6); }   
+    | QUOTEH6 plaintext LINEBREAK             { 
+            $$ = str_format("%s%s", tag_check_stack(TAG_OTHER_IN_BLOCKQUOTE), create_hn($2, 6)); 
+        }   
+
 
     | inlineelements LINEBREAK            { 
             $$ = str_format("%s%s\n", tag_check_stack(TAG_P), $1); 
+        } 
+
+    | LARGERTHAN inlineelements LINEBREAK            { 
+            $$ = str_format("%s%s\n", tag_check_stack(TAG_P_IN_BLOCKQUOTE), $2); 
         } 
 
     | OLSTART inlineelements LINEBREAK            { 
             $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_OL), $2); 
         } 
 
+    | QUOTEOLSTART inlineelements LINEBREAK            { 
+            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_OL_IN_BLOCKQUOTE), $2); 
+        } 
+
     | ULSTART inlineelements LINEBREAK            { 
             $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_UL), $2); 
+        } 
+
+    | QUOTEULSTART inlineelements LINEBREAK            { 
+            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_UL_IN_BLOCKQUOTE), $2); 
         } 
 
     | INDENT CODETEXT                     { 

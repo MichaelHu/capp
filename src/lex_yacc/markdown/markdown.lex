@@ -12,10 +12,12 @@ int yylineno;
 %x ESCAPE CODESPAN XCODESPAN CODEBLOCK
 
 blankline ^[ \t]*\n
+quoteblankline ^>[ \t]*\n
 
 %%
 
 {blankline}                             { yylineno++; return BLANKLINE; }
+{quoteblankline}                        { yylineno++; return QUOTEBLANKLINE; }
 
 ^>                                      { return LARGERTHAN; }
 
@@ -31,13 +33,15 @@ blankline ^[ \t]*\n
 <CODESPAN>[^`\n]+                       { yylval.text = strdup(yytext); return CODETEXT; }
 
 
-"``"                                     { BEGIN XCODESPAN; return DOUBLEBACKTICK; }
-<XCODESPAN>``                             { BEGIN INITIAL; return DOUBLEBACKTICK; }
-<XCODESPAN>.                              { yylval.text = strdup(yytext); return CODETEXT; }
+"``"                                    { BEGIN XCODESPAN; return DOUBLEBACKTICK; }
+<XCODESPAN>``                           { BEGIN INITIAL; return DOUBLEBACKTICK; }
+<XCODESPAN>.                            { yylval.text = strdup(yytext); return CODETEXT; }
 
 
-^[*+][ ]+                               { return ULSTART; }
+^[*+-][ ]+                              { return ULSTART; }
+^>" "+[*+-][ ]+                         { return QUOTEULSTART; }
 ^[1-9][0-9]*\.[ ]+                      { return OLSTART; }
+^>" "+[1-9][0-9]*\.[ ]+                 { return QUOTEOLSTART; }
 
 
 ^(\t|[ ]{4})+                           { BEGIN CODEBLOCK; yylval.text = strdup(yytext); return INDENT; }
@@ -73,6 +77,13 @@ __                                      { return DOUBLEUNDERSCORE; }
 ^####                    { return H4; }
 ^#####                   { return H5; }
 ^######                  { return H6; }
+
+^>" "+#                       { return QUOTEH1; }
+^>" "+##                      { return QUOTEH2; }
+^>" "+###                     { return QUOTEH3; }
+^>" "+####                    { return QUOTEH4; }
+^>" "+#####                   { return QUOTEH5; }
+^>" "+######                  { return QUOTEH6; }
 
 
 
