@@ -3,6 +3,7 @@ Terminals which are not used
    MINUS
    PLUS
    LEFTCURLY
+   RIGHTCURLY
 
 
 Grammar
@@ -33,48 +34,58 @@ Grammar
    20     | OLSTART inlineelements LINEBREAK
    21     | QUOTEOLSTART inlineelements LINEBREAK
    22     | ULSTART inlineelements LINEBREAK
-   23     | QUOTEULSTART inlineelements LINEBREAK
-   24     | INDENT CODETEXT
+   23     | INDENT ULSTART inlineelements LINEBREAK
+   24     | QUOTEULSTART inlineelements LINEBREAK
+   25     | INDENT inlineelements LINEBREAK
+   26     | INDENT CODETEXT
+   27     | error LINEBREAK
 
-   25 inlineelements: inlineelements inlineelement
-   26               | inlineelement
+   28 inlineelements: inlineelements inlineelement
+   29               | inlineelement
 
-   27 inlineelement: TEXT
-   28              | SPECIALCHAR
-   29              | STAR inlineelements STAR
-   30              | UNDERSCORE inlineelements UNDERSCORE
-   31              | DOUBLESTAR inlineelements DOUBLESTAR
-   32              | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | BACKTICK codespan BACKTICK
-   34              | DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | error LINEBREAK
-   38              | error RIGHTPARENTHESES
-   39              | error RIGHTCURLY
-   40              | error RIGHTSQUARE
+   30 inlineelement: TEXT
+   31              | SPECIALCHAR
+   32              | STAR inlineelements STAR
+   33              | UNDERSCORE inlineelements UNDERSCORE
+   34              | DOUBLESTAR inlineelements DOUBLESTAR
+   35              | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | BACKTICK codespan BACKTICK
+   37              | DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | BACKTICK error LINEBREAK
+   41              | DOUBLEBACKTICK error LINEBREAK
+   42              | LEFTPARENTHESES error LINEBREAK
+   43              | RIGHTPARENTHESES error LINEBREAK
+   44              | LEFTSQUARE error LINEBREAK
+   45              | RIGHTSQUARE error LINEBREAK
+   46              | EXCLAMATION error LINEBREAK
+   47              | STAR error LINEBREAK
+   48              | DOUBLESTAR error LINEBREAK
+   49              | UNDERSCORE error LINEBREAK
+   50              | DOUBLEUNDERSCORE error LINEBREAK
 
-   41 plaintext: plaintext text_list
-   42          | text_list
+   51 plaintext: plaintext text_list
+   52          | text_list
 
-   43 text_list: TEXT
-   44          | SPECIALCHAR
+   53 text_list: TEXT
+   54          | SPECIALCHAR
 
-   45 codespan: codespan code_list
-   46         | code_list
+   55 codespan: codespan code_list
+   56         | code_list
 
-   47 code_list: CODETEXT
-   48          | SPECIALCHAR
+   57 code_list: CODETEXT
+   58          | SPECIALCHAR
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-error (256) 37 38 39 40
-TEXT (258) 27 43
-SPECIALCHAR (259) 28 44 48
-CODETEXT (260) 24 47
-INDENT (261) 24
+error (256) 27 40 41 42 43 44 45 46 47 48 49 50
+TEXT (258) 30 53
+SPECIALCHAR (259) 31 54 58
+CODETEXT (260) 26 57
+INDENT (261) 23 25 26
 H1 (262) 6
 H2 (263) 8
 H3 (264) 10
@@ -87,29 +98,30 @@ QUOTEH3 (270) 11
 QUOTEH4 (271) 13
 QUOTEH5 (272) 15
 QUOTEH6 (273) 17
-EXCLAMATION (274) 36
+EXCLAMATION (274) 39 46
 MINUS (275)
 PLUS (276)
-RIGHTPARENTHESES (277) 35 36 38
-LEFTPARENTHESES (278) 35 36
-RIGHTSQUARE (279) 35 36 40
-LEFTSQUARE (280) 35 36
+RIGHTPARENTHESES (277) 38 39 43
+LEFTPARENTHESES (278) 38 39 42
+RIGHTSQUARE (279) 38 39 45
+LEFTSQUARE (280) 38 39 44
 LEFTCURLY (281)
-RIGHTCURLY (282) 39
-UNDERSCORE (283) 30
-STAR (284) 29
-BACKTICK (285) 33
+RIGHTCURLY (282)
+UNDERSCORE (283) 33 49
+STAR (284) 32 47
+BACKTICK (285) 36 40
 BLANKLINE (286) 4
-LINEBREAK (287) 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 37
+LINEBREAK (287) 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+    25 27 40 41 42 43 44 45 46 47 48 49 50
 LARGERTHAN (288) 19
-DOUBLESTAR (289) 31
-DOUBLEUNDERSCORE (290) 32
+DOUBLESTAR (289) 34 48
+DOUBLEUNDERSCORE (290) 35 50
 OLSTART (291) 20
-ULSTART (292) 22
-DOUBLEBACKTICK (293) 34
+ULSTART (292) 22 23
+DOUBLEBACKTICK (293) 37 41
 QUOTEBLANKLINE (294) 5
 QUOTEOLSTART (295) 21
-QUOTEULSTART (296) 23
+QUOTEULSTART (296) 24
 STARX (297)
 
 
@@ -123,21 +135,21 @@ lines (45)
     on left: 2 3, on right: 1 2
 line (46)
     on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-    24, on right: 2
+    24 25 26 27, on right: 2
 inlineelements (47)
-    on left: 25 26, on right: 18 19 20 21 22 23 25 29 30 31 32
+    on left: 28 29, on right: 18 19 20 21 22 23 24 25 28 32 33 34 35
 inlineelement (48)
-    on left: 27 28 29 30 31 32 33 34 35 36 37 38 39 40,
-    on right: 25 26
+    on left: 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+    48 49 50, on right: 28 29
 plaintext (49)
-    on left: 41 42, on right: 6 7 8 9 10 11 12 13 14 15 16 17 35 36
-    41
+    on left: 51 52, on right: 6 7 8 9 10 11 12 13 14 15 16 17 38 39
+    51
 text_list (50)
-    on left: 43 44, on right: 41 42
+    on left: 53 54, on right: 51 52
 codespan (51)
-    on left: 45 46, on right: 33 34 45
+    on left: 55 56, on right: 36 37 55
 code_list (52)
-    on left: 47 48, on right: 45 46
+    on left: 57 58, on right: 55 56
 
 
 state 0
@@ -183,24 +195,34 @@ state 2
    20     | . OLSTART inlineelements LINEBREAK
    21     | . QUOTEOLSTART inlineelements LINEBREAK
    22     | . ULSTART inlineelements LINEBREAK
-   23     | . QUOTEULSTART inlineelements LINEBREAK
-   24     | . INDENT CODETEXT
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   23     | . INDENT ULSTART inlineelements LINEBREAK
+   24     | . QUOTEULSTART inlineelements LINEBREAK
+   25     | . INDENT inlineelements LINEBREAK
+   26     | . INDENT CODETEXT
+   27     | . error LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
     error             shift, and go to state 4
     TEXT              shift, and go to state 5
@@ -219,26 +241,29 @@ state 2
     QUOTEH5           shift, and go to state 18
     QUOTEH6           shift, and go to state 19
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    BLANKLINE         shift, and go to state 25
-    LARGERTHAN        shift, and go to state 26
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    OLSTART           shift, and go to state 29
-    ULSTART           shift, and go to state 30
-    DOUBLEBACKTICK    shift, and go to state 31
-    QUOTEBLANKLINE    shift, and go to state 32
-    QUOTEOLSTART      shift, and go to state 33
-    QUOTEULSTART      shift, and go to state 34
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    BLANKLINE         shift, and go to state 28
+    LARGERTHAN        shift, and go to state 29
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    OLSTART           shift, and go to state 32
+    ULSTART           shift, and go to state 33
+    DOUBLEBACKTICK    shift, and go to state 34
+    QUOTEBLANKLINE    shift, and go to state 35
+    QUOTEOLSTART      shift, and go to state 36
+    QUOTEULSTART      shift, and go to state 37
 
     $end  reduce using rule 1 (markdownfile)
 
-    line            go to state 35
-    inlineelements  go to state 36
-    inlineelement   go to state 37
+    line            go to state 38
+    inlineelements  go to state 39
+    inlineelement   go to state 40
 
 
 state 3
@@ -250,1564 +275,2004 @@ state 3
 
 state 4
 
-   37 inlineelement: error . LINEBREAK
-   38              | error . RIGHTPARENTHESES
-   39              | error . RIGHTCURLY
-   40              | error . RIGHTSQUARE
+   27 line: error . LINEBREAK
 
-    RIGHTPARENTHESES  shift, and go to state 38
-    RIGHTSQUARE       shift, and go to state 39
-    RIGHTCURLY        shift, and go to state 40
-    LINEBREAK         shift, and go to state 41
+    LINEBREAK  shift, and go to state 41
 
 
 state 5
 
-   27 inlineelement: TEXT .
+   30 inlineelement: TEXT .
 
-    $default  reduce using rule 27 (inlineelement)
+    $default  reduce using rule 30 (inlineelement)
 
 
 state 6
 
-   28 inlineelement: SPECIALCHAR .
+   31 inlineelement: SPECIALCHAR .
 
-    $default  reduce using rule 28 (inlineelement)
+    $default  reduce using rule 31 (inlineelement)
 
 
 state 7
 
-   24 line: INDENT . CODETEXT
+   23 line: INDENT . ULSTART inlineelements LINEBREAK
+   25     | INDENT . inlineelements LINEBREAK
+   26     | INDENT . CODETEXT
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    CODETEXT  shift, and go to state 42
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    CODETEXT          shift, and go to state 42
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    ULSTART           shift, and go to state 43
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 44
+    inlineelement   go to state 40
 
 
 state 8
 
     6 line: H1 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 45
-    text_list  go to state 46
+    plaintext  go to state 47
+    text_list  go to state 48
 
 
 state 9
 
     8 line: H2 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 47
-    text_list  go to state 46
+    plaintext  go to state 49
+    text_list  go to state 48
 
 
 state 10
 
    10 line: H3 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 48
-    text_list  go to state 46
+    plaintext  go to state 50
+    text_list  go to state 48
 
 
 state 11
 
    12 line: H4 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 49
-    text_list  go to state 46
+    plaintext  go to state 51
+    text_list  go to state 48
 
 
 state 12
 
    14 line: H5 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 50
-    text_list  go to state 46
+    plaintext  go to state 52
+    text_list  go to state 48
 
 
 state 13
 
    16 line: H6 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 51
-    text_list  go to state 46
+    plaintext  go to state 53
+    text_list  go to state 48
 
 
 state 14
 
     7 line: QUOTEH1 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 52
-    text_list  go to state 46
+    plaintext  go to state 54
+    text_list  go to state 48
 
 
 state 15
 
     9 line: QUOTEH2 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 53
-    text_list  go to state 46
+    plaintext  go to state 55
+    text_list  go to state 48
 
 
 state 16
 
    11 line: QUOTEH3 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 54
-    text_list  go to state 46
+    plaintext  go to state 56
+    text_list  go to state 48
 
 
 state 17
 
    13 line: QUOTEH4 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 55
-    text_list  go to state 46
+    plaintext  go to state 57
+    text_list  go to state 48
 
 
 state 18
 
    15 line: QUOTEH5 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 56
-    text_list  go to state 46
+    plaintext  go to state 58
+    text_list  go to state 48
 
 
 state 19
 
    17 line: QUOTEH6 . plaintext LINEBREAK
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 57
-    text_list  go to state 46
+    plaintext  go to state 59
+    text_list  go to state 48
 
 
 state 20
 
-   36 inlineelement: EXCLAMATION . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39 inlineelement: EXCLAMATION . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   46              | EXCLAMATION . error LINEBREAK
 
-    LEFTSQUARE  shift, and go to state 58
+    error       shift, and go to state 60
+    LEFTSQUARE  shift, and go to state 61
 
 
 state 21
 
-   35 inlineelement: LEFTSQUARE . plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   43 inlineelement: RIGHTPARENTHESES . error LINEBREAK
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-
-    plaintext  go to state 59
-    text_list  go to state 46
+    error  shift, and go to state 62
 
 
 state 22
 
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   30              | UNDERSCORE . inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   42 inlineelement: LEFTPARENTHESES . error LINEBREAK
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelements  go to state 60
-    inlineelement   go to state 37
+    error  shift, and go to state 63
 
 
 state 23
 
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   29              | STAR . inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   45 inlineelement: RIGHTSQUARE . error LINEBREAK
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelements  go to state 61
-    inlineelement   go to state 37
+    error  shift, and go to state 64
 
 
 state 24
 
-   33 inlineelement: BACKTICK . codespan BACKTICK
-   45 codespan: . codespan code_list
-   46         | . code_list
-   47 code_list: . CODETEXT
-   48          | . SPECIALCHAR
+   38 inlineelement: LEFTSQUARE . plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   44              | LEFTSQUARE . error LINEBREAK
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    SPECIALCHAR  shift, and go to state 62
-    CODETEXT     shift, and go to state 63
+    error        shift, and go to state 65
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    codespan   go to state 64
-    code_list  go to state 65
+    plaintext  go to state 66
+    text_list  go to state 48
 
 
 state 25
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   33              | UNDERSCORE . inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   49              | UNDERSCORE . error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    error             shift, and go to state 67
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 68
+    inlineelement   go to state 40
+
+
+state 26
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   32              | STAR . inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   47              | STAR . error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    error             shift, and go to state 69
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 70
+    inlineelement   go to state 40
+
+
+state 27
+
+   36 inlineelement: BACKTICK . codespan BACKTICK
+   40              | BACKTICK . error LINEBREAK
+   55 codespan: . codespan code_list
+   56         | . code_list
+   57 code_list: . CODETEXT
+   58          | . SPECIALCHAR
+
+    error        shift, and go to state 71
+    SPECIALCHAR  shift, and go to state 72
+    CODETEXT     shift, and go to state 73
+
+    codespan   go to state 74
+    code_list  go to state 75
+
+
+state 28
 
     4 line: BLANKLINE .
 
     $default  reduce using rule 4 (line)
 
 
-state 26
-
-   19 line: LARGERTHAN . inlineelements LINEBREAK
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
-
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelements  go to state 66
-    inlineelement   go to state 37
-
-
-state 27
-
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   31              | DOUBLESTAR . inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
-
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelements  go to state 67
-    inlineelement   go to state 37
-
-
-state 28
-
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   32              | DOUBLEUNDERSCORE . inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
-
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelements  go to state 68
-    inlineelement   go to state 37
-
-
 state 29
 
-   20 line: OLSTART . inlineelements LINEBREAK
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   19 line: LARGERTHAN . inlineelements LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelements  go to state 69
-    inlineelement   go to state 37
+    inlineelements  go to state 76
+    inlineelement   go to state 40
 
 
 state 30
 
-   22 line: ULSTART . inlineelements LINEBREAK
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   34              | DOUBLESTAR . inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   48              | DOUBLESTAR . error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
+    error             shift, and go to state 77
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelements  go to state 70
-    inlineelement   go to state 37
+    inlineelements  go to state 78
+    inlineelement   go to state 40
 
 
 state 31
 
-   34 inlineelement: DOUBLEBACKTICK . codespan DOUBLEBACKTICK
-   45 codespan: . codespan code_list
-   46         | . code_list
-   47 code_list: . CODETEXT
-   48          | . SPECIALCHAR
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   35              | DOUBLEUNDERSCORE . inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+   50              | DOUBLEUNDERSCORE . error LINEBREAK
 
-    SPECIALCHAR  shift, and go to state 62
-    CODETEXT     shift, and go to state 63
+    error             shift, and go to state 79
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    codespan   go to state 71
-    code_list  go to state 65
+    inlineelements  go to state 80
+    inlineelement   go to state 40
 
 
 state 32
+
+   20 line: OLSTART . inlineelements LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 81
+    inlineelement   go to state 40
+
+
+state 33
+
+   22 line: ULSTART . inlineelements LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 82
+    inlineelement   go to state 40
+
+
+state 34
+
+   37 inlineelement: DOUBLEBACKTICK . codespan DOUBLEBACKTICK
+   41              | DOUBLEBACKTICK . error LINEBREAK
+   55 codespan: . codespan code_list
+   56         | . code_list
+   57 code_list: . CODETEXT
+   58          | . SPECIALCHAR
+
+    error        shift, and go to state 83
+    SPECIALCHAR  shift, and go to state 72
+    CODETEXT     shift, and go to state 73
+
+    codespan   go to state 84
+    code_list  go to state 75
+
+
+state 35
 
     5 line: QUOTEBLANKLINE .
 
     $default  reduce using rule 5 (line)
 
 
-state 33
+state 36
 
    21 line: QUOTEOLSTART . inlineelements LINEBREAK
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelements  go to state 72
-    inlineelement   go to state 37
+    inlineelements  go to state 85
+    inlineelement   go to state 40
 
 
-state 34
+state 37
 
-   23 line: QUOTEULSTART . inlineelements LINEBREAK
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   24 line: QUOTEULSTART . inlineelements LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelements  go to state 73
-    inlineelement   go to state 37
+    inlineelements  go to state 86
+    inlineelement   go to state 40
 
 
-state 35
+state 38
 
     2 lines: lines line .
 
     $default  reduce using rule 2 (lines)
 
 
-state 36
+state 39
 
    18 line: inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 74
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 87
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelement  go to state 75
-
-
-state 37
-
-   26 inlineelements: inlineelement .
-
-    $default  reduce using rule 26 (inlineelements)
-
-
-state 38
-
-   38 inlineelement: error RIGHTPARENTHESES .
-
-    $default  reduce using rule 38 (inlineelement)
-
-
-state 39
-
-   40 inlineelement: error RIGHTSQUARE .
-
-    $default  reduce using rule 40 (inlineelement)
+    inlineelement  go to state 88
 
 
 state 40
 
-   39 inlineelement: error RIGHTCURLY .
+   29 inlineelements: inlineelement .
 
-    $default  reduce using rule 39 (inlineelement)
+    $default  reduce using rule 29 (inlineelements)
 
 
 state 41
 
-   37 inlineelement: error LINEBREAK .
+   27 line: error LINEBREAK .
 
-    $default  reduce using rule 37 (inlineelement)
+    $default  reduce using rule 27 (line)
 
 
 state 42
 
-   24 line: INDENT CODETEXT .
+   26 line: INDENT CODETEXT .
 
-    $default  reduce using rule 24 (line)
+    $default  reduce using rule 26 (line)
 
 
 state 43
 
-   43 text_list: TEXT .
+   23 line: INDENT ULSTART . inlineelements LINEBREAK
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    $default  reduce using rule 43 (text_list)
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelements  go to state 89
+    inlineelement   go to state 40
 
 
 state 44
 
-   44 text_list: SPECIALCHAR .
+   25 line: INDENT inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    $default  reduce using rule 44 (text_list)
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 90
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
 
 
 state 45
 
-    6 line: H1 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   53 text_list: TEXT .
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 76
-
-    text_list  go to state 77
+    $default  reduce using rule 53 (text_list)
 
 
 state 46
 
-   42 plaintext: text_list .
+   54 text_list: SPECIALCHAR .
 
-    $default  reduce using rule 42 (plaintext)
+    $default  reduce using rule 54 (text_list)
 
 
 state 47
 
-    8 line: H2 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+    6 line: H1 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 78
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 91
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 48
 
-   10 line: H3 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   52 plaintext: text_list .
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 79
-
-    text_list  go to state 77
+    $default  reduce using rule 52 (plaintext)
 
 
 state 49
 
-   12 line: H4 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+    8 line: H2 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 80
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 93
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 50
 
-   14 line: H5 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   10 line: H3 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 81
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 94
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 51
 
-   16 line: H6 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   12 line: H4 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 82
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 95
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 52
 
-    7 line: QUOTEH1 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   14 line: H5 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 83
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 96
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 53
 
-    9 line: QUOTEH2 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   16 line: H6 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 84
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 97
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 54
 
-   11 line: QUOTEH3 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+    7 line: QUOTEH1 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 85
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 98
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 55
 
-   13 line: QUOTEH4 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+    9 line: QUOTEH2 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 86
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 99
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 56
 
-   15 line: QUOTEH5 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   11 line: QUOTEH3 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 87
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 100
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 57
 
-   17 line: QUOTEH6 plaintext . LINEBREAK
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   13 line: QUOTEH4 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    LINEBREAK    shift, and go to state 88
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 101
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 58
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE . plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   15 line: QUOTEH5 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 102
 
-    plaintext  go to state 89
-    text_list  go to state 46
+    text_list  go to state 92
 
 
 state 59
 
-   35 inlineelement: LEFTSQUARE plaintext . RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   17 line: QUOTEH6 plaintext . LINEBREAK
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    RIGHTSQUARE  shift, and go to state 90
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    LINEBREAK    shift, and go to state 103
 
-    text_list  go to state 77
+    text_list  go to state 92
 
 
 state 60
 
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   30              | UNDERSCORE inlineelements . UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   46 inlineelement: EXCLAMATION error . LINEBREAK
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 91
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelement  go to state 75
+    LINEBREAK  shift, and go to state 104
 
 
 state 61
 
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   29              | STAR inlineelements . STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   39 inlineelement: EXCLAMATION LEFTSQUARE . plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 92
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    inlineelement  go to state 75
+    plaintext  go to state 105
+    text_list  go to state 48
 
 
 state 62
 
-   48 code_list: SPECIALCHAR .
+   43 inlineelement: RIGHTPARENTHESES error . LINEBREAK
 
-    $default  reduce using rule 48 (code_list)
+    LINEBREAK  shift, and go to state 106
 
 
 state 63
 
-   47 code_list: CODETEXT .
+   42 inlineelement: LEFTPARENTHESES error . LINEBREAK
 
-    $default  reduce using rule 47 (code_list)
+    LINEBREAK  shift, and go to state 107
 
 
 state 64
 
-   33 inlineelement: BACKTICK codespan . BACKTICK
-   45 codespan: codespan . code_list
-   47 code_list: . CODETEXT
-   48          | . SPECIALCHAR
+   45 inlineelement: RIGHTSQUARE error . LINEBREAK
 
-    SPECIALCHAR  shift, and go to state 62
-    CODETEXT     shift, and go to state 63
-    BACKTICK     shift, and go to state 93
-
-    code_list  go to state 94
+    LINEBREAK  shift, and go to state 108
 
 
 state 65
 
-   46 codespan: code_list .
+   44 inlineelement: LEFTSQUARE error . LINEBREAK
 
-    $default  reduce using rule 46 (codespan)
+    LINEBREAK  shift, and go to state 109
 
 
 state 66
 
-   19 line: LARGERTHAN inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   38 inlineelement: LEFTSQUARE plaintext . RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 95
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    RIGHTSQUARE  shift, and go to state 110
 
-    inlineelement  go to state 75
+    text_list  go to state 92
 
 
 state 67
 
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   31              | DOUBLESTAR inlineelements . DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   49 inlineelement: UNDERSCORE error . LINEBREAK
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 96
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelement  go to state 75
+    LINEBREAK  shift, and go to state 111
 
 
 state 68
 
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   32              | DOUBLEUNDERSCORE inlineelements . DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   33              | UNDERSCORE inlineelements . UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 97
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 112
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelement  go to state 75
+    inlineelement  go to state 88
 
 
 state 69
 
-   20 line: OLSTART inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   47 inlineelement: STAR error . LINEBREAK
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 98
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelement  go to state 75
+    LINEBREAK  shift, and go to state 113
 
 
 state 70
 
-   22 line: ULSTART inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   32              | STAR inlineelements . STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
 
-    error             shift, and go to state 4
     TEXT              shift, and go to state 5
     SPECIALCHAR       shift, and go to state 6
     EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 99
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 114
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
 
-    inlineelement  go to state 75
+    inlineelement  go to state 88
 
 
 state 71
 
-   34 inlineelement: DOUBLEBACKTICK codespan . DOUBLEBACKTICK
-   45 codespan: codespan . code_list
-   47 code_list: . CODETEXT
-   48          | . SPECIALCHAR
+   40 inlineelement: BACKTICK error . LINEBREAK
 
-    SPECIALCHAR     shift, and go to state 62
-    CODETEXT        shift, and go to state 63
-    DOUBLEBACKTICK  shift, and go to state 100
-
-    code_list  go to state 94
+    LINEBREAK  shift, and go to state 115
 
 
 state 72
 
-   21 line: QUOTEOLSTART inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   58 code_list: SPECIALCHAR .
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 101
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelement  go to state 75
+    $default  reduce using rule 58 (code_list)
 
 
 state 73
 
-   23 line: QUOTEULSTART inlineelements . LINEBREAK
-   25 inlineelements: inlineelements . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   57 code_list: CODETEXT .
 
-    error             shift, and go to state 4
-    TEXT              shift, and go to state 5
-    SPECIALCHAR       shift, and go to state 6
-    EXCLAMATION       shift, and go to state 20
-    LEFTSQUARE        shift, and go to state 21
-    UNDERSCORE        shift, and go to state 22
-    STAR              shift, and go to state 23
-    BACKTICK          shift, and go to state 24
-    LINEBREAK         shift, and go to state 102
-    DOUBLESTAR        shift, and go to state 27
-    DOUBLEUNDERSCORE  shift, and go to state 28
-    DOUBLEBACKTICK    shift, and go to state 31
-
-    inlineelement  go to state 75
+    $default  reduce using rule 57 (code_list)
 
 
 state 74
+
+   36 inlineelement: BACKTICK codespan . BACKTICK
+   55 codespan: codespan . code_list
+   57 code_list: . CODETEXT
+   58          | . SPECIALCHAR
+
+    SPECIALCHAR  shift, and go to state 72
+    CODETEXT     shift, and go to state 73
+    BACKTICK     shift, and go to state 116
+
+    code_list  go to state 117
+
+
+state 75
+
+   56 codespan: code_list .
+
+    $default  reduce using rule 56 (codespan)
+
+
+state 76
+
+   19 line: LARGERTHAN inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 118
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 77
+
+   48 inlineelement: DOUBLESTAR error . LINEBREAK
+
+    LINEBREAK  shift, and go to state 119
+
+
+state 78
+
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   34              | DOUBLESTAR inlineelements . DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 120
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 79
+
+   50 inlineelement: DOUBLEUNDERSCORE error . LINEBREAK
+
+    LINEBREAK  shift, and go to state 121
+
+
+state 80
+
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   35              | DOUBLEUNDERSCORE inlineelements . DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 122
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 81
+
+   20 line: OLSTART inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 123
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 82
+
+   22 line: ULSTART inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 124
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 83
+
+   41 inlineelement: DOUBLEBACKTICK error . LINEBREAK
+
+    LINEBREAK  shift, and go to state 125
+
+
+state 84
+
+   37 inlineelement: DOUBLEBACKTICK codespan . DOUBLEBACKTICK
+   55 codespan: codespan . code_list
+   57 code_list: . CODETEXT
+   58          | . SPECIALCHAR
+
+    SPECIALCHAR     shift, and go to state 72
+    CODETEXT        shift, and go to state 73
+    DOUBLEBACKTICK  shift, and go to state 126
+
+    code_list  go to state 117
+
+
+state 85
+
+   21 line: QUOTEOLSTART inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 127
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 86
+
+   24 line: QUOTEULSTART inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 128
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 87
 
    18 line: inlineelements LINEBREAK .
 
     $default  reduce using rule 18 (line)
 
 
-state 75
+state 88
 
-   25 inlineelements: inlineelements inlineelement .
+   28 inlineelements: inlineelements inlineelement .
 
-    $default  reduce using rule 25 (inlineelements)
+    $default  reduce using rule 28 (inlineelements)
 
 
-state 76
+state 89
+
+   23 line: INDENT ULSTART inlineelements . LINEBREAK
+   28 inlineelements: inlineelements . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    TEXT              shift, and go to state 5
+    SPECIALCHAR       shift, and go to state 6
+    EXCLAMATION       shift, and go to state 20
+    RIGHTPARENTHESES  shift, and go to state 21
+    LEFTPARENTHESES   shift, and go to state 22
+    RIGHTSQUARE       shift, and go to state 23
+    LEFTSQUARE        shift, and go to state 24
+    UNDERSCORE        shift, and go to state 25
+    STAR              shift, and go to state 26
+    BACKTICK          shift, and go to state 27
+    LINEBREAK         shift, and go to state 129
+    DOUBLESTAR        shift, and go to state 30
+    DOUBLEUNDERSCORE  shift, and go to state 31
+    DOUBLEBACKTICK    shift, and go to state 34
+
+    inlineelement  go to state 88
+
+
+state 90
+
+   25 line: INDENT inlineelements LINEBREAK .
+
+    $default  reduce using rule 25 (line)
+
+
+state 91
 
     6 line: H1 plaintext LINEBREAK .
 
     $default  reduce using rule 6 (line)
 
 
-state 77
+state 92
 
-   41 plaintext: plaintext text_list .
+   51 plaintext: plaintext text_list .
 
-    $default  reduce using rule 41 (plaintext)
+    $default  reduce using rule 51 (plaintext)
 
 
-state 78
+state 93
 
     8 line: H2 plaintext LINEBREAK .
 
     $default  reduce using rule 8 (line)
 
 
-state 79
+state 94
 
    10 line: H3 plaintext LINEBREAK .
 
     $default  reduce using rule 10 (line)
 
 
-state 80
+state 95
 
    12 line: H4 plaintext LINEBREAK .
 
     $default  reduce using rule 12 (line)
 
 
-state 81
+state 96
 
    14 line: H5 plaintext LINEBREAK .
 
     $default  reduce using rule 14 (line)
 
 
-state 82
+state 97
 
    16 line: H6 plaintext LINEBREAK .
 
     $default  reduce using rule 16 (line)
 
 
-state 83
+state 98
 
     7 line: QUOTEH1 plaintext LINEBREAK .
 
     $default  reduce using rule 7 (line)
 
 
-state 84
+state 99
 
     9 line: QUOTEH2 plaintext LINEBREAK .
 
     $default  reduce using rule 9 (line)
 
 
-state 85
+state 100
 
    11 line: QUOTEH3 plaintext LINEBREAK .
 
     $default  reduce using rule 11 (line)
 
 
-state 86
+state 101
 
    13 line: QUOTEH4 plaintext LINEBREAK .
 
     $default  reduce using rule 13 (line)
 
 
-state 87
+state 102
 
    15 line: QUOTEH5 plaintext LINEBREAK .
 
     $default  reduce using rule 15 (line)
 
 
-state 88
+state 103
 
    17 line: QUOTEH6 plaintext LINEBREAK .
 
     $default  reduce using rule 17 (line)
 
 
-state 89
+state 104
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE plaintext . RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   46 inlineelement: EXCLAMATION error LINEBREAK .
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-    RIGHTSQUARE  shift, and go to state 103
-
-    text_list  go to state 77
+    $default  reduce using rule 46 (inlineelement)
 
 
-state 90
+state 105
 
-   35 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE . LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39 inlineelement: EXCLAMATION LEFTSQUARE plaintext . RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    LEFTPARENTHESES  shift, and go to state 104
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
+    RIGHTSQUARE  shift, and go to state 130
 
-
-state 91
-
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   30              | UNDERSCORE . inlineelements UNDERSCORE  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   30              | UNDERSCORE inlineelements UNDERSCORE .  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
-
-    $default  reduce using rule 30 (inlineelement)
-
-    inlineelements  go to state 60
-    inlineelement   go to state 37
-
-    Conflict between rule 30 and token error resolved as reduce (error < STARX).
-    Conflict between rule 30 and token TEXT resolved as reduce (TEXT < STARX).
-    Conflict between rule 30 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
-    Conflict between rule 30 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
-    Conflict between rule 30 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
-    Conflict between rule 30 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
-    Conflict between rule 30 and token STAR resolved as reduce (STAR < STARX).
-    Conflict between rule 30 and token BACKTICK resolved as reduce (BACKTICK < STARX).
-    Conflict between rule 30 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
-    Conflict between rule 30 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
-    Conflict between rule 30 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+    text_list  go to state 92
 
 
-state 92
+state 106
 
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   29              | STAR . inlineelements STAR  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   29              | STAR inlineelements STAR .  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   43 inlineelement: RIGHTPARENTHESES error LINEBREAK .
 
-    $default  reduce using rule 29 (inlineelement)
-
-    inlineelements  go to state 61
-    inlineelement   go to state 37
-
-    Conflict between rule 29 and token error resolved as reduce (error < STARX).
-    Conflict between rule 29 and token TEXT resolved as reduce (TEXT < STARX).
-    Conflict between rule 29 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
-    Conflict between rule 29 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
-    Conflict between rule 29 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
-    Conflict between rule 29 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
-    Conflict between rule 29 and token STAR resolved as reduce (STAR < STARX).
-    Conflict between rule 29 and token BACKTICK resolved as reduce (BACKTICK < STARX).
-    Conflict between rule 29 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
-    Conflict between rule 29 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
-    Conflict between rule 29 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+    $default  reduce using rule 43 (inlineelement)
 
 
-state 93
+state 107
 
-   33 inlineelement: BACKTICK codespan BACKTICK .
+   42 inlineelement: LEFTPARENTHESES error LINEBREAK .
 
-    $default  reduce using rule 33 (inlineelement)
-
-
-state 94
-
-   45 codespan: codespan code_list .
-
-    $default  reduce using rule 45 (codespan)
+    $default  reduce using rule 42 (inlineelement)
 
 
-state 95
+state 108
 
-   19 line: LARGERTHAN inlineelements LINEBREAK .
+   45 inlineelement: RIGHTSQUARE error LINEBREAK .
 
-    $default  reduce using rule 19 (line)
-
-
-state 96
-
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   31              | DOUBLESTAR . inlineelements DOUBLESTAR  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   31              | DOUBLESTAR inlineelements DOUBLESTAR .  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
-
-    $default  reduce using rule 31 (inlineelement)
-
-    inlineelements  go to state 67
-    inlineelement   go to state 37
-
-    Conflict between rule 31 and token error resolved as reduce (error < STARX).
-    Conflict between rule 31 and token TEXT resolved as reduce (TEXT < STARX).
-    Conflict between rule 31 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
-    Conflict between rule 31 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
-    Conflict between rule 31 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
-    Conflict between rule 31 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
-    Conflict between rule 31 and token STAR resolved as reduce (STAR < STARX).
-    Conflict between rule 31 and token BACKTICK resolved as reduce (BACKTICK < STARX).
-    Conflict between rule 31 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
-    Conflict between rule 31 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
-    Conflict between rule 31 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+    $default  reduce using rule 45 (inlineelement)
 
 
-state 97
+state 109
 
-   25 inlineelements: . inlineelements inlineelement
-   26               | . inlineelement
-   27 inlineelement: . TEXT
-   28              | . SPECIALCHAR
-   29              | . STAR inlineelements STAR
-   30              | . UNDERSCORE inlineelements UNDERSCORE
-   31              | . DOUBLESTAR inlineelements DOUBLESTAR
-   32              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   32              | DOUBLEUNDERSCORE . inlineelements DOUBLEUNDERSCORE  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   32              | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE .  [error, TEXT, SPECIALCHAR, EXCLAMATION, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
-   33              | . BACKTICK codespan BACKTICK
-   34              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
-   35              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   36              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
-   37              | . error LINEBREAK
-   38              | . error RIGHTPARENTHESES
-   39              | . error RIGHTCURLY
-   40              | . error RIGHTSQUARE
+   44 inlineelement: LEFTSQUARE error LINEBREAK .
 
-    $default  reduce using rule 32 (inlineelement)
+    $default  reduce using rule 44 (inlineelement)
+
+
+state 110
+
+   38 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE . LEFTPARENTHESES plaintext RIGHTPARENTHESES
+
+    LEFTPARENTHESES  shift, and go to state 131
+
+
+state 111
+
+   49 inlineelement: UNDERSCORE error LINEBREAK .
+
+    $default  reduce using rule 49 (inlineelement)
+
+
+state 112
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   33              | UNDERSCORE . inlineelements UNDERSCORE  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   33              | UNDERSCORE inlineelements UNDERSCORE .  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   49              | UNDERSCORE . error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    error  shift, and go to state 67
+
+    TEXT              reduce using rule 33 (inlineelement)
+    SPECIALCHAR       reduce using rule 33 (inlineelement)
+    EXCLAMATION       reduce using rule 33 (inlineelement)
+    RIGHTPARENTHESES  reduce using rule 33 (inlineelement)
+    LEFTPARENTHESES   reduce using rule 33 (inlineelement)
+    RIGHTSQUARE       reduce using rule 33 (inlineelement)
+    LEFTSQUARE        reduce using rule 33 (inlineelement)
+    UNDERSCORE        reduce using rule 33 (inlineelement)
+    STAR              reduce using rule 33 (inlineelement)
+    BACKTICK          reduce using rule 33 (inlineelement)
+    LINEBREAK         reduce using rule 33 (inlineelement)
+    DOUBLESTAR        reduce using rule 33 (inlineelement)
+    DOUBLEUNDERSCORE  reduce using rule 33 (inlineelement)
+    DOUBLEBACKTICK    reduce using rule 33 (inlineelement)
 
     inlineelements  go to state 68
-    inlineelement   go to state 37
+    inlineelement   go to state 40
 
-    Conflict between rule 32 and token error resolved as reduce (error < STARX).
+    Conflict between rule 33 and token TEXT resolved as reduce (TEXT < STARX).
+    Conflict between rule 33 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
+    Conflict between rule 33 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
+    Conflict between rule 33 and token RIGHTPARENTHESES resolved as reduce (RIGHTPARENTHESES < STARX).
+    Conflict between rule 33 and token LEFTPARENTHESES resolved as reduce (LEFTPARENTHESES < STARX).
+    Conflict between rule 33 and token RIGHTSQUARE resolved as reduce (RIGHTSQUARE < STARX).
+    Conflict between rule 33 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
+    Conflict between rule 33 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
+    Conflict between rule 33 and token STAR resolved as reduce (STAR < STARX).
+    Conflict between rule 33 and token BACKTICK resolved as reduce (BACKTICK < STARX).
+    Conflict between rule 33 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
+    Conflict between rule 33 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
+    Conflict between rule 33 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+
+
+state 113
+
+   47 inlineelement: STAR error LINEBREAK .
+
+    $default  reduce using rule 47 (inlineelement)
+
+
+state 114
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   32              | STAR . inlineelements STAR  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   32              | STAR inlineelements STAR .  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   47              | STAR . error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    error  shift, and go to state 69
+
+    TEXT              reduce using rule 32 (inlineelement)
+    SPECIALCHAR       reduce using rule 32 (inlineelement)
+    EXCLAMATION       reduce using rule 32 (inlineelement)
+    RIGHTPARENTHESES  reduce using rule 32 (inlineelement)
+    LEFTPARENTHESES   reduce using rule 32 (inlineelement)
+    RIGHTSQUARE       reduce using rule 32 (inlineelement)
+    LEFTSQUARE        reduce using rule 32 (inlineelement)
+    UNDERSCORE        reduce using rule 32 (inlineelement)
+    STAR              reduce using rule 32 (inlineelement)
+    BACKTICK          reduce using rule 32 (inlineelement)
+    LINEBREAK         reduce using rule 32 (inlineelement)
+    DOUBLESTAR        reduce using rule 32 (inlineelement)
+    DOUBLEUNDERSCORE  reduce using rule 32 (inlineelement)
+    DOUBLEBACKTICK    reduce using rule 32 (inlineelement)
+
+    inlineelements  go to state 70
+    inlineelement   go to state 40
+
     Conflict between rule 32 and token TEXT resolved as reduce (TEXT < STARX).
     Conflict between rule 32 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
     Conflict between rule 32 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
+    Conflict between rule 32 and token RIGHTPARENTHESES resolved as reduce (RIGHTPARENTHESES < STARX).
+    Conflict between rule 32 and token LEFTPARENTHESES resolved as reduce (LEFTPARENTHESES < STARX).
+    Conflict between rule 32 and token RIGHTSQUARE resolved as reduce (RIGHTSQUARE < STARX).
     Conflict between rule 32 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
     Conflict between rule 32 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
     Conflict between rule 32 and token STAR resolved as reduce (STAR < STARX).
@@ -1817,115 +2282,299 @@ state 97
     Conflict between rule 32 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
 
 
-state 98
+state 115
+
+   40 inlineelement: BACKTICK error LINEBREAK .
+
+    $default  reduce using rule 40 (inlineelement)
+
+
+state 116
+
+   36 inlineelement: BACKTICK codespan BACKTICK .
+
+    $default  reduce using rule 36 (inlineelement)
+
+
+state 117
+
+   55 codespan: codespan code_list .
+
+    $default  reduce using rule 55 (codespan)
+
+
+state 118
+
+   19 line: LARGERTHAN inlineelements LINEBREAK .
+
+    $default  reduce using rule 19 (line)
+
+
+state 119
+
+   48 inlineelement: DOUBLESTAR error LINEBREAK .
+
+    $default  reduce using rule 48 (inlineelement)
+
+
+state 120
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   34              | DOUBLESTAR . inlineelements DOUBLESTAR  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   34              | DOUBLESTAR inlineelements DOUBLESTAR .  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   48              | DOUBLESTAR . error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+
+    error  shift, and go to state 77
+
+    TEXT              reduce using rule 34 (inlineelement)
+    SPECIALCHAR       reduce using rule 34 (inlineelement)
+    EXCLAMATION       reduce using rule 34 (inlineelement)
+    RIGHTPARENTHESES  reduce using rule 34 (inlineelement)
+    LEFTPARENTHESES   reduce using rule 34 (inlineelement)
+    RIGHTSQUARE       reduce using rule 34 (inlineelement)
+    LEFTSQUARE        reduce using rule 34 (inlineelement)
+    UNDERSCORE        reduce using rule 34 (inlineelement)
+    STAR              reduce using rule 34 (inlineelement)
+    BACKTICK          reduce using rule 34 (inlineelement)
+    LINEBREAK         reduce using rule 34 (inlineelement)
+    DOUBLESTAR        reduce using rule 34 (inlineelement)
+    DOUBLEUNDERSCORE  reduce using rule 34 (inlineelement)
+    DOUBLEBACKTICK    reduce using rule 34 (inlineelement)
+
+    inlineelements  go to state 78
+    inlineelement   go to state 40
+
+    Conflict between rule 34 and token TEXT resolved as reduce (TEXT < STARX).
+    Conflict between rule 34 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
+    Conflict between rule 34 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
+    Conflict between rule 34 and token RIGHTPARENTHESES resolved as reduce (RIGHTPARENTHESES < STARX).
+    Conflict between rule 34 and token LEFTPARENTHESES resolved as reduce (LEFTPARENTHESES < STARX).
+    Conflict between rule 34 and token RIGHTSQUARE resolved as reduce (RIGHTSQUARE < STARX).
+    Conflict between rule 34 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
+    Conflict between rule 34 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
+    Conflict between rule 34 and token STAR resolved as reduce (STAR < STARX).
+    Conflict between rule 34 and token BACKTICK resolved as reduce (BACKTICK < STARX).
+    Conflict between rule 34 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
+    Conflict between rule 34 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
+    Conflict between rule 34 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+
+
+state 121
+
+   50 inlineelement: DOUBLEUNDERSCORE error LINEBREAK .
+
+    $default  reduce using rule 50 (inlineelement)
+
+
+state 122
+
+   28 inlineelements: . inlineelements inlineelement
+   29               | . inlineelement
+   30 inlineelement: . TEXT
+   31              | . SPECIALCHAR
+   32              | . STAR inlineelements STAR
+   33              | . UNDERSCORE inlineelements UNDERSCORE
+   34              | . DOUBLESTAR inlineelements DOUBLESTAR
+   35              | . DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   35              | DOUBLEUNDERSCORE . inlineelements DOUBLEUNDERSCORE  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   35              | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE .  [TEXT, SPECIALCHAR, EXCLAMATION, RIGHTPARENTHESES, LEFTPARENTHESES, RIGHTSQUARE, LEFTSQUARE, UNDERSCORE, STAR, BACKTICK, LINEBREAK, DOUBLESTAR, DOUBLEUNDERSCORE, DOUBLEBACKTICK]
+   36              | . BACKTICK codespan BACKTICK
+   37              | . DOUBLEBACKTICK codespan DOUBLEBACKTICK
+   38              | . LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39              | . EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   40              | . BACKTICK error LINEBREAK
+   41              | . DOUBLEBACKTICK error LINEBREAK
+   42              | . LEFTPARENTHESES error LINEBREAK
+   43              | . RIGHTPARENTHESES error LINEBREAK
+   44              | . LEFTSQUARE error LINEBREAK
+   45              | . RIGHTSQUARE error LINEBREAK
+   46              | . EXCLAMATION error LINEBREAK
+   47              | . STAR error LINEBREAK
+   48              | . DOUBLESTAR error LINEBREAK
+   49              | . UNDERSCORE error LINEBREAK
+   50              | . DOUBLEUNDERSCORE error LINEBREAK
+   50              | DOUBLEUNDERSCORE . error LINEBREAK
+
+    error  shift, and go to state 79
+
+    TEXT              reduce using rule 35 (inlineelement)
+    SPECIALCHAR       reduce using rule 35 (inlineelement)
+    EXCLAMATION       reduce using rule 35 (inlineelement)
+    RIGHTPARENTHESES  reduce using rule 35 (inlineelement)
+    LEFTPARENTHESES   reduce using rule 35 (inlineelement)
+    RIGHTSQUARE       reduce using rule 35 (inlineelement)
+    LEFTSQUARE        reduce using rule 35 (inlineelement)
+    UNDERSCORE        reduce using rule 35 (inlineelement)
+    STAR              reduce using rule 35 (inlineelement)
+    BACKTICK          reduce using rule 35 (inlineelement)
+    LINEBREAK         reduce using rule 35 (inlineelement)
+    DOUBLESTAR        reduce using rule 35 (inlineelement)
+    DOUBLEUNDERSCORE  reduce using rule 35 (inlineelement)
+    DOUBLEBACKTICK    reduce using rule 35 (inlineelement)
+
+    inlineelements  go to state 80
+    inlineelement   go to state 40
+
+    Conflict between rule 35 and token TEXT resolved as reduce (TEXT < STARX).
+    Conflict between rule 35 and token SPECIALCHAR resolved as reduce (SPECIALCHAR < STARX).
+    Conflict between rule 35 and token EXCLAMATION resolved as reduce (EXCLAMATION < STARX).
+    Conflict between rule 35 and token RIGHTPARENTHESES resolved as reduce (RIGHTPARENTHESES < STARX).
+    Conflict between rule 35 and token LEFTPARENTHESES resolved as reduce (LEFTPARENTHESES < STARX).
+    Conflict between rule 35 and token RIGHTSQUARE resolved as reduce (RIGHTSQUARE < STARX).
+    Conflict between rule 35 and token LEFTSQUARE resolved as reduce (LEFTSQUARE < STARX).
+    Conflict between rule 35 and token UNDERSCORE resolved as reduce (UNDERSCORE < STARX).
+    Conflict between rule 35 and token STAR resolved as reduce (STAR < STARX).
+    Conflict between rule 35 and token BACKTICK resolved as reduce (BACKTICK < STARX).
+    Conflict between rule 35 and token DOUBLESTAR resolved as reduce (DOUBLESTAR < STARX).
+    Conflict between rule 35 and token DOUBLEUNDERSCORE resolved as reduce (DOUBLEUNDERSCORE < STARX).
+    Conflict between rule 35 and token DOUBLEBACKTICK resolved as reduce (DOUBLEBACKTICK < STARX).
+
+
+state 123
 
    20 line: OLSTART inlineelements LINEBREAK .
 
     $default  reduce using rule 20 (line)
 
 
-state 99
+state 124
 
    22 line: ULSTART inlineelements LINEBREAK .
 
     $default  reduce using rule 22 (line)
 
 
-state 100
+state 125
 
-   34 inlineelement: DOUBLEBACKTICK codespan DOUBLEBACKTICK .
+   41 inlineelement: DOUBLEBACKTICK error LINEBREAK .
 
-    $default  reduce using rule 34 (inlineelement)
+    $default  reduce using rule 41 (inlineelement)
 
 
-state 101
+state 126
+
+   37 inlineelement: DOUBLEBACKTICK codespan DOUBLEBACKTICK .
+
+    $default  reduce using rule 37 (inlineelement)
+
+
+state 127
 
    21 line: QUOTEOLSTART inlineelements LINEBREAK .
 
     $default  reduce using rule 21 (line)
 
 
-state 102
+state 128
 
-   23 line: QUOTEULSTART inlineelements LINEBREAK .
+   24 line: QUOTEULSTART inlineelements LINEBREAK .
+
+    $default  reduce using rule 24 (line)
+
+
+state 129
+
+   23 line: INDENT ULSTART inlineelements LINEBREAK .
 
     $default  reduce using rule 23 (line)
 
 
-state 103
+state 130
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE . LEFTPARENTHESES plaintext RIGHTPARENTHESES
+   39 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE . LEFTPARENTHESES plaintext RIGHTPARENTHESES
 
-    LEFTPARENTHESES  shift, and go to state 105
-
-
-state 104
-
-   35 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES . plaintext RIGHTPARENTHESES
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
-
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
-
-    plaintext  go to state 106
-    text_list  go to state 46
+    LEFTPARENTHESES  shift, and go to state 132
 
 
-state 105
+state 131
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES . plaintext RIGHTPARENTHESES
-   41 plaintext: . plaintext text_list
-   42          | . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   38 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES . plaintext RIGHTPARENTHESES
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT         shift, and go to state 43
-    SPECIALCHAR  shift, and go to state 44
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    plaintext  go to state 107
-    text_list  go to state 46
-
-
-state 106
-
-   35 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext . RIGHTPARENTHESES
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
-
-    TEXT              shift, and go to state 43
-    SPECIALCHAR       shift, and go to state 44
-    RIGHTPARENTHESES  shift, and go to state 108
-
-    text_list  go to state 77
+    plaintext  go to state 133
+    text_list  go to state 48
 
 
-state 107
+state 132
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext . RIGHTPARENTHESES
-   41 plaintext: plaintext . text_list
-   43 text_list: . TEXT
-   44          | . SPECIALCHAR
+   39 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES . plaintext RIGHTPARENTHESES
+   51 plaintext: . plaintext text_list
+   52          | . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    TEXT              shift, and go to state 43
-    SPECIALCHAR       shift, and go to state 44
-    RIGHTPARENTHESES  shift, and go to state 109
+    TEXT         shift, and go to state 45
+    SPECIALCHAR  shift, and go to state 46
 
-    text_list  go to state 77
-
-
-state 108
-
-   35 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES .
-
-    $default  reduce using rule 35 (inlineelement)
+    plaintext  go to state 134
+    text_list  go to state 48
 
 
-state 109
+state 133
 
-   36 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES .
+   38 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext . RIGHTPARENTHESES
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
 
-    $default  reduce using rule 36 (inlineelement)
+    TEXT              shift, and go to state 45
+    SPECIALCHAR       shift, and go to state 46
+    RIGHTPARENTHESES  shift, and go to state 135
+
+    text_list  go to state 92
+
+
+state 134
+
+   39 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext . RIGHTPARENTHESES
+   51 plaintext: plaintext . text_list
+   53 text_list: . TEXT
+   54          | . SPECIALCHAR
+
+    TEXT              shift, and go to state 45
+    SPECIALCHAR       shift, and go to state 46
+    RIGHTPARENTHESES  shift, and go to state 136
+
+    text_list  go to state 92
+
+
+state 135
+
+   38 inlineelement: LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES .
+
+    $default  reduce using rule 38 (inlineelement)
+
+
+state 136
+
+   39 inlineelement: EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES .
+
+    $default  reduce using rule 39 (inlineelement)

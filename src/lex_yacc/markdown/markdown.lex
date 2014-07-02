@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include "markdown.y.h"
+#include "tagstack.h"
 
 /* prototypes */
 void yyerror(char *s);
@@ -10,6 +11,7 @@ int yylineno;
 %}
 
 %x ESCAPE CODESPAN XCODESPAN CODEBLOCK
+%x INDENTLIST 
 
 blankline ^[ \t]*\n
 quoteblankline ^>[ \t]*\n
@@ -38,15 +40,53 @@ quoteblankline ^>[ \t]*\n
 <XCODESPAN>.                            { yylval.text = strdup(yytext); return CODETEXT; }
 
 
-^[*+-][ ]+                              { return ULSTART; }
+^" "{0,3}[*+-][ ]+                      { return ULSTART; }
 ^>" "+[*+-][ ]+                         { return QUOTEULSTART; }
-^[1-9][0-9]*\.[ ]+                      { return OLSTART; }
+^" "{0,3}[1-9][0-9]*\.[ ]+              { return OLSTART; }
 ^>" "+[1-9][0-9]*\.[ ]+                 { return QUOTEOLSTART; }
 
 
-^(\t|[ ]{4})+                           { BEGIN CODEBLOCK; yylval.text = strdup(yytext); return INDENT; }
+
+^(\t|[ ]{4})+/[ ]{0,3}\*[ ]+            { 
+                                            /* indent list */
+                                            if(latest_list_level() + 1 == indent_level(yytext)){
+                                                BEGIN INDENTLIST;
+                                                yylval.text = strdup(yytext);
+                                                return INDENT; 
+                                            }
+                                            else{
+                                                BEGIN CODEBLOCK; 
+                                                yylval.text = strdup(yytext);
+                                                return INDENT;
+                                            }
+                                        }   
+^(\t|[ ]{4})+                           { 
+                                            /* indent p */
+                                            if(latest_list_level() + 1 == indent_level(yytext)){
+                                                yylval.text = strdup(yytext);
+                                                return INDENT; 
+                                            }
+                                            else{
+                                                BEGIN CODEBLOCK; 
+                                                yylval.text = strdup(yytext);
+                                                return INDENT;
+                                            }
+                                        }
 <CODEBLOCK>.+                           { yylval.text = strdup(yytext); return CODETEXT; }
 <CODEBLOCK>\n                           { BEGIN INITIAL; yylineno++; }
+
+<INDENTLIST>[ ]{0,3}\*[ ]+              { BEGIN INITIAL; return ULSTART; }
+
+    /*
+    ^(\t|[ ]{4}){2}                         { yylval.text = strdup(yytext); return INDENT2; }
+    ^(\t|[ ]{4}){3}                         { yylval.text = strdup(yytext); return INDENT3; }
+    */
+
+    /*
+    ^(\t|[ ]{4})+                           { BEGIN CODEBLOCK; yylval.text = strdup(yytext); return INDENT; }
+    <CODEBLOCK>.+                           { yylval.text = strdup(yytext); return CODETEXT; }
+    <CODEBLOCK>\n                           { BEGIN INITIAL; yylineno++; }
+    */
 
 
 "*"                                     { return STAR; }
@@ -88,8 +128,8 @@ __                                      { return DOUBLEUNDERSCORE; }
 
 
 [^#!+()\[\]{}_*`\\\n\t" ".]+  { yylval.text = strdup(yytext); return TEXT; }
-[.\t" "]                       { yylval.text = strdup(yytext); return TEXT; }
-\n                              { yylineno++; return LINEBREAK; }
+[.#!+()\[\]{}_*`\\\t" "]      { yylval.text = strdup(yytext); return TEXT; }
+\n                            { yylineno++; return LINEBREAK; }
 
 
 %%
