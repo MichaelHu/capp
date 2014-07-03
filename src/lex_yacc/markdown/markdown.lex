@@ -1,8 +1,8 @@
 %{
 
 #include <string.h>
+#include "blocknode.h"
 #include "markdown.y.h"
-#include "tagstack.h"
 
 /* prototypes */
 void yyerror(char *s);
@@ -111,19 +111,8 @@ __                                      { return DOUBLEUNDERSCORE; }
 "!"                                     { return EXCLAMATION; }
 
 
-^#                       { return H1; }
-^##                      { return H2; }
-^###                     { return H3; }
-^####                    { return H4; }
-^#####                   { return H5; }
-^######                  { return H6; }
-
-^>" "+#                       { return QUOTEH1; }
-^>" "+##                      { return QUOTEH2; }
-^>" "+###                     { return QUOTEH3; }
-^>" "+####                    { return QUOTEH4; }
-^>" "+#####                   { return QUOTEH5; }
-^>" "+######                  { return QUOTEH6; }
+^#{1,6}                       { yylval.text = strdup(yytext); return H; }
+^>" "+#{1,6}                  { yylval.text = strdup(yytext); return QUOTEH; }
 
 
 

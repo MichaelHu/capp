@@ -21,8 +21,6 @@ typedef enum {
     , TAG_QUOTE_H
 
     , TAG_INDENT_P
-    , TAG_INDENT2_P
-    , TAG_INDENT3_P
     , TAG_INDENT_UL
     , TAG_INDENT_OL
     , TAG_INDENT_PRE

@@ -1,9 +1,10 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include "htmltags.h" 
-#include "tagstack.h" 
+#include "blocknode.h" 
 
 /* prototypes */
 int yylex(void);
@@ -14,19 +15,19 @@ int yylineno;
 
 
 %union{
-    char *text;        /* symbol table index */
+    char *text;
+    t_blocknode *node;
 };
 
     /* bind with terminater */
-%token <text> TEXT SPECIALCHAR CODETEXT INDENT
-%token H1 H2 H3 H4 H5 H6
-%token QUOTEH1 QUOTEH2 QUOTEH3 QUOTEH4 QUOTEH5 QUOTEH6 
+%token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
 %token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK QUOTEBLANKLINE QUOTEOLSTART QUOTEULSTART
 
-%type <text> lines line inlineelements inlineelement plaintext text_list
-%type <text> codespan code_list error 
+%type <text> inlineelements inlineelement plaintext text_list
+%type <text> codespan code_list error lines 
+%type <node> line
 
 %nonassoc TEXT SPECIALCHAR EXCLAMATION LEFTSQUARE STAR DOUBLESTAR UNDERSCORE DOUBLEUNDERSCORE BACKTICK DOUBLEBACKTICK LEFTPARENTHESES RIGHTSQUARE RIGHTPARENTHESES error
 %nonassoc STARX
@@ -34,85 +35,87 @@ int yylineno;
 %%
 
 markdownfile: 
-    lines                       { tag_show_stack(); }
+    lines { /* tag_show_stack(); */ }
     ;
 
 lines:
-    lines line                  { $$ = str_concat($1, $2); }
-    | /* NULL */                { $$ = ""; }
+    lines line  { 
+            $$ = str_concat($1, blocknode_parse($2)); 
+        }
+
+    | /* NULL */{ $$ = ""; }
     ;
 
 line:
-      BLANKLINE                { $$ = str_format("%s", tag_check_stack(TAG_BLANK, 0)); }
-    | QUOTEBLANKLINE           { $$ = str_format("%s", tag_check_stack(TAG_QUOTE_BLANK, 0)); }
-
-    | H1 plaintext LINEBREAK                  { $$ = create_hn($2, 1); tag_check_stack(TAG_H, 0); }  
-    | QUOTEH1 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 1)); 
-        }   
-
-    | H2 plaintext LINEBREAK                  { $$ = create_hn($2, 2); tag_check_stack(TAG_H, 0); }   
-    | QUOTEH2 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 2)); 
-        }   
-
-    | H3 plaintext LINEBREAK                  { $$ = create_hn($2, 3); tag_check_stack(TAG_H, 0); }   
-    | QUOTEH3 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 3)); 
-        }   
-
-    | H4 plaintext LINEBREAK                  { $$ = create_hn($2, 4); tag_check_stack(TAG_H, 0); }  
-    | QUOTEH4 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 4)); 
-        }   
-
-    | H5 plaintext LINEBREAK                  { $$ = create_hn($2, 5); tag_check_stack(TAG_H, 0);  }  
-    | QUOTEH5 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 5)); 
-        }   
-
-    | H6 plaintext LINEBREAK                  { $$ = create_hn($2, 6); tag_check_stack(TAG_H, 0); }   
-    | QUOTEH6 plaintext LINEBREAK             { 
-            $$ = str_format("%s%s", tag_check_stack(TAG_QUOTE_H, 0), create_hn($2, 6)); 
-        }   
-
-
-    | inlineelements LINEBREAK            { 
-            $$ = str_format("%s%s\n", tag_check_stack(TAG_P, 0), $1); 
-        } 
-
-    | LARGERTHAN inlineelements LINEBREAK            { 
-            $$ = str_format("%s%s\n", tag_check_stack(TAG_QUOTE_P, 0), $2); 
-        } 
-
-    | OLSTART inlineelements LINEBREAK            { 
-            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_OL, 0), $2); 
-        } 
-
-    | QUOTEOLSTART inlineelements LINEBREAK            { 
-            $$ = str_format("%s<li>%s</li>\n", tag_check_stack(TAG_QUOTE_OL, 0), $2); 
-        } 
-
-    | ULSTART inlineelements LINEBREAK            { 
-            $$ = str_format("%s<li>%s\n", tag_check_stack(TAG_UL, 0), $2); 
-        } 
-
-    | INDENT ULSTART inlineelements LINEBREAK            { 
-            $$ = str_format("%s<li>%s\n", tag_check_stack(TAG_INDENT_UL, indent_level($1)), $3); 
-        } 
-
-    | QUOTEULSTART inlineelements LINEBREAK            { 
-            $$ = str_format("%s<li>%s\n", tag_check_stack(TAG_QUOTE_UL, 0), $2); 
-        } 
-
-    | INDENT inlineelements LINEBREAK            { 
-            $$ = str_format("%s%s\n", tag_check_stack(TAG_INDENT_P, indent_level($1)), $2); 
-        } 
-    | INDENT CODETEXT                           {
-            $$ = str_format("%s%s", tag_check_stack(TAG_PRE, 0), html_escape($2) ); 
+    BLANKLINE { 
+            tag_check_stack(TAG_BLANK, 0); 
+            $$ = blocknode_create(TAG_BLANK, 1, "");
         }
 
-    | error LINEBREAK                           { $$ = str_format("%s", $1); yyerrok; yyclearin; }
+    | QUOTEBLANKLINE { 
+            tag_check_stack(TAG_QUOTE_BLANK, 0); 
+            $$ = blocknode_create(TAG_QUOTE_BLANK, 1, "");
+        }
+
+    | H plaintext LINEBREAK {              
+            tag_check_stack(TAG_H, 0); 
+            $$ = blocknode_create(TAG_H, 2, $1, $2);
+        }   
+    | QUOTEH plaintext LINEBREAK { 
+            tag_check_stack(TAG_QUOTE_H, 0); 
+            $$ = blocknode_create(TAG_QUOTE_H, 2, $1, $2);
+        }   
+
+
+    | inlineelements LINEBREAK { 
+            tag_check_stack(TAG_P, 0); 
+            $$ = blocknode_create(TAG_P, 1, $1);
+        } 
+
+    | LARGERTHAN inlineelements LINEBREAK { 
+            tag_check_stack(TAG_QUOTE_P, 0); 
+            $$ = blocknode_create(TAG_QUOTE_P, 1, $2);
+        } 
+
+    | OLSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_OL, 0); 
+            $$ = blocknode_create(TAG_OL, 1, $2);
+        } 
+
+    | QUOTEOLSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_QUOTE_OL, 0); 
+            $$ = blocknode_create(TAG_QUOTE_OL, 1, $2);
+        } 
+
+    | ULSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_UL, 0); 
+            $$ = blocknode_create(TAG_UL, 1, $2);
+        } 
+
+    | INDENT ULSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_INDENT_UL, indent_level($1)); 
+            $$ = blocknode_create(TAG_INDENT_UL, 2, $1, $3);
+        } 
+
+    | QUOTEULSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_QUOTE_UL, 0); 
+            $$ = blocknode_create(TAG_QUOTE_UL, 1, $2);
+        } 
+
+    | INDENT inlineelements LINEBREAK { 
+            tag_check_stack(TAG_INDENT_P, indent_level($1)); 
+            $$ = blocknode_create(TAG_INDENT_P, 2, $1, $2);
+        } 
+    | INDENT CODETEXT {
+            tag_check_stack(TAG_PRE, 0); 
+            $$ = blocknode_create(TAG_PRE, 2, $1, $2);
+        }
+
+    | error LINEBREAK { 
+            $$ = blocknode_create(TAG_NULL, 1, str_format("%s", "@error@")); 
+            yyerrok; 
+            yyclearin; 
+        }
     ;
 
 inlineelements:  
@@ -138,17 +141,6 @@ inlineelement:
     | EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_image($3, $6);
                                 } 
-    | BACKTICK error LINEBREAK          { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | DOUBLEBACKTICK error LINEBREAK          { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | LEFTPARENTHESES error LINEBREAK         { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | RIGHTPARENTHESES error LINEBREAK         { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | LEFTSQUARE error LINEBREAK         { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | RIGHTSQUARE error LINEBREAK         { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | EXCLAMATION error LINEBREAK         { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | STAR error LINEBREAK                              { $$ = str_format("*%s*", $2); yyerrok; yyclearin; }
-    | DOUBLESTAR error LINEBREAK                  { $$ = str_format("**%s**", $2); yyerrok; yyclearin; }
-    | UNDERSCORE error LINEBREAK                  { $$ = str_format("_%s_", $2); yyerrok; yyclearin; }
-    | DOUBLEUNDERSCORE error LINEBREAK      { $$ = str_format("__%s__", $2); yyerrok; yyclearin; }
     ;
 
 plaintext:

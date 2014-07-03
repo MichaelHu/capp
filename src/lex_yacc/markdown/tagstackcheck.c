@@ -66,8 +66,6 @@ void tag_show_stack(){
             case TAG_QUOTE_H: printf("TAG_QUOTE_H, %d\n", item -> indent_level); break;
 
             case TAG_INDENT_P: printf("TAG_INDENT_P, %d\n", item -> indent_level); break;
-            case TAG_INDENT2_P: printf("TAG_INDENT2_P, %d\n", item -> indent_level); break;
-            case TAG_INDENT3_P: printf("TAG_INDENT3_P, %d\n", item -> indent_level); break;
             case TAG_INDENT_UL: printf("TAG_INDENT_UL, %d\n", item -> indent_level); break;
             case TAG_INDENT_OL: printf("TAG_INDENT_OL, %d\n", item -> indent_level); break;
             case TAG_INDENT_PRE: printf("TAG_INDENT_PRE, %d\n", item -> indent_level); break;
