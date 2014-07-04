@@ -49,75 +49,82 @@ lines:
 line:
     BLANKLINE { 
             tag_check_stack(TAG_BLANK, 0); 
-            $$ = blocknode_create(TAG_BLANK, 1, "");
+            $$ = blocknode_create(TAG_BLANK, 0, 1, "");
         }
 
     | QUOTEBLANKLINE { 
             tag_check_stack(TAG_QUOTE_BLANK, 0); 
-            $$ = blocknode_create(TAG_QUOTE_BLANK, 1, "");
+            $$ = blocknode_create(TAG_QUOTE_BLANK, 0, 1, "");
         }
 
     | H plaintext LINEBREAK {              
             tag_check_stack(TAG_H, 0); 
-            $$ = blocknode_create(TAG_H, 2, $1, $2);
+            $$ = blocknode_create(TAG_H, 0, 2, $1, $2);
         }   
     | QUOTEH plaintext LINEBREAK { 
             tag_check_stack(TAG_QUOTE_H, 0); 
-            $$ = blocknode_create(TAG_QUOTE_H, 2, $1, $2);
+            $$ = blocknode_create(TAG_QUOTE_H, 0, 2, $1, $2);
         }   
 
 
     | inlineelements LINEBREAK { 
             tag_check_stack(TAG_P, 0); 
-            $$ = blocknode_create(TAG_P, 1, $1);
+            $$ = blocknode_create(TAG_P, 0, 1, $1);
         } 
 
     | LARGERTHAN inlineelements LINEBREAK { 
             tag_check_stack(TAG_QUOTE_P, 0); 
-            $$ = blocknode_create(TAG_QUOTE_P, 1, $2);
+            $$ = blocknode_create(TAG_QUOTE_P, 0, 1, $2);
         } 
 
     | OLSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_OL, 0); 
-            $$ = blocknode_create(TAG_OL, 1, $2);
+            $$ = blocknode_create(TAG_OL, 0, 1, $2);
         } 
 
     | QUOTEOLSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_QUOTE_OL, 0); 
-            $$ = blocknode_create(TAG_QUOTE_OL, 1, $2);
+            $$ = blocknode_create(TAG_QUOTE_OL, 0, 1, $2);
         } 
 
     | INDENT OLSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_INDENT_OL, indent_level($1)); 
-            $$ = blocknode_create(TAG_INDENT_OL, 2, $1, $3);
+            $$ = blocknode_create(TAG_INDENT_OL, indent_level($1), 2, $1, $3);
         } 
 
     | ULSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_UL, 0); 
-            $$ = blocknode_create(TAG_UL, 1, $2);
+            $$ = blocknode_create(TAG_UL, 0, 1, $2);
         } 
 
     | INDENT ULSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_INDENT_UL, indent_level($1)); 
-            $$ = blocknode_create(TAG_INDENT_UL, 2, $1, $3);
+            $$ = blocknode_create(TAG_INDENT_UL, indent_level($1), 2, $1, $3);
         } 
 
     | QUOTEULSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_QUOTE_UL, 0); 
-            $$ = blocknode_create(TAG_QUOTE_UL, 1, $2);
+            $$ = blocknode_create(TAG_QUOTE_UL, 0, 1, $2);
         } 
 
     | INDENT inlineelements LINEBREAK { 
             tag_check_stack(TAG_INDENT_P, indent_level($1)); 
-            $$ = blocknode_create(TAG_INDENT_P, 2, $1, $2);
+            $$ = blocknode_create(TAG_INDENT_P, indent_level($1), 2, $1, $2);
         } 
     | INDENT CODETEXT {
-            tag_check_stack(TAG_PRE, indent_level($1)); 
-            $$ = blocknode_create(TAG_PRE, 2, $1, $2);
+            if(is_inner_pre(indent_level($1))){
+                /* PRE indent level is 1 less than the literal indent */
+                tag_check_stack(TAG_INDENT_PRE, indent_level($1) - 1); 
+                $$ = blocknode_create(TAG_INDENT_PRE, indent_level($1) - 1, 2, $1, $2);
+            }
+            else{
+                tag_check_stack(TAG_PRE, indent_level($1) - 1); 
+                $$ = blocknode_create(TAG_PRE, indent_level($1) - 1, 2, $1, $2);
+            }
         }
 
     | error LINEBREAK { 
-            $$ = blocknode_create(TAG_NULL, 1, str_format("%s", "@error@")); 
+            $$ = blocknode_create(TAG_NULL, 0, 1, str_format("%s", "@error@")); 
             yyerrok; 
             yyclearin; 
         }

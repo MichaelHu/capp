@@ -6,7 +6,7 @@
 
 t_blocknode *node_list = NULL, *node_current = NULL;
 
-t_blocknode *blocknode_create(t_tag tag, int nops, ...){
+t_blocknode *blocknode_create(t_tag tag, int level, int nops, ...){
     va_list args;
     t_blocknode *p;
     int i;
@@ -26,6 +26,7 @@ t_blocknode *blocknode_create(t_tag tag, int nops, ...){
     }
 
     p->tag = tag; 
+    p->indent_level = level; 
     p->nops = nops;
     p->next = NULL;
     va_start(args, nops);
@@ -46,12 +47,12 @@ t_blocknode *blocknode_create(t_tag tag, int nops, ...){
     return p;
 }
 
-char *blocknode_parse(t_blocknode *node){
+char *blocknode_show(t_blocknode *node){
     char *s, *format;
 
     switch(node -> nops){
         case 1:
-            format = "%s, [ %s ]";
+            format = "%s\t, [%s]";
             s = str_format(
                 format
                 , get_tag_type(node->tag)
@@ -59,7 +60,7 @@ char *blocknode_parse(t_blocknode *node){
             );
             break;
         case 2:
-            format = "%s, [ %s ], [ %s ]";
+            format = "%s\t, [%s], [%s]";
             s = str_format(
                 format
                 , get_tag_type(node->tag)
@@ -68,7 +69,7 @@ char *blocknode_parse(t_blocknode *node){
             );
             break;
         case 3:
-            format = "%s, [ %s ], [ %s ], [ %s ]";
+            format = "%s\t, [%s], [%s], [%s]";
             s = str_format(
                 format
                 , get_tag_type(node->tag)
@@ -92,11 +93,15 @@ char *blocknode_parse(t_blocknode *node){
     return s;
 }
 
+char* blocknode_parse(t_blocknode *node){
+    return "";
+}
+
 void blocklist_parse(){
     t_blocknode *p = node_list;
 
     while(p){
-        blocknode_parse(p);
+        blocknode_show(p);
         p = p->next;
     }
 

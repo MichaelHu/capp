@@ -1,4 +1,4 @@
-#define TAG_STACK_SIZE 1000
+#define TAG_STACK_SIZE 20
 
 /* tag name representing each line */
 typedef enum {
@@ -43,14 +43,15 @@ int tag_empty_stack();
 int tag_full_stack();
 int tag_in_stack(t_tag tag, int level);
 void tag_push_stack(t_tag tag, int level);
+void tag_show_stack();
 t_tag_item *tag_pop_stack();
 t_tag_item *tag_shift_stack();
 t_tag_item *tag_latest_stack(t_tag tag);
 
 char* tag_check_stack(t_tag tag, int level);
-void tag_show_stack();
 char *get_tag_type(t_tag tag);
 int is_in_list(int level);
+int is_inner_pre(int level);
 int indent_level(char *s);
 
 

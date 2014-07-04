@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stddef.h> /* for NULL */
 #include <stdlib.h>
 #include "tagstack.h"
@@ -89,3 +90,18 @@ t_tag_item *tag_latest_stack(t_tag tag){
     }
     return NULL;
 }
+
+void tag_show_stack(){
+    t_tag_item *item;
+    int i;
+    for(i=tag_stack.size-1; i>=0; i--){
+        item = tag_stack.arr[i];
+        printf(
+            "%s, level %d\n"
+            , get_tag_type(item->tag)
+            , item->indent_level
+        );
+    }
+    printf("=====================\n");
+}
+
