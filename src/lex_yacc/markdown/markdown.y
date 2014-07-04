@@ -35,12 +35,12 @@ int yylineno;
 %%
 
 markdownfile: 
-    lines { /* tag_show_stack(); */ }
+    lines { /* tag_show_stack(); */ blocklist_parse(); }
     ;
 
 lines:
     lines line  { 
-            $$ = str_concat($1, blocknode_parse($2)); 
+            /* $$ = str_concat($1, blocknode_parse($2)); */ 
         }
 
     | /* NULL */{ $$ = ""; }
@@ -87,6 +87,11 @@ line:
             $$ = blocknode_create(TAG_QUOTE_OL, 1, $2);
         } 
 
+    | INDENT OLSTART inlineelements LINEBREAK { 
+            tag_check_stack(TAG_INDENT_OL, indent_level($1)); 
+            $$ = blocknode_create(TAG_INDENT_OL, 2, $1, $3);
+        } 
+
     | ULSTART inlineelements LINEBREAK { 
             tag_check_stack(TAG_UL, 0); 
             $$ = blocknode_create(TAG_UL, 1, $2);
@@ -107,7 +112,7 @@ line:
             $$ = blocknode_create(TAG_INDENT_P, 2, $1, $2);
         } 
     | INDENT CODETEXT {
-            tag_check_stack(TAG_PRE, 0); 
+            tag_check_stack(TAG_PRE, indent_level($1)); 
             $$ = blocknode_create(TAG_PRE, 2, $1, $2);
         }
 

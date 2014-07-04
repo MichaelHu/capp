@@ -47,9 +47,22 @@ quoteblankline ^>[ \t]*\n
 
 
 
-^(\t|[ ]{4})+/[ ]{0,3}\*[ ]+            { 
-                                            /* indent list */
-                                            if(latest_list_level() + 1 == indent_level(yytext)){
+^(\t|[ ]{4})+/[ ]{0,3}[*+][ ]+            { 
+                                            /* indent ul list */
+                                            if(is_in_list(indent_level(yytext))){
+                                                BEGIN INDENTLIST;
+                                                yylval.text = strdup(yytext);
+                                                return INDENT; 
+                                            }
+                                            else{
+                                                BEGIN CODEBLOCK; 
+                                                yylval.text = strdup(yytext);
+                                                return INDENT;
+                                            }
+                                        }   
+^(\t|[ ]{4})+/[ ]{0,3}[1-9][0-9]*\.[ ]+ { 
+                                            /* indent ol list */
+                                            if(is_in_list(indent_level(yytext))){
                                                 BEGIN INDENTLIST;
                                                 yylval.text = strdup(yytext);
                                                 return INDENT; 
@@ -62,7 +75,7 @@ quoteblankline ^>[ \t]*\n
                                         }   
 ^(\t|[ ]{4})+                           { 
                                             /* indent p */
-                                            if(latest_list_level() + 1 == indent_level(yytext)){
+                                            if(is_in_list(indent_level(yytext))){
                                                 yylval.text = strdup(yytext);
                                                 return INDENT; 
                                             }
@@ -75,7 +88,8 @@ quoteblankline ^>[ \t]*\n
 <CODEBLOCK>.+                           { yylval.text = strdup(yytext); return CODETEXT; }
 <CODEBLOCK>\n                           { BEGIN INITIAL; yylineno++; }
 
-<INDENTLIST>[ ]{0,3}\*[ ]+              { BEGIN INITIAL; return ULSTART; }
+<INDENTLIST>[ ]{0,3}[*+][ ]+            { BEGIN INITIAL; return ULSTART; }
+<INDENTLIST>[ ]{0,3}[1-9][0-9]*\.[ ]+   { BEGIN INITIAL; return OLSTART; }
 
     /*
     ^(\t|[ ]{4}){2}                         { yylval.text = strdup(yytext); return INDENT2; }

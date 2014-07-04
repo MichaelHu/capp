@@ -4,34 +4,7 @@
 #include "htmltags.h"
 #include "blocknode.h"
 
-char *get_tag_type(t_tag tag);
-
-char *get_tag_type(t_tag tag){
-    switch(tag){
-        case TAG_NULL: return "TAG_NULL";
-
-        case TAG_P: return "TAG_P";
-        case TAG_UL: return "TAG_UL";
-        case TAG_OL: return "TAG_OL";
-        case TAG_PRE: return "TAG_PRE";
-        case TAG_QUOTE: return "TAG_QUOTE";
-        case TAG_BLANK: return "TAG_BLANK";
-        case TAG_H: return "TAG_H";
-        case TAG_EOF: return "TAG_EOF";
-
-        case TAG_QUOTE_P: return "TAG_QUOTE_P";
-        case TAG_QUOTE_UL: return "TAG_QUOTE_UL";
-        case TAG_QUOTE_OL: return "TAG_QUOTE_OL";
-        case TAG_QUOTE_PRE: return "TAG_QUOTE_PRE";
-        case TAG_QUOTE_BLANK: return "TAG_QUOTE_BLANK";
-        case TAG_QUOTE_H: return "TAG_QUOTE_H";
-
-        case TAG_INDENT_P: return "TAG_INDENT_P";
-        case TAG_INDENT_UL: return "TAG_INDENT_UL";
-        case TAG_INDENT_OL: return "TAG_INDENT_OL";
-        case TAG_INDENT_PRE: return "TAG_INDENT_PRE";
-    }
-}
+t_blocknode *node_list = NULL, *node_current = NULL;
 
 t_blocknode *blocknode_create(t_tag tag, int nops, ...){
     va_list args;
@@ -42,21 +15,34 @@ t_blocknode *blocknode_create(t_tag tag, int nops, ...){
             (t_blocknode *)malloc(sizeof(t_blocknode)) ) 
         == NULL){
         printf("out of memory");
+        exit(1);
     }
 
     if( ( p -> ops = 
             (char **)malloc(nops * sizeof(char *)) ) 
         == NULL){
         printf("out of memory");
+        exit(1);
     }
 
     p->tag = tag; 
     p->nops = nops;
+    p->next = NULL;
     va_start(args, nops);
     for(i=0; i<nops; i++){
         p->ops[i] = va_arg(args, char*);
     }
     va_end(args);
+
+
+    if(!node_list){
+        node_list = p;
+    }
+    if(node_current){
+        node_current -> next = p;
+    }
+    node_current = p;
+
     return p;
 }
 
@@ -106,3 +92,12 @@ char *blocknode_parse(t_blocknode *node){
     return s;
 }
 
+void blocklist_parse(){
+    t_blocknode *p = node_list;
+
+    while(p){
+        blocknode_parse(p);
+        p = p->next;
+    }
+
+}

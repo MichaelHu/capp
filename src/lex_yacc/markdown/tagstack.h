@@ -49,8 +49,8 @@ t_tag_item *tag_latest_stack(t_tag tag);
 
 char* tag_check_stack(t_tag tag, int level);
 void tag_show_stack();
-int is_in_list();
+char *get_tag_type(t_tag tag);
+int is_in_list(int level);
 int indent_level(char *s);
-int latest_list_level();
 
 
