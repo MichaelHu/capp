@@ -35,7 +35,7 @@ int yylineno;
 %%
 
 markdownfile: 
-    lines { /* tag_show_stack(); */ blocklist_parse(); }
+    lines { blocknode_create(TAG_EOF, -1, 1, ""); blocklist_parse(); }
     ;
 
 lines:
@@ -124,7 +124,8 @@ line:
         }
 
     | error LINEBREAK { 
-            $$ = blocknode_create(TAG_NULL, 0, 1, str_format("%s", "@error@")); 
+            /* set error indent level: 100 */
+            $$ = blocknode_create(TAG_ERROR, 100, 1, str_format("%s", "@error@")); 
             yyerrok; 
             yyclearin; 
         }

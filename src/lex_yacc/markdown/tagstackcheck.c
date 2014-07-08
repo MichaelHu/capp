@@ -99,13 +99,12 @@ char* tag_check_stack(t_tag tag, int level){
 
 char *get_tag_type(t_tag tag){
     switch(tag){
-        case TAG_NULL: return "TAG_NULL";
+        case TAG_ERROR: return "TAG_ERROR";
 
         case TAG_P: return "TAG_P";
         case TAG_UL: return "TAG_UL";
         case TAG_OL: return "TAG_OL";
         case TAG_PRE: return "TAG_PRE";
-        case TAG_QUOTE: return "TAG_QUOTE";
         case TAG_BLANK: return "TAG_BLANK";
         case TAG_H: return "TAG_H";
         case TAG_EOF: return "TAG_EOF";

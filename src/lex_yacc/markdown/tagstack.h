@@ -2,13 +2,12 @@
 
 /* tag name representing each line */
 typedef enum {
-    TAG_NULL
+    TAG_ERROR
 
     , TAG_P
     , TAG_UL
     , TAG_OL
     , TAG_PRE
-    , TAG_QUOTE
     , TAG_BLANK
     , TAG_H
     , TAG_EOF
