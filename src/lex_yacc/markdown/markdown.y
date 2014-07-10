@@ -11,6 +11,7 @@ int yylex(void);
 void yyerror(char *s);
 FILE *yyin;
 int yylineno;
+char *yytext;
 %}
 
 
@@ -22,7 +23,7 @@ int yylineno;
     /* bind with terminater */
 %token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
-%token LEFTCURLY RIGHTCURLY UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
+%token UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
 %token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK QUOTEBLANKLINE QUOTEOLSTART QUOTEULSTART
 
 %type <text> inlineelements inlineelement plaintext text_list
@@ -179,7 +180,7 @@ code_list:
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "line %d: %s\n", yylineno, s);
+    fprintf(stderr, "line %d: %s %s\n", yylineno, s, yytext);
 }
 
 int main(int argc, char **argv){

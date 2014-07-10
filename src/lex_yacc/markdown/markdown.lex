@@ -11,10 +11,11 @@ int yylineno;
 %}
 
 %x ESCAPE CODESPAN XCODESPAN CODEBLOCK
-%x INDENTLIST 
+%x INDENTLIST
+%x LINKMODE LINKESCAPE
 
-blankline ^[ \t]*\n
-quoteblankline ^>[ \t]*\n
+blankline ^[ ]{0,3}\n
+quoteblankline ^>[ ]{0,3}\n
 
 %%
 
@@ -103,17 +104,22 @@ quoteblankline ^>[ \t]*\n
     */
 
 
+"["                                     { BEGIN LINKMODE; return LEFTSQUARE; }
+<LINKMODE>"]"                           { return RIGHTSQUARE; }
+<LINKMODE>"("                           { return LEFTPARENTHESES; }
+<LINKMODE>")"                           { BEGIN INITIAL; return RIGHTPARENTHESES; }
+<LINKMODE>[^\]()\\]+                    { yylval.text = strdup(yytext); return TEXT; }
+<LINKMODE>\\                            { BEGIN LINKESCAPE; }
+<LINKESCAPE>[\\`*_{}()#+\-.!]           { BEGIN LINKMODE; yylval.text = strdup(yytext); return SPECIALCHAR; }
+<LINKESCAPE>.                           { BEGIN LINKMODE; yylval.text = strdup(yytext); return SPECIALCHAR; }
+
 "*"                                     { return STAR; }
 "_"                                     { return UNDERSCORE; }
-"{"                                     { return LEFTCURLY; }
-"}"                                     { return RIGHTCURLY; }
-"["                                     { return LEFTSQUARE; }
-"]"                                     { return RIGHTSQUARE; }
-"("                                     { return LEFTPARENTHESES; }
-")"                                     { return RIGHTPARENTHESES; }
 "+"                                     { return PLUS; }
     /*
     "-"                                     { return MINUS; }
+    "{"                                     { return LEFTCURLY; }
+    "}"                                     { return RIGHTCURLY; }
     */
 
 __                                      { return DOUBLEUNDERSCORE; }
@@ -130,8 +136,8 @@ __                                      { return DOUBLEUNDERSCORE; }
 
 
 
-[^#!+()\[\]{}_*`\\\n\t" ".]+  { yylval.text = strdup(yytext); return TEXT; }
-[.#!+()\[\]{}_*`\\\t" "]      { yylval.text = strdup(yytext); return TEXT; }
+[^#!+()\[\]_*`\\\n\t" ".]+  { yylval.text = strdup(yytext); return TEXT; }
+[.#!+()\[\]_*`\\\t" "]      { yylval.text = strdup(yytext); return TEXT; }
 \n                            { yylineno++; return LINEBREAK; }
 
 

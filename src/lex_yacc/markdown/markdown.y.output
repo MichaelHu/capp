@@ -2,8 +2,6 @@ Terminals which are not used
 
    MINUS
    PLUS
-   LEFTCURLY
-   RIGHTCURLY
 
 
 Grammar
@@ -75,48 +73,46 @@ RIGHTPARENTHESES (267) 29 30
 LEFTPARENTHESES (268) 29 30
 RIGHTSQUARE (269) 29 30
 LEFTSQUARE (270) 29 30
-LEFTCURLY (271)
-RIGHTCURLY (272)
-UNDERSCORE (273) 24
-STAR (274) 23
-BACKTICK (275) 27
-BLANKLINE (276) 4
-LINEBREAK (277) 6 7 8 9 10 11 12 13 14 15 16 18
-LARGERTHAN (278) 9
-DOUBLESTAR (279) 25
-DOUBLEUNDERSCORE (280) 26
-OLSTART (281) 10 12
-ULSTART (282) 13 14
-DOUBLEBACKTICK (283) 28
-QUOTEBLANKLINE (284) 5
-QUOTEOLSTART (285) 11
-QUOTEULSTART (286) 15
-STARX (287)
+UNDERSCORE (271) 24
+STAR (272) 23
+BACKTICK (273) 27
+BLANKLINE (274) 4
+LINEBREAK (275) 6 7 8 9 10 11 12 13 14 15 16 18
+LARGERTHAN (276) 9
+DOUBLESTAR (277) 25
+DOUBLEUNDERSCORE (278) 26
+OLSTART (279) 10 12
+ULSTART (280) 13 14
+DOUBLEBACKTICK (281) 28
+QUOTEBLANKLINE (282) 5
+QUOTEOLSTART (283) 11
+QUOTEULSTART (284) 15
+STARX (285)
 
 
 Nonterminals, with rules where they appear
 
-$accept (33)
+$accept (31)
     on left: 0
-markdownfile (34)
+markdownfile (32)
     on left: 1, on right: 0
-lines (35)
+lines (33)
     on left: 2 3, on right: 1 2
-line (36)
+line (34)
     on left: 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18,
     on right: 2
-inlineelements (37)
+inlineelements (35)
     on left: 19 20, on right: 8 9 10 11 12 13 14 15 16 19 23 24 25
     26
-inlineelement (38)
+inlineelement (36)
     on left: 21 22 23 24 25 26 27 28 29 30, on right: 19 20
-plaintext (39)
+plaintext (37)
     on left: 31 32, on right: 6 7 29 30 31
-text_list (40)
+text_list (38)
     on left: 33 34, on right: 31 32
-codespan (41)
+codespan (39)
     on left: 35 36, on right: 27 28 35
-code_list (42)
+code_list (40)
     on left: 37 38, on right: 35 36
 
 
