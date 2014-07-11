@@ -1,88 +1,315 @@
+<h1> h1 text</h1>
+<h2> h2 text</h2>
+<h3> h3 text</h3>
+<h4> h4 text</h4>
+<h5> h5 text</h5>
+<h6> h6 text</h6>
+<p>this is H1
+==========</p>
 <p>this is H2
 ----------</p>
-<h1>#  <h1 text></h1>
-<h1>##  h2 text</h1>
-<h1>###  h3 text</h1>
-<h1>####  h4 text</h1>
-<h1>#####  h5 text</h1>
-<h1>######  h6 text</h1>
-<h1>###  如何做一个编译器</h1>
-<p>This is [an `example](http://example.com/ "Title") inline link.</p>
-<p>[This link < ](http://example.net/) has no title attribute.</p>
-<p>inline images:</p>
-<h1>##  raw html</h1>
-<p><table>
-<tr>
-<td>name</td>
-<td>age</td>
-</tr>
-<tr>
-<td>Michael</td>
-<td>32</td>
-</tr>
-</table></p>
-<p>![Alt text](/path/to/img.jpg)
-![Alt text](/path/to/img.jpg "Optional title")</p>
-<p>*258i*
-_258i_</p>
-
-<p>**258i**
-__258i__</p>
-
-<p>_**258i**_
-__ **25 8i** __
-** _258i_ **</p>
 
 
-<p>UNIQUE      shift, and go to state 1703 **[\baidu news](http://m.baidu.com)** 241 alter_table_cmd: ADD_P . opt_column columnDef</p>
+<p>The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra (unwanted) <p> tags around HTML block-level tags.</p>
 
+
+<p>*literal asterisks*</p>
+
+<h2> backslash escapes</h2>
+<pre><code>\   backslash
+`   backtick
+*   asterisk
+_   underscore
+{}  curly braces
+[]  square brackets
+()  parentheses
+#   hash mark
++   plus sign
+-   minus sign (hyphen)
+.   dot
+!   exclamation mark
+
+
+</code></pre>
+<p><table></p>
+<pre><code><tr><pre><code><td>Foo</td></code></pre>
+
+</tr></code></pre>
+<p></table></p>
+<p>*emphasis*</p>
+<p><div>*emphasis*</div></p>
+<h2> <span>header</span></h2>
+<ul><li><a href="url">text</a></li>
+<li><img src="url"></li></ul>
+<p>&lt;
+&amp;</p>
+<p>http://images.google.com/images?num=30&amp;q=larry+bird</p>
+<p>4 < 5</p>
+<p>"  n"  => <br /></p>
+<blockquote><p> This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.</p></blockquote>
+<blockquote><p> Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse id sem consectetuer libero luctus adipiscing.</p></blockquote>
+
+<blockquote><p> This is the first level of quoting.</p></blockquote>
+<blockquote><p> > This is nested blockquote.</p></blockquote>
+<blockquote><p> Back to the first level.</p></blockquote>
+
+<blockquote><h3>> #</h3></blockquote>
+<blockquote><ol><li>This is the first list item.</li>
+<li>This is the second list item.</li></ol>
+<p> Here's some example code:</p></blockquote>
+<blockquote><p>     return shell_exec("echo $input | $markdown_script");</p></blockquote>
 <ul><li>Red</li>
 <li>Green</li>
 <li>Blue</li>
 <li>Red</li>
-<li>Green: <code>vsprintf(s, "%d::", 1)</code></li>
+<li>Green</li>
 <li>Blue</li>
-<li><a href="url">text</a></li>
-<li><img src="url"></li>
-<li>This is [an `example](http://example.com/ "Title") inline link.</li>
-<li>[This link < ](http://example.net/) has no title attribute.</li></ul>
-<ol><li>abc</li>
-<li>Bird</li>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li></ul>
+<ol><li>Bird</li>
 <li>McHale</li>
-<li><a href="url">text</a></li>
 <li>Parish</li>
-<li>This is [an `example](http://example.com/ "Title") inline link.</li>
-<li>[This link < ](http://example.net/) has no title attribute.</li>
 <li>Bird</li>
 <li>McHale</li>
 <li>Parish</li>
 <li>Bird</li>
 <li>McHale</li>
 <li>Parish</li></ol>
-<p><code>printf("%s", "hello, world!")</code></p>
+<ul><li>Bird</li>
+<li>Magic</li></ul>
+<ol><li>This is a list item with two paragraphs. Lorem ipsum dolor<p>sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+mi posuere lectus.</p>
+<p>Vestibulum enim wisi, viverra nec, fringilla in, laoreet
+vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
+sit amet velit.</p>
+</li>
+<li>Suspendisse id sem consectetuer libero luctus adipiscing.</li></ol>
+<ul><li>This is a list item with two paragraphs.<p>This is the second paragraph in the list item. You're</p>
+</li></ul>
+<p>only required to indent the first line. Lorem ipsum dolor
+sit amet, consectetuer adipiscing elit.</p>
+<ul><li>Another item in the same list.</li></ul>
+<p>blockquote within a list item, the blockquote’s > delimiters need to be indented:</p>
+<ul><li>A list item with a blockquote:<p>> This is a blockquote
+> inside a list item.</p>
+</li>
+<li>A list item with a code block:<pre><code><code goes here></code></pre>
+</li></ul>
+<p>This is a normal paragraph:</p>
+<pre><code>This is a code block.
+
+
+
+</code></pre>
+<p><p>This is a normal paragraph:</p></p>
+<p><pre><code>This is a code block.
+</code></pre></p>
+
+
+
+
+
+<p>Here is an example of AppleScript:</p>
+<pre><code>tell application "Foo"<pre><code>beep</code></pre>
+
+end tell
+
+
+
+</code></pre>
+<p><p>Here is an example of AppleScript:</p></p>
+<p><pre><code>tell application "Foo"</p>
+<pre><code>beep</code></pre>
+<p>end tell
+</code></pre></p>
+
+
+
+<pre><code><div class="footer"><pre><code>&copy; 2004 Foo Corporation</code></pre>
+
+</div>
+
+
+</code></pre>
+<p><pre><code>&lt;div class="footer"&gt;</p>
+<pre><code>&amp;copy; 2004 Foo Corporation</code></pre>
+<p>&lt;/div&gt;
+</code></pre></p>
+
+
+<p>Regular Markdown syntax is not processed within code blocks. E.g., asterisks are just literal asterisks within a code block.</p>
+
+<h2> to be implemented</h2>
+<p><hr /></p>
+<pre><code>* * *
+
+***
+
+*****
+
+- - -
+
+---------------------------------------
+
+
+
+</code></pre>
+<p>This is [an example](http://example.com/ "Title") inline link.</p>
+<p>[This link](http://example.net/) has no title attribute.</p>
+
+
+<p><p>This is <a href="http://example.com/" title="Title">
+an example</a> inline link.</p></p>
+<p><p><a href="http://example.net/">This link</a> has no
+title attribute.</p></p>
+
+
+
+<h2> to be implemented</h2>
+<pre><code>This is [an example][id] reference-style link.
+This is [an example] [id] reference-style link.
+
+[id]: http://example.com/  "Optional Title Here"
+
+
+
+
+[foo]: http://example.com/  "Optional Title Here"
+[foo]: http://example.com/  'Optional Title Here'
+[foo]: http://example.com/  (Optional Title Here)
+
+
+[id]: http://example.com/longish/path/to/resource/here<pre><code>"Optional Title Here"</code></pre>
+
+
+
+
+
+[Google][]
+
+[Google]: http://google.com/
+
+
+
+
+
+</code></pre>
+<p>*single asterisks*</p>
+<p>_single underscores_</p>
+<p>**double asterisks**</p>
+<p>__double underscores__</p>
+
+
+
+
+<p><em>single asterisks</em></p>
+<p><em>single underscores</em></p>
+<p><strong>double asterisks</strong></p>
+<p><strong>double underscores</strong></p>
+
+
+
+
+<p>un*frigging*believable</p>
+
+
+
+<p>*this text is surrounded by literal asterisks*</p>
+
+
+
 <p>Use the <code>printf()</code> function.</p>
 
+<pre><code><p>Use the <code>printf()</code> function.</p>
+
+</code></pre>
 <p><code>There is a literal backtick (`) here.</code></p>
-<p><script type="text/javascript"></p>
-<pre><code>document.title = 'hello, markdown.';</code></pre>
-<p></script></p>
-<pre><code><script type="text/javascript"><pre><code>document.title = 'hello, markdown.';</code></pre>
+<pre><code><p><code>There is a literal backtick (`) here.</code></p>
 
-</script>
 
-  1 #include <stdlib.h>                      
-  2 #include <stdio.h>                       
-  3 #include <string.h>                      
-  4 #include <stdarg.h>
-  5 #include "htmltags.h" 
-  6 
-  7 
-  8 char *str_concat(char *s1, char *s2){    
-  9     char *_str;                          
- 10 
- 11     _str = (char *)malloc(strlen(s1) + strlen(s2) + 1);     
- 12     sprintf(_str, "%s%s", s1, s2);       
- 13     return _str;                         
- 14 }
+
+
+
+</code></pre>
+<p>A single backtick in a code span: <code> ` </code></p>
+<p>A backtick-delimited string in a code span: <code> `foo` </code></p>
+
+<pre><code><p>A single backtick in a code span: <code>`</code></p>
+
+<p>A backtick-delimited string in a code span: <code>`foo`</code></p>
+
+
+
+
+
+
+</code></pre>
+<p>Please don't use any <code>&lt;blink></code> tags.</p>
+
+<p><p>Please don't use any <code>&lt;blink&gt;</code> tags.</p></p>
+
+
+
+
+
+<p><code>&amp;#8212;</code> is the decimal-encoded equivalent of <code>&amp;mdash;</code>.</p>
+
+<p><p><code>&amp;#8212;</code> is the decimal-encoded
+equivalent of <code>&amp;mdash;</code>.</p></p>
+
+
+
+<p>inline images:</p>
+<p>![Alt text](/path/to/img.jpg)
+![Alt text](/path/to/img.jpg "Optional title")</p>
+
+<p>reference images:</p>
+<h2> to be implemented</h2>
+<pre><code>![Alt text][id]
+
+[id]: url/to/image  "Optional title attribute"
+
+
+
+</code></pre>
+<p><http://example.com/></p>
+<p><a href="http://example.com/">http://example.com/</a></p>
+
+
+
+<p><address@example.com></p>
+<p><a href="&#x6D;&#x61;i&#x6C;&#x74;&#x6F;:&#x61;&#x64;&#x64;&#x72;&#x65;
+&#115;&#115;&#64;&#101;&#120;&#x61;&#109;&#x70;&#x6C;e&#x2E;&#99;&#111;
+&#109;">&#x61;&#x64;&#x64;&#x72;&#x65;&#115;&#115;&#64;&#101;&#120;&#x61;
+&#109;&#x70;&#x6C;e&#x2E;&#99;&#111;&#109;</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2> to be implemented</h2>
+<pre><code>a / b;
+// comment
+var c = a / 5;
+////////
+/^\s+|\s+$/.test("   hello, world!   ");
+a/b/c
+
 
 </code></pre>

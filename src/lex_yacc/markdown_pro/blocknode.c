@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 #include "htmltags.h"
 #include "blocknode.h"
 
@@ -12,6 +13,8 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current); /* glue two nodes:
 char *blocknode_close(t_blocknode *node); /* simply close higher-level node */
 char *blocknode_output(t_blocknode *node); /* simply output node content without tags */
 
+char *get_open_header(t_blocknode *node);
+char *get_close_header(t_blocknode *node);
 
 
 
@@ -45,15 +48,12 @@ char *blocknode_output(t_blocknode *node){
             break;
 
         case TAG_PRE: 
+        case TAG_H:
         case TAG_INDENT_P:
         case TAG_INDENT_UL:
         case TAG_INDENT_OL:
         case TAG_INDENT_PRE:
             printf("%s", node->ops[1]); 
-            break;
-
-        case TAG_H:
-            printf("%s %s", node->ops[0], node->ops[1]); 
             break;
 
         /* to be implemented */
@@ -83,7 +83,7 @@ char *blocknode_close(t_blocknode *node) {
         case TAG_QUOTE_P: printf("</p></blockquote>"); break;
         case TAG_QUOTE_UL: printf("</li></ul></blockquote>"); break;
         case TAG_QUOTE_OL: printf("</li></ol></blockquote"); break;
-        case TAG_QUOTE_H: printf("</h1></blockquote>"); break;
+        case TAG_QUOTE_H: printf("%s", str_format("%s</blockquote>", get_close_header(node))); break;
 
         case TAG_PRE:  printf("</code></pre>"); break;
         case TAG_INDENT_P: printf("</p>"); break;
@@ -278,13 +278,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
             case TAG_UL: glue = "<ul><li>"; break;
             case TAG_OL: glue = "<ol><li>"; break;
             case TAG_PRE: glue = "<pre><code>"; break;
-            case TAG_H: glue = "<h1>"; break;
+            case TAG_H: glue = get_open_header(current); break;
 
             case TAG_QUOTE_P: glue = "<blockquote><p>"; break;
             case TAG_QUOTE_UL: glue = "<blockquote><ul><li>"; break;
             case TAG_QUOTE_OL: glue = "<blockquote><ol><li>"; break;
             case TAG_QUOTE_PRE: glue = "<blockquote><pre><code>"; break;
-            case TAG_QUOTE_H: glue = "<blockquote><h1>"; break;
+            case TAG_QUOTE_H: glue = str_format("<blockquote>%s", get_open_header(current)); break;
 
             case TAG_INDENT_P: glue = "<p>"; break;
             case TAG_INDENT_UL: glue = "<ul><li>"; break;
@@ -338,13 +338,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
 
                     /* blank will close p , h and quoted elements */
                     case TAG_P: glue = "</p>\n"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n"; blocknode_pop_stack(); break; 
+                    case TAG_H: glue = str_format("%s\n", get_close_header(top)); blocknode_pop_stack(); break; 
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li</ul></blockquote>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li</ol></blockquote>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* no effect */
                     case TAG_UL: 
@@ -380,7 +380,7 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     /* quoted blank will close p , quoted p, and quoted h */
                     case TAG_P: glue = "</p>\n"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_P: glue = "</p></blockquote>\n"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* and has no effects on other quoted elements */
                     case TAG_QUOTE_UL:
@@ -422,13 +422,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_UL: glue = "</li></ul>\n<p>"; blocknode_pop_stack();break;
                     case TAG_OL: glue = "</li></ol>\n<p>"; blocknode_pop_stack();break;
                     case TAG_PRE: glue = "</code></pre>\n<p>"; blocknode_pop_stack();break;
-                    case TAG_H: glue = "</h1>\n<p>"; blocknode_pop_stack();break;
+                    case TAG_H: glue = str_format("%s\n<p>", get_close_header(top)); blocknode_pop_stack();break;
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>\n<p>"; blocknode_pop_stack();break;
                     case TAG_QUOTE_UL: glue = "</li></ul></blockquote>\n<p>"; blocknode_pop_stack();break;
                     case TAG_QUOTE_OL: glue = "</li></ol></blockquote>\n<p>"; blocknode_pop_stack();break;
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>\n<p>"; blocknode_pop_stack();break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n<p>"; blocknode_pop_stack();break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n<p>", get_close_header(top)); blocknode_pop_stack();break;
 
                 }
                 break;
@@ -458,13 +458,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_P: glue = "</p>\n<ul><li>"; blocknode_pop_stack();  break;
                     case TAG_OL: glue = "</li></ol>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<ul><li>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<ul><li>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<ul><li>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li></ul></blockquote>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol></blockquote>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>\n<ul><li>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n<ul><li>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n<ul><li>", get_close_header(top)); blocknode_pop_stack(); break;
 
                 }
                 break;
@@ -494,13 +494,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_P: glue = "</p>\n<ol><li>"; blocknode_pop_stack();  break;
                     case TAG_UL: glue = "</li></ul>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<ol><li>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<ol><li>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<ol><li>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li></ul></blockquote>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol></blockquote>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>\n<ol><li>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n<ol><li>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n<ol><li>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -529,13 +529,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_P: glue = "</p>\n<pre><code>"; blocknode_pop_stack();  break;
                     case TAG_UL: glue = "</li></ul>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_OL: glue = "</li></ol>\n<pre><code>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<pre><code>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<pre><code>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li></ul></blockquote>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol></blockquote>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>\n<pre><code>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n<pre><code>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n<pre><code>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -558,19 +558,25 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                         break;
 
                     /* be the same: append only */
-                    case TAG_H: glue = "</h1>\n<h1>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format(
+                            "%s\n%s"
+                            , get_close_header(top)
+                            , get_open_header(current)
+                        ); 
+                        blocknode_pop_stack();
+                        break;
 
                     /* close other nodes with the same levels and open header */
-                    case TAG_P: glue = "</p>\n<h1>"; blocknode_pop_stack();  break;
-                    case TAG_UL: glue = "</li></ul>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_OL: glue = "</li></ol>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_PRE: glue = "</code></pre>\n<h1>"; blocknode_pop_stack(); break;
+                    case TAG_P: glue = str_format("</p>\n%s", get_open_header(current)); blocknode_pop_stack();  break;
+                    case TAG_UL: glue = str_format("</li></ul>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_OL: glue = str_format("</li></ol>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_PRE: glue = str_format("</code></pre>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
 
-                    case TAG_QUOTE_P: glue = "</p></blockquote>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_UL: glue = "</li></ul></blockquote>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_OL: glue = "</li></ol></blockquote>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1></blockquote>\n<h1>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_P: glue = str_format("</p></blockquote>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_UL: glue = str_format("</li></ul></blockquote>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_OL: glue = str_format("</li></ol></blockquote>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_PRE: glue = str_format("</code></pre></blockquote>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s</blockquote>\n%s", get_close_header(top), get_open_header(current)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -600,13 +606,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_UL: glue = "</li></ul>\n<blockquote><p>"; blocknode_pop_stack(); break;
                     case TAG_OL: glue = "</li></ol>\n<blockquote><p>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<blockquote><p>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<blockquote><p>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<blockquote><p>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* close other quoted nodes with the same levels and open p */ 
                     case TAG_QUOTE_UL: glue = "</li></ul>\n<p>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol>\n<p>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre>\n<p>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1>\n<p>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s\n<p>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -636,13 +642,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_UL: glue = "</li></ul>\n<blockquote><ul><li>"; blocknode_pop_stack(); break;
                     case TAG_OL: glue = "</li></ol>\n<blockquote><ul><li>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<blockquote><ul><li>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<blockquote><ul><li>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<blockquote><ul><li>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* close other quoted nodes with the same levels and open ul */ 
                     case TAG_QUOTE_P: glue = "</p>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol>\n<ul><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre>\n<ul><li>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1>\n<ul><li>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s\n<ul><li>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -672,13 +678,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_UL: glue = "</li></ul>\n<blockquote><ol><li>"; blocknode_pop_stack(); break;
                     case TAG_OL: glue = "</li></ol>\n<blockquote><ol><li>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<blockquote><ol><li>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<blockquote><ol><li>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<blockquote><ol><li>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* close other quoted nodes with the same levels and open ul */ 
                     case TAG_QUOTE_P: glue = "</p>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li></ul>\n<ol><li>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_PRE: glue = "</code></pre>\n<ol><li>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1>\n<ol><li>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s\n<ol><li>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -708,13 +714,13 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_UL: glue = "</li></ul>\n<blockquote><pre><code>"; blocknode_pop_stack(); break;
                     case TAG_OL: glue = "</li></ol>\n<blockquote><pre><code>"; blocknode_pop_stack(); break;
                     case TAG_PRE: glue = "</code></pre>\n<blockquote><pre><code>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<blockquote><pre><code>"; blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<blockquote><pre><code>", get_close_header(top)); blocknode_pop_stack(); break;
 
                     /* close other quoted nodes with the same levels and open ul */ 
                     case TAG_QUOTE_P: glue = "</p>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li></ul>\n<pre><code>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_OL: glue = "</li></ol>\n<pre><code>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_H: glue = "</h1>\n<pre><code>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s\n<pre><code>", get_close_header(top)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -737,20 +743,20 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                         break;
 
                     /* be the same: append only */
-                    case TAG_QUOTE_H: glue = "</h1>\n<h1>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_H: glue = str_format("%s\n%s", get_close_header(top), get_open_header(current)); blocknode_pop_stack(); break;
 
                     /* close other nodes with the same levels and open quoted ul */
-                    case TAG_P: glue = "</p>\n<blockquote><h1>"; blocknode_pop_stack();  break;
-                    case TAG_UL: glue = "</li></ul>\n<blockquote><h1>"; blocknode_pop_stack(); break;
-                    case TAG_OL: glue = "</li></ol>\n<blockquote><h1>"; blocknode_pop_stack(); break;
-                    case TAG_PRE: glue = "</code></pre>\n<blockquote><h1>"; blocknode_pop_stack(); break;
-                    case TAG_H: glue = "</h1>\n<blockquote><h1>"; blocknode_pop_stack(); break;
+                    case TAG_P: glue = str_format("</p>\n<blockquote>%s", get_open_header(current)); blocknode_pop_stack();  break;
+                    case TAG_UL: glue = str_format("</li></ul>\n<blockquote>%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_OL: glue = str_format("</li></ol>\n<blockquote>%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_PRE: glue = str_format("</code></pre>\n<blockquote>%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_H: glue = str_format("%s\n<blockquote>%s", get_close_header(top), get_open_header(current)); blocknode_pop_stack(); break;
 
                     /* close other quoted nodes with the same levels and open ul */ 
-                    case TAG_QUOTE_P: glue = "</p>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_UL: glue = "</li></ul>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_OL: glue = "</li></ol>\n<h1>"; blocknode_pop_stack(); break;
-                    case TAG_QUOTE_PRE: glue = "</code></pre>\n<h1>"; blocknode_pop_stack(); break;
+                    case TAG_QUOTE_P: glue = str_format("</p>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_UL: glue = str_format("</li></ul>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_OL: glue = str_format("</li></ol>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
+                    case TAG_QUOTE_PRE: glue = str_format("</code></pre>\n%s", get_open_header(current)); blocknode_pop_stack(); break;
                 }
                 break;
 
@@ -923,4 +929,24 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
     printf("%s", glue);
     return glue;
 }
+
+
+char *get_open_header(t_blocknode *node){
+    if(node -> tag != TAG_H
+        && node -> tag != TAG_QUOTE_H){
+        return ""; 
+    }
+
+    return str_format("<h%d>", strlen(node -> ops[0]));
+}
+
+char *get_close_header(t_blocknode *node){
+    if(node -> tag != TAG_H
+        && node -> tag != TAG_QUOTE_H){
+        return ""; 
+    }
+
+    return str_format("</h%d>", strlen(node -> ops[0]));
+}
+
 
