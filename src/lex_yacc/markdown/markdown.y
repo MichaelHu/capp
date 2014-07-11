@@ -138,23 +138,26 @@ inlineelements:
     ;
 
 inlineelement:
-    TEXT                                { $$ = $1; }
-    | SPECIALCHAR                       { $$ = $1; }
+    plain_text                          { $$ = $1; }
 
+    /*
     | STAR inlineelements STAR %prec STARX              { $$ = create_emphasis($2); } 
     | UNDERSCORE inlineelements UNDERSCORE %prec STARX             { $$ = create_emphasis($2); } 
     | DOUBLESTAR inlineelements DOUBLESTAR %prec STARX              { $$ = create_strong($2); }
     | DOUBLEUNDERSCORE inlineelements DOUBLEUNDERSCORE %prec STARX  { $$ = create_strong($2); }
+    */
 
     | BACKTICK codespan BACKTICK        { $$ = create_codespan( html_escape($2) ); }
     | DOUBLEBACKTICK codespan DOUBLEBACKTICK        { $$ = create_codespan($2); }
 
+    /*
     | LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_link($2, $5);
                                 } 
     | EXCLAMATION LEFTSQUARE plaintext RIGHTSQUARE LEFTPARENTHESES plaintext RIGHTPARENTHESES {
                                  $$ = create_image($3, $6);
                                 } 
+    */
     ;
 
 plaintext:
