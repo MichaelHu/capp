@@ -12,6 +12,8 @@ void yyerror(char *s);
 FILE *yyin;
 int yylineno;
 char *yytext;
+
+int _inner_pre_level = -1;
 %}
 
 
@@ -113,14 +115,25 @@ line:
             $$ = blocknode_create(TAG_INDENT_P, indent_level($1), 2, $1, $2);
         } 
     | INDENT CODETEXT {
-            if(is_inner_pre(indent_level($1))){
+            _inner_pre_level = inner_pre_level(indent_level($1));
+            if(_inner_pre_level > -1){
                 /* PRE indent level is 1 less than the literal indent */
-                tag_check_stack(TAG_INDENT_PRE, indent_level($1) - 1); 
-                $$ = blocknode_create(TAG_INDENT_PRE, indent_level($1) - 1, 2, $1, $2);
+                tag_check_stack(TAG_INDENT_PRE, _inner_pre_level); 
+                $$ = blocknode_create(
+                        TAG_INDENT_PRE
+                        , _inner_pre_level
+                        , 1
+                        , str_padding_left( $2, 4 * ( indent_level($1) - _inner_pre_level - 1 ) )
+                    );
             }
             else{
-                tag_check_stack(TAG_PRE, indent_level($1) - 1); 
-                $$ = blocknode_create(TAG_PRE, indent_level($1) - 1, 2, $1, $2);
+                tag_check_stack(TAG_PRE, 0); 
+                $$ = blocknode_create(
+                        TAG_PRE
+                        , 0
+                        , 1
+                        , str_padding_left( $2, 4 * ( indent_level($1) - 1 ) ) 
+                    );
             }
         }
 

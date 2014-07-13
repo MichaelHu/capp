@@ -50,7 +50,7 @@ t_tag_item *tag_latest_stack(t_tag tag);
 char* tag_check_stack(t_tag tag, int level);
 char *get_tag_type(t_tag tag);
 int is_in_list(int level);
-int is_inner_pre(int level);
+int inner_pre_level(int level);
 int indent_level(char *s);
 
 

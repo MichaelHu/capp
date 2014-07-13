@@ -9,7 +9,9 @@
 2. 常规markdown內联元素的支持不包含在此实现中，原因是基于lex & yacc对语法的严格要求，不适合markdown语法的随意性，会出现非常多的syntax error，而error handling很不容易实现。
     比如內联元素a, img等，编写时，直接写其HTML格式，如下：
 
-        <a href="url">title</a>
+        <a href="url">
+            title
+        </a>
         <img src="url">
 
 3. 支持多级嵌套列表
@@ -26,9 +28,9 @@
 语法：
 
     # h1 text 
-    ## h2 text
+        ## h2 text
     ### h3 text
-    #### h4 text
+        #### h4 text
     ##### h5 text
     ###### h6 text
 

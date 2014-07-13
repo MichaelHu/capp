@@ -47,16 +47,16 @@ char *blocknode_output(t_blocknode *node){
             printf("%s", node->ops[0]); 
             break;
 
+        case TAG_PRE: 
+        case TAG_INDENT_PRE:
+            printf("%s", html_escape(node->ops[0])); 
+            break;
+
         case TAG_H:
         case TAG_INDENT_P:
         case TAG_INDENT_UL:
         case TAG_INDENT_OL:
             printf("%s", node->ops[1]); 
-            break;
-
-        case TAG_PRE: 
-        case TAG_INDENT_PRE:
-            printf("%s", html_escape(node->ops[1])); 
             break;
 
         /* to be implemented */

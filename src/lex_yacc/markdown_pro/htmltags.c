@@ -24,6 +24,33 @@ char *str_format(char *format, ...){
     return _str;
 }
 
+char *str_padding_left(char *s, int count){
+    char *_str, *ret;
+
+    if(0 == count){
+        return s;
+    }
+
+    _str = (char *)malloc(count + 1);     
+    if(!_str){
+        printf("out of memory!\n");
+        exit(1);
+    }
+
+    memset(_str, ' ', count);
+    _str[count] = 0;
+
+    ret = str_concat(_str, s);
+    free(_str);
+
+    return ret;
+}
+
+
+
+
+
+
 char *create_image(char *title, char *href){
     char *_str = NULL,
         *format = "<img src=\"%s\" title=\"%s\">",

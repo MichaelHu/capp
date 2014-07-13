@@ -42,31 +42,40 @@ int is_in_list(int level){
 
 }
 
-int is_inner_pre(int level){
+int inner_pre_level(int level){
     
     t_tag_item *item;
+    int _level = -1;
 
     item = tag_latest_stack(TAG_UL);
     if(item && level >= item -> indent_level + 2){
-        return 1;
+        if(_level < item -> indent_level + 1){
+            _level = item -> indent_level + 1;
+        }
     }
 
     item = tag_latest_stack(TAG_INDENT_UL);
     if(item && level >= item -> indent_level + 2){
-        return 1;
+        if(_level < item -> indent_level + 1){
+            _level = item -> indent_level + 1;
+        }
     }
 
     item = tag_latest_stack(TAG_OL);
     if(item && level >= item -> indent_level + 2){
-        return 1;
+        if(_level < item -> indent_level + 1){
+            _level = item -> indent_level + 1;
+        }
     }
 
     item = tag_latest_stack(TAG_INDENT_OL);
     if(item && level >= item -> indent_level + 2){
-        return 1;
+        if(_level < item -> indent_level + 1){
+            _level = item -> indent_level + 1;
+        }
     }
 
-    return 0;
+    return _level;
 
 }
 
