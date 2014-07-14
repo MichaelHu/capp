@@ -329,19 +329,15 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_BLANK:
                     case TAG_QUOTE_BLANK:
                     case TAG_EOF:
-
-                    /* higher level indent elements shouldn't exist in stack */
-                    case TAG_INDENT_P:
-                    case TAG_INDENT_UL:
-                    case TAG_INDENT_OL:
-                    case TAG_INDENT_PRE:
                         printf("stack error\n");
                         exit(1);
                         break;
 
-                    /* blank will close p , h and quoted elements */
+                    /* blank will close p , indent p, h and quoted elements */
                     case TAG_P: glue = "</p>\n"; blocknode_pop_stack(); break;
                     case TAG_H: glue = str_format("%s\n", get_close_header(top)); blocknode_pop_stack(); break; 
+
+                    case TAG_INDENT_P: glue = "</p>\n"; blocknode_pop_stack(); break;
 
                     case TAG_QUOTE_P: glue = "</p></blockquote>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_UL: glue = "</li</ul></blockquote>"; blocknode_pop_stack(); break;
@@ -349,12 +345,17 @@ char *blocknode_glue(t_blocknode *top, t_blocknode *current) {
                     case TAG_QUOTE_PRE: glue = "</code></pre></blockquote>"; blocknode_pop_stack(); break;
                     case TAG_QUOTE_H: glue = str_format("%s</blockquote>", get_close_header(top)); blocknode_pop_stack(); break;
 
-                    /* no effect */
+                    /* no effect on tags below */
                     case TAG_UL: 
                     case TAG_OL:
+
+                    case TAG_INDENT_UL:
+                    case TAG_INDENT_OL:
                         glue = "";
                         break;
 
+                    /* append newline to PRE and INDENT_PRE */
+                    case TAG_INDENT_PRE:
                     case TAG_PRE:
                         glue = "\n";
                         break;

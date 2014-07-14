@@ -13,12 +13,19 @@
             3.   inner ordered list 1
 
      +   inner list 
+
      +   inner list
+
      +   inner list
 
         1.   inner ordered list 2 
+
+        3.   inner ( ordered ) list 2
+
         2.   inner ( ordered ) list 2
+
         3.   [This \[link\]](http://example.net/) has no title attribute.
+
         4.   inner ordered list 2
 
 

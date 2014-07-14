@@ -52,7 +52,7 @@ lines:
 line:
     BLANKLINE { 
             tag_check_stack(TAG_BLANK, 0); 
-            $$ = blocknode_create(TAG_BLANK, 0, 1, "");
+            $$ = blocknode_create(TAG_BLANK, 100, 1, "");
         }
 
     | QUOTEBLANKLINE { 
