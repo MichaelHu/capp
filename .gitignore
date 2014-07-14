@@ -27,3 +27,5 @@
 *.lai
 *.la
 *.a
+
+*.md.html

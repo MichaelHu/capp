@@ -51,7 +51,7 @@ lines:
 
 line:
     BLANKLINE { 
-            tag_check_stack(TAG_BLANK, 0); 
+            tag_check_stack(TAG_BLANK, 100); 
             $$ = blocknode_create(TAG_BLANK, 100, 1, "");
         }
 
