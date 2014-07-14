@@ -1,9 +1,10 @@
 body {
-    margin: 30px 20px;
+    width: 800px;
+    margin: 30px auto;
 
     font-family: Arial;
     font-size: 14px;
-    line-height: 20px;
+    line-height: 26px;
 }
 
 h1 {
@@ -31,7 +32,7 @@ pre, code {
     font-family: monospace;
     color: #048ebd;
     font-size: 12px;
-    line-height: 14px;
+    line-height: 16px;
 }
 
 pre {

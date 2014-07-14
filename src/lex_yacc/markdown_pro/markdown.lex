@@ -21,17 +21,17 @@ int yylineno;
 %x ESCAPE CODEBLOCK CODESPAN XCODESPAN 
 %x INDENTLIST
 
-blankline ^[ ]{0,3}\n
-quoteblankline ^>[ ]{0,3}\n
+blankline ^[ ]{0,3}\r?\n
+quoteblankline ^>[ ]{0,3}\r?\n
 
 %%
 
 {blankline}                             { yylineno++; P("BLANKLINE"); return BLANKLINE; }
     /* !!! note: quoteblankline has no effect */
-^>\n                                    { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
-^>" "\n                                 { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
-^>"  "\n                                { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
-^>"   "\n                               { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
+^>\r?\n                                    { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
+^>" "\r?\n                                 { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
+^>"  "\r?\n                                { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
+^>"   "\r?\n                               { yylineno++; P("QUOTEBLANKLINE"); return QUOTEBLANKLINE; }
 
 ^>                                      { P("LARGERTHAN"); return LARGERTHAN; }
 
