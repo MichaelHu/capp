@@ -23,7 +23,7 @@ int _inner_pre_level = -1;
 };
 
     /* bind with terminater */
-%token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH
+%token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH HTMLBLOCK
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
 %token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK QUOTEBLANKLINE QUOTEOLSTART QUOTEULSTART
@@ -135,6 +135,28 @@ line:
                         , str_padding_left( $2, 4 * ( indent_level($1) - 1 ) ) 
                     );
             }
+        }
+
+    | HTMLBLOCK TEXT LINEBREAK {
+            tag_check_stack(TAG_HTMLBLOCK, 0);
+            $$ = blocknode_create(
+                    TAG_HTMLBLOCK
+                    , 0
+                    , 2
+                    , $1
+                    , $2
+                );
+        }
+
+    | HTMLBLOCK LINEBREAK {
+            tag_check_stack(TAG_HTMLBLOCK, 0);
+            $$ = blocknode_create(
+                    TAG_HTMLBLOCK
+                    , 0
+                    , 2
+                    , $1
+                    , ""
+                );
         }
 
     | error LINEBREAK { 

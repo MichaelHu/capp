@@ -110,6 +110,8 @@ char *get_tag_type(t_tag tag){
     switch(tag){
         case TAG_ERROR: return "TAG_ERROR";
 
+        case TAG_HTMLBLOCK: return "TAG_HTMLBLOCK";
+
         case TAG_P: return "TAG_P";
         case TAG_UL: return "TAG_UL";
         case TAG_OL: return "TAG_OL";

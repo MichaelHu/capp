@@ -4,6 +4,8 @@
 typedef enum {
     TAG_ERROR
 
+    , TAG_HTMLBLOCK
+
     , TAG_P
     , TAG_UL
     , TAG_OL

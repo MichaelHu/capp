@@ -19,7 +19,7 @@ int yylineno;
 %}
 
 %x ESCAPE CODEBLOCK CODESPAN XCODESPAN 
-%x INDENTLIST
+%x INDENTLIST SHTMLBLOCK
 
 blankline ^[ ]{0,4}\r?\n
 quoteblankline ^>[ ]{0,4}\r?\n
@@ -106,6 +106,16 @@ quoteblankline ^>[ ]{0,4}\r?\n
 
 ^#{1,6}                       { yylval.text = strdup(yytext); P("H"); return H; }
 ^>" "+#{1,6}                  { yylval.text = strdup(yytext); P("QUOTEH"); return QUOTEH; }
+
+    /* block and functional html tags must be in one line */
+^\<\/?(div|table|tr|td|h[1-6]|dl|iframe|section|header|footer|ul|ol|script|style)[^>]*\>   { 
+                                            yylval.text = strdup(yytext); 
+                                            P("HTMLBLOCK"); 
+                                            BEGIN SHTMLBLOCK; 
+                                            return HTMLBLOCK; 
+                                        }
+<SHTMLBLOCK>.+          { yylval.text = strdup(yytext); P("TEXT"); return TEXT; }
+<SHTMLBLOCK>\n          { yylineno++; P("LINEBREAK"); BEGIN INITIAL;  return LINEBREAK; }
 
 
 .                             { yylval.text = strdup(yytext); P("TEXT"); return TEXT; }
