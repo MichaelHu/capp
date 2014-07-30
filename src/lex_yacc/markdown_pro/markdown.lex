@@ -44,7 +44,7 @@ quoteblankline ^>[ ]{0,4}\r?\n
 "`"                                     { BEGIN CODESPAN; return BACKTICK; }
 <CODESPAN>\\`                           { yylval.text = strdup(yytext); return SPECIALCHAR; }
 <CODESPAN>`                             { BEGIN INITIAL; return BACKTICK; }
-<CODESPAN>[^`\n]+                       { yylval.text = strdup(yytext); return CODETEXT; }
+<CODESPAN>[^`\r\n]+                     { yylval.text = strdup(yytext); return CODETEXT; }
 
 "``"                                    { BEGIN XCODESPAN; return DOUBLEBACKTICK; }
 <XCODESPAN>``                           { BEGIN INITIAL; return DOUBLEBACKTICK; }
@@ -98,7 +98,7 @@ quoteblankline ^>[ ]{0,4}\r?\n
                                             }
                                         }
 <CODEBLOCK>.+                           { yylval.text = strdup(yytext); P("CODETEXT"); return CODETEXT; }
-<CODEBLOCK>\n                           { BEGIN INITIAL; yylineno++; }
+<CODEBLOCK>\r?\n                        { BEGIN INITIAL; yylineno++; }
 
 <INDENTLIST>[ ]{0,3}[*+][ ]+            { BEGIN INITIAL; P("ULSTART"); return ULSTART; }
 <INDENTLIST>[ ]{0,3}[1-9][0-9]*\.[ ]+   { BEGIN INITIAL; P("OLSTART"); return OLSTART; }
@@ -115,11 +115,11 @@ quoteblankline ^>[ ]{0,4}\r?\n
                                             return HTMLBLOCK; 
                                         }
 <SHTMLBLOCK>.+          { yylval.text = strdup(yytext); P("TEXT"); return TEXT; }
-<SHTMLBLOCK>\n          { yylineno++; P("LINEBREAK"); BEGIN INITIAL;  return LINEBREAK; }
+<SHTMLBLOCK>\r?\n       { yylineno++; P("LINEBREAK"); BEGIN INITIAL;  return LINEBREAK; }
 
 
 .                             { yylval.text = strdup(yytext); P("TEXT"); return TEXT; }
-\n                            { yylineno++; P("LINEBREAK"); return LINEBREAK; }
+\r?\n                         { yylineno++; P("LINEBREAK"); return LINEBREAK; }
 
 
 %%
