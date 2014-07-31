@@ -7,39 +7,11 @@ void pop_bigger_level_tag(level){
     while( item
         && item->indent_level >= level){
         tag_pop_stack();
-#ifdef MD_DEBUG
+#ifdef _IS_DEBUG_TAGSTACK
         printf("pop tag: %s, level %d\n", get_tag_type(item->tag), item->indent_level);
 #endif
         item = tag_top_stack();
     }
-}
-
-int is_in_list(int level){
-    
-    t_tag_item *item;
-
-    item = tag_latest_stack(TAG_UL);
-    if(item && item -> indent_level + 1 == level){
-        return 1;
-    }
-
-    item = tag_latest_stack(TAG_INDENT_UL);
-    if(item && item -> indent_level + 1 == level){
-        return 1;
-    }
-
-    item = tag_latest_stack(TAG_OL);
-    if(item && item -> indent_level + 1 == level){
-        return 1;
-    }
-
-    item = tag_latest_stack(TAG_INDENT_OL);
-    if(item && item -> indent_level + 1 == level){
-        return 1;
-    }
-
-    return 0;
-
 }
 
 int inner_pre_level(int level){
@@ -96,7 +68,7 @@ int indent_level(char *s){
 char* tag_check_stack(t_tag tag, int level){
 
     if(tag != TAG_BLANK && tag != TAG_QUOTE_BLANK){
-#ifdef MD_DEBUG
+#ifdef _IS_DEBUG_TAGSTACK
         printf("current tag: %s, level: %d\n", get_tag_type(tag), level);
 #endif
         pop_bigger_level_tag(level);

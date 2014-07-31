@@ -83,13 +83,35 @@ int tag_in_stack(t_tag tag, int level){
 
 t_tag_item *tag_latest_stack(t_tag tag){
     int i;
-    for(i=0; i<tag_stack.size; i++){
+    for(i=tag_stack.size-1; i>=0; i--){
         if(tag == tag_stack.arr[i] -> tag){
             return tag_stack.arr[i];
         }
     }
     return NULL;
 }
+
+int is_in_list(int level){
+    int i;
+    t_tag_item *item;
+
+    for(i=tag_stack.size-1; i>=0; i--){
+        item = tag_stack.arr[i];
+        if(item -> indent_level + 1 == level
+            && (
+                TAG_UL == item -> tag
+                || TAG_INDENT_UL == item -> tag
+                || TAG_OL == item -> tag
+                || TAG_INDENT_OL == item -> tag
+                )
+            ){
+            return 1;
+        }
+    }
+    return 0;
+
+}
+
 
 void tag_show_stack(){
     t_tag_item *item;
