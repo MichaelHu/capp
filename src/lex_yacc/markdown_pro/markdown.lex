@@ -41,14 +41,19 @@ quoteblankline ^>[ ]{0,4}\r?\n
 <ESCAPE>[\\`*_{}()#+\-.!]               { BEGIN INITIAL; yylval.text = strdup(yytext); P("SPECIALCHAR"); return SPECIALCHAR; }
 <ESCAPE>.                               { BEGIN INITIAL; yylval.text = strdup(yytext); P("SPECIALCHAR"); return SPECIALCHAR; }
 
-"`"                                     { BEGIN CODESPAN; return BACKTICK; }
-<CODESPAN>\\`                           { yylval.text = strdup(yytext); return SPECIALCHAR; }
-<CODESPAN>`                             { BEGIN INITIAL; return BACKTICK; }
-<CODESPAN>[^`\r\n]+                     { yylval.text = strdup(yytext); return CODETEXT; }
+"`"                                     { P("BACKTICK"); BEGIN CODESPAN; return BACKTICK; }
+<CODESPAN>\\`                           { P("SPECIALCHAR"); 
+                                            yylval.text = strdup("`"); return SPECIALCHAR; }
+<CODESPAN>[^`\\\r\n]+                   { P("CODETEXT"); yylval.text = strdup(yytext); return CODETEXT; }
+<CODESPAN>\r?\n|\\                      { P("CODETEXT"); yylval.text = strdup(yytext); 
+                                            yylineno++; return CODETEXT; }
+<CODESPAN>`                             { P("BACKTICK"); BEGIN INITIAL; return BACKTICK; }
 
-"``"                                    { BEGIN XCODESPAN; return DOUBLEBACKTICK; }
-<XCODESPAN>``                           { BEGIN INITIAL; return DOUBLEBACKTICK; }
-<XCODESPAN>.                            { yylval.text = strdup(yytext); return CODETEXT; }
+"``"                                    { P("DOUBLEBACKTICK"); BEGIN XCODESPAN; return DOUBLEBACKTICK; }
+<XCODESPAN>.                            { P("CODETEXT"); yylval.text = strdup(yytext); return CODETEXT; }
+<XCODESPAN>\r?\n                        { P("CODETEXT"); yylval.text = strdup(yytext);
+                                            yylineno++; return CODETEXT; }
+<XCODESPAN>``                           { P("DOUBLEBACKTICK"); BEGIN INITIAL; return DOUBLEBACKTICK; }
 
 
 
