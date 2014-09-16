@@ -1,12 +1,16 @@
+@s
 % Guide to BSTR and C String Conversions
 % hudamin 
 % 2011-07-26
 
+@s
 ## Introduction
 One of the confusing aspects of Windows programming is managing the conversion of Visual Basic style strings to/from C language style strings.  It isn't that it is so difficult, it is just difficult to remember the details, it is usually not done often, the MSDN documentation so voluminous that it is difficult to find answers to your questions.  But the worst part is that you could perform some typecast that compiles fine, but doesn't work the way you expect.  This results code that doesn't work, and the bugs are hard to track down.  After some experience, you learn to make sure your string conversions are doing what you expect.
 
+@s
 C strings are arrays of characters terminated by a NULL character.  Visual Basic strings differ in that the length of the string preceded the characters in the string.  So a VB string knows it's own length.  In addition, all VB strings are Unicode (16 bits per character).
 
+@s
 ## String Types
 
 BSTR/C String conversions are required if:
@@ -14,6 +18,7 @@ BSTR/C String conversions are required if:
 * You are doing COM programming in C/C++
 * You are writing multiple language applications, such as C++ DLL's accessed by Visual Basic applications. 
 
+@s
 ### C Language String Types and Classes
 
 This article deals with the following C/MFC/ATL string types:
@@ -24,6 +29,7 @@ This article deals with the following C/MFC/ATL string types:
 * _bstr_t -- A C++ class wrapper for the Visual Basic string type
 * CComBSTR -- Yet another C++ class wrapper for the Visual Basic string type used predominately in ATL code
 
+@s
 ### Demo Project
 The demo project is just an MFC dialog based application with buttons for each type of conversion.  It is built using VC++ 6.0.  It uses a couple of support functions you may find helpful:
 
@@ -39,6 +45,7 @@ The demo project is just an MFC dialog based application with buttons for each t
 		return bstr;
 	}
 
+@s
 	CComBSTR GetComBSTR()
 	{
 		CComBSTR bstr("This is the test string.");
@@ -59,10 +66,12 @@ The demo project is just an MFC dialog based application with buttons for each t
 
 	}
 
+@s
 ## Conversions
 
 So let's get to it.  Here are the conversion techniques:
 
+@s
 ### Converting BSTR to _bstr_t
 
 	:::cpp
@@ -81,6 +90,7 @@ So let's get to it.  Here are the conversion techniques:
 	ShowBSTR(bstrFinal);
 
 
+@s
 ### Converting a _bstr_t to BSTR
 
 You may want to get a BSTR from a _bstr_t class.
@@ -103,6 +113,7 @@ You may want to get a BSTR from a _bstr_t class.
     ShowBSTR(bstrFinish);
 
  
+@s
 ### Converting a CComBSTR to BSTR
 
 You may want to get a BSTR from a CComBSTR class.
@@ -123,6 +134,7 @@ You may want to get a BSTR from a CComBSTR class.
 
     ShowBSTR(bstrFinish);
  
+@s
 ### Converting _bstr_t to CComBSTR
 
 	:::cpp
@@ -135,6 +147,7 @@ You may want to get a BSTR from a CComBSTR class.
 
     ShowBSTR(bstrFinish);
 
+@s
 ### Converting BSTR to C String
 
 *(Note :-  conversion that only works in Unicode)*
@@ -152,6 +165,7 @@ You may want to get a BSTR from a CComBSTR class.
     _stprintf(szFinal, _T("%s"), (LPCTSTR)bstrStart);
     AfxMessageBox(szFinal);
 
+@s
     _bstr_t bstrIntermediate(bstrStart); // convert to _bstr_t
     CString strFinal;
 
@@ -164,6 +178,7 @@ You may want to get a BSTR from a CComBSTR class.
 
     AfxMessageBox(strFinal);
 
+@s
 ### Converting _bstr_t to C String
 *(this works in both ANSI and Unicode)*
 
@@ -176,6 +191,7 @@ You may want to get a BSTR from a CComBSTR class.
     AfxMessageBox(szFinal);
     
 
+@s
 ### Converting CComBSTR to LPCTSTR
 *(not possible, must go through _bstr_t )*
 
@@ -191,6 +207,7 @@ You may want to get a BSTR from a CComBSTR class.
 
     AfxMessageBox(szFinal);
 
+@s
 ### Converting LPCTSTR to _bstr_t
 *(Use a constructor or = operator)*
 
@@ -209,6 +226,7 @@ You may want to get a BSTR from a CComBSTR class.
     
     ShowBSTR(bstrFinal);
 
+@s
 ### Converting LPCTSTR to CComBSTR
 *Use a constructor or CComBSTR::Append function*
 
@@ -230,6 +248,7 @@ You may want to get a BSTR from a CComBSTR class.
 
     ShowBSTR(bstrFinal);
 
+@s
 ## Conclusion
 
 Well I tested all of the conversion in the demo project.  If you need to try others, download the demo for easy modification.  I am sure I will hear if there are any mistakes!

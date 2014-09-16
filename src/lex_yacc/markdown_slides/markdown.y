@@ -23,7 +23,7 @@ int _inner_pre_level = -1;
 };
 
     /* bind with terminater */
-%token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH HTMLBLOCK
+%token <text> TEXT SPECIALCHAR CODETEXT INDENT H QUOTEH HTMLBLOCK SECTION VSECTION
 %token EXCLAMATION MINUS PLUS RIGHTPARENTHESES LEFTPARENTHESES RIGHTSQUARE LEFTSQUARE
 %token UNDERSCORE STAR BACKTICK BLANKLINE LINEBREAK LARGERTHAN
 %token DOUBLESTAR DOUBLEUNDERSCORE OLSTART ULSTART DOUBLEBACKTICK QUOTEBLANKLINE QUOTEOLSTART QUOTEULSTART
@@ -38,7 +38,7 @@ int _inner_pre_level = -1;
 %%
 
 markdownfile: 
-    lines { blocknode_create(TAG_EOF, -1, 1, ""); blocklist_parse(); }
+    lines { blocknode_create(TAG_EOF, -2, 1, ""); blocklist_parse(); }
     ;
 
 lines:
@@ -58,6 +58,16 @@ line:
     | QUOTEBLANKLINE { 
             tag_check_stack(TAG_QUOTE_BLANK, 0); 
             $$ = blocknode_create(TAG_QUOTE_BLANK, 0, 1, "");
+        }
+
+    | SECTION LINEBREAK {
+            tag_check_stack(TAG_SECTION, -1); 
+            $$ = blocknode_create(TAG_SECTION, -1, 1, $1);
+        }
+
+    | VSECTION LINEBREAK {
+            tag_check_stack(TAG_VSECTION, -1); 
+            $$ = blocknode_create(TAG_VSECTION, -1, 1, $1);
         }
 
     | H plaintext LINEBREAK {              

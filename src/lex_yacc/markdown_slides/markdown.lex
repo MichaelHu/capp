@@ -36,6 +36,13 @@ quoteblankline ^>[ ]{0,4}\r?\n
 
 ^>                                      { P("LARGERTHAN"); return LARGERTHAN; }
 
+^@s.*                                   { P("SECTION"); 
+                                            yylval.text = strdup(yytext);
+                                            return SECTION; }
+^@vs.*                                  { P("VSECTION"); 
+                                            yylval.text = strdup(yytext);
+                                            return VSECTION; }
+
 
 \\                                      { BEGIN ESCAPE; }
 <ESCAPE>[\\`*_{}()#+\-.!]               { BEGIN INITIAL; yylval.text = strdup(yytext); P("SPECIALCHAR"); return SPECIALCHAR; }
@@ -113,7 +120,7 @@ quoteblankline ^>[ ]{0,4}\r?\n
 ^>" "+#{1,6}                  { yylval.text = strdup(yytext); P("QUOTEH"); return QUOTEH; }
 
     /* block and functional html tags must be in one line */
-^\<\/?(div|table|tr|td|h[1-6]|dl|iframe|section|header|footer|ul|ol|script|style)[^>]*\>   { 
+^\<\/?(div|table|tr|td|h[1-6]|dl|iframe|section|header|footer|ul|ol|li|script|style|aside)[^>]*\>   { 
                                             yylval.text = strdup(yytext); 
                                             P("HTMLBLOCK"); 
                                             BEGIN SHTMLBLOCK; 

@@ -7,6 +7,8 @@ typedef enum {
 
     , TAG_HTMLBLOCK
 
+    , TAG_SECTION
+    , TAG_VSECTION
     , TAG_P
     , TAG_UL
     , TAG_OL

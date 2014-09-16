@@ -1,3 +1,4 @@
+@s
 # h1 text
 ## h2 text
 ### h3 text
@@ -8,6 +9,7 @@
 this is H1
 ==========
 
+@s
 this is H2
 ----------
 
@@ -16,10 +18,11 @@ this is H2
 The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra \(unwanted\) <p> tags around HTML block-level tags.
 
 
-
+@s
 \*literal asterisks\*
 
 
+@s
 ## backslash escapes
 
     \   backslash
@@ -37,21 +40,25 @@ The only restrictions are that block-level HTML elements — e.g. <div>, <table>
 
 
 
+@s
 <table>
-    <tr>
-        <td>Foo</td>
-    </tr>
+<tr>
+<td>Foo</td>
+</tr>
 </table>
 
+@s
 *emphasis*
 
 <div>*emphasis*</div>
 
+@s
 ## <span>header</span>
 
 * <a href="url">text</a>
 * <img src="url">
 
+@s
 &lt;
 &amp;
 
@@ -59,6 +66,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 4 < 5
 
+@s
 "  \n"  => <br />
 
 > This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
@@ -70,6 +78,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 
 
+@s
 > This is the first level of quoting.
 >
 > > This is nested blockquote.
@@ -78,6 +87,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 
 
+@s
 > ## This is a header.
 > 
 > 1.   This is the first list item.
@@ -88,11 +98,13 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 >     return shell_exec\("echo $input | $markdown_script"\);
 
 
+@s
 *   Red
 *   Green
 *   Blue
 
 
+@s
 +   Red
 +   Green
 +   Blue
@@ -103,6 +115,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 -   Blue
 
 
+@s
 1.  Bird
 2.  McHale
 3.  Parish
@@ -113,6 +126,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 1.  Parish
 
 
+@s
 3. Bird
 1. McHale
 8. Parish
@@ -120,6 +134,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 
 
+@s
 *   Bird
 
 *   Magic
@@ -127,6 +142,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 
 
+@s
 1.  This is a list item with two paragraphs. Lorem ipsum dolor
     sit amet, consectetuer adipiscing elit. Aliquam hendrerit
     mi posuere lectus.
@@ -142,6 +158,7 @@ http://images.google.com/images?num=30&amp;q=larry\+bird
 
 
 
+@s
 *   This is a list item with two paragraphs.
 
     This is the second paragraph in the list item. You're
@@ -156,6 +173,7 @@ sit amet, consectetuer adipiscing elit.
 
 
 
+@s
 blockquote within a list item, the blockquote’s > delimiters need to be indented:
 
 *   A list item with a blockquote:
@@ -168,6 +186,7 @@ blockquote within a list item, the blockquote’s > delimiters need to be indent
 
 
 
+@s
 *   A list item with a code block:
 
         <code goes here>
@@ -176,6 +195,7 @@ blockquote within a list item, the blockquote’s > delimiters need to be indent
 
 
 
+@s
 This is a normal paragraph:
 
     This is a code block.
@@ -183,6 +203,7 @@ This is a normal paragraph:
 
 
 
+@s
 <p>This is a normal paragraph:</p>
 
 <pre><code>This is a code block.
@@ -193,6 +214,7 @@ This is a normal paragraph:
 
 
 
+@s
 Here is an example of AppleScript:
 
     tell application "Foo"
@@ -202,6 +224,7 @@ Here is an example of AppleScript:
 
 
 
+@s
 <p>Here is an example of AppleScript:</p>
 
 <pre><code>tell application "Foo"
@@ -212,12 +235,14 @@ end tell
 
 
 
+@s
     <div class="footer">
         &copy; 2004 Foo Corporation
     </div>
 
 
 
+@s
 <pre><code>&lt;div class="footer"&gt;
     &amp;copy; 2004 Foo Corporation
 &lt;/div&gt;
@@ -225,9 +250,11 @@ end tell
 
 
 
+@s
 Regular Markdown syntax is not processed within code blocks. E.g., asterisks are just literal asterisks within a code block.
 
 
+@s
 ## to be implemented
 
 <hr />
@@ -245,12 +272,14 @@ Regular Markdown syntax is not processed within code blocks. E.g., asterisks are
 
 
 
+@s
 This is [an example](http://example.com/ "Title") inline link.
 
 [This link](http://example.net/) has no title attribute.
 
 
 
+@s
 <p>This is <a href="http://example.com/" title="Title">
 an example</a> inline link.</p>
 
@@ -260,6 +289,7 @@ title attribute.</p>
 
 
 
+@s
 ## to be implemented
 
     This is [an example][id] reference-style link.
@@ -270,6 +300,7 @@ title attribute.</p>
 
 
 
+@s
     [foo]: http://example.com/  "Optional Title Here"
     [foo]: http://example.com/  'Optional Title Here'
     [foo]: http://example.com/  (Optional Title Here)
@@ -281,6 +312,7 @@ title attribute.</p>
 
 
 
+@s
     [Google][]
 
     [Google]: http://google.com/
@@ -290,6 +322,7 @@ title attribute.</p>
 
 
 
+@s
 *single asterisks*
 
 _single underscores_
@@ -302,6 +335,7 @@ __double underscores__
 
 
 
+@s
 <em>single asterisks</em>
 
 <em>single underscores</em>
@@ -314,16 +348,19 @@ __double underscores__
 
 
 
+@s
 un*frigging*believable
 
 
 
 
+@s
 \*this text is surrounded by literal asterisks\*
 
 
 
 
+@s
 Use the `printf()` function.
 
 
@@ -339,6 +376,7 @@ Use the `printf()` function.
 
 
 
+@s
 A single backtick in a code span: `` ` ``
 
 A backtick-delimited string in a code span: `` `foo` ``
@@ -354,6 +392,7 @@ A backtick-delimited string in a code span: `` `foo` ``
 
 
 
+@s
 Please don't use any `<blink>` tags.
 
 
@@ -364,6 +403,7 @@ Please don't use any `<blink>` tags.
 
 
 
+@s
 `&#8212;` is the decimal-encoded equivalent of `&mdash;`.
 
 
@@ -373,12 +413,14 @@ equivalent of <code>&amp;mdash;</code>.</p>
 
 
 
+@s
 inline images:
 
 ![Alt text](/path/to/img.jpg)
 ![Alt text](/path/to/img.jpg "Optional title")
 
 
+@s
 reference images:
 
 ## to be implemented
@@ -390,6 +432,7 @@ reference images:
 
 
 
+@s
 <http://example.com/>
 
 <a href="http://example.com/">http://example.com/</a>
@@ -397,6 +440,7 @@ reference images:
 
 
 
+@s
 <address@example.com>
 
 <a href="&#x6D;&#x61;i&#x6C;&#x74;&#x6F;:&#x61;&#x64;&#x64;&#x72;&#x65;
@@ -424,6 +468,7 @@ reference images:
 
 
 
+@s
 ## to be implemented
 
     a / b;
