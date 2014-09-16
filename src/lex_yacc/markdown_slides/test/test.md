@@ -1,0 +1,437 @@
+# h1 text
+## h2 text
+### h3 text
+#### h4 text
+##### h5 text
+###### h6 text
+
+this is H1
+==========
+
+this is H2
+----------
+
+
+
+The only restrictions are that block-level HTML elements — e.g. <div>, <table>, <pre>, <p>, etc. — must be separated from surrounding content by blank lines, and the start and end tags of the block should not be indented with tabs or spaces. Markdown is smart enough not to add extra \(unwanted\) <p> tags around HTML block-level tags.
+
+
+
+\*literal asterisks\*
+
+
+## backslash escapes
+
+    \   backslash
+    `   backtick
+    *   asterisk
+    _   underscore
+    {}  curly braces
+    []  square brackets
+    ()  parentheses
+    #   hash mark
+    +   plus sign
+    -   minus sign (hyphen)
+    .   dot
+    !   exclamation mark
+
+
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
+
+*emphasis*
+
+<div>*emphasis*</div>
+
+## <span>header</span>
+
+* <a href="url">text</a>
+* <img src="url">
+
+&lt;
+&amp;
+
+http://images.google.com/images?num=30&amp;q=larry\+bird
+
+4 < 5
+
+"  \n"  => <br />
+
+> This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,
+> consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.
+> Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
+> 
+> Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse
+> id sem consectetuer libero luctus adipiscing.
+
+
+
+> This is the first level of quoting.
+>
+> > This is nested blockquote.
+>
+> Back to the first level.
+
+
+
+> ## This is a header.
+> 
+> 1.   This is the first list item.
+> 2.   This is the second list item.
+> 
+> Here's some example code:
+> 
+>     return shell_exec\("echo $input | $markdown_script"\);
+
+
+*   Red
+*   Green
+*   Blue
+
+
++   Red
++   Green
++   Blue
+
+
+-   Red
+-   Green
+-   Blue
+
+
+1.  Bird
+2.  McHale
+3.  Parish
+
+
+1.  Bird
+1.  McHale
+1.  Parish
+
+
+3. Bird
+1. McHale
+8. Parish
+
+
+
+
+*   Bird
+
+*   Magic
+
+
+
+
+1.  This is a list item with two paragraphs. Lorem ipsum dolor
+    sit amet, consectetuer adipiscing elit. Aliquam hendrerit
+    mi posuere lectus.
+
+    Vestibulum enim wisi, viverra nec, fringilla in, laoreet
+    vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
+    sit amet velit.
+
+2.  Suspendisse id sem consectetuer libero luctus adipiscing.
+
+
+
+
+
+
+*   This is a list item with two paragraphs.
+
+    This is the second paragraph in the list item. You're
+only required to indent the first line. Lorem ipsum dolor
+sit amet, consectetuer adipiscing elit.
+
+*   Another item in the same list.
+
+
+
+
+
+
+
+blockquote within a list item, the blockquote’s > delimiters need to be indented:
+
+*   A list item with a blockquote:
+
+    > This is a blockquote
+    > inside a list item.
+
+
+
+
+
+
+*   A list item with a code block:
+
+        <code goes here>
+
+
+
+
+
+This is a normal paragraph:
+
+    This is a code block.
+
+
+
+
+<p>This is a normal paragraph:</p>
+
+<pre><code>This is a code block.
+</code></pre>
+
+
+
+
+
+
+Here is an example of AppleScript:
+
+    tell application "Foo"
+        beep
+    end tell
+
+
+
+
+<p>Here is an example of AppleScript:</p>
+
+<pre><code>tell application "Foo"
+    beep
+end tell
+</code></pre>
+
+
+
+
+    <div class="footer">
+        &copy; 2004 Foo Corporation
+    </div>
+
+
+
+<pre><code>&lt;div class="footer"&gt;
+    &amp;copy; 2004 Foo Corporation
+&lt;/div&gt;
+</code></pre>
+
+
+
+Regular Markdown syntax is not processed within code blocks. E.g., asterisks are just literal asterisks within a code block.
+
+
+## to be implemented
+
+<hr />
+
+    * * *
+
+    ***
+
+    *****
+
+    - - -
+
+    ---------------------------------------
+
+
+
+
+This is [an example](http://example.com/ "Title") inline link.
+
+[This link](http://example.net/) has no title attribute.
+
+
+
+<p>This is <a href="http://example.com/" title="Title">
+an example</a> inline link.</p>
+
+<p><a href="http://example.net/">This link</a> has no
+title attribute.</p>
+
+
+
+
+## to be implemented
+
+    This is [an example][id] reference-style link.
+    This is [an example] [id] reference-style link.
+
+    [id]: http://example.com/  "Optional Title Here"
+
+
+
+
+    [foo]: http://example.com/  "Optional Title Here"
+    [foo]: http://example.com/  'Optional Title Here'
+    [foo]: http://example.com/  (Optional Title Here)
+
+
+    [id]: http://example.com/longish/path/to/resource/here
+        "Optional Title Here"
+
+
+
+
+    [Google][]
+
+    [Google]: http://google.com/
+
+
+
+
+
+
+*single asterisks*
+
+_single underscores_
+
+**double asterisks**
+
+__double underscores__
+
+
+
+
+
+<em>single asterisks</em>
+
+<em>single underscores</em>
+
+<strong>double asterisks</strong>
+
+<strong>double underscores</strong>
+
+
+
+
+
+un*frigging*believable
+
+
+
+
+\*this text is surrounded by literal asterisks\*
+
+
+
+
+Use the `printf()` function.
+
+
+    <p>Use the <code>printf()</code> function.</p>
+
+
+``There is a literal backtick (`) here.``
+
+    <p><code>There is a literal backtick (`) here.</code></p>
+
+
+
+
+
+
+A single backtick in a code span: `` ` ``
+
+A backtick-delimited string in a code span: `` `foo` ``
+
+
+    <p>A single backtick in a code span: <code>`</code></p>
+
+    <p>A backtick-delimited string in a code span: <code>`foo`</code></p>
+
+
+
+
+
+
+
+Please don't use any `<blink>` tags.
+
+
+<p>Please don't use any <code>&lt;blink&gt;</code> tags.</p>
+
+
+
+
+
+
+`&#8212;` is the decimal-encoded equivalent of `&mdash;`.
+
+
+<p><code>&amp;#8212;</code> is the decimal-encoded
+equivalent of <code>&amp;mdash;</code>.</p>
+
+
+
+
+inline images:
+
+![Alt text](/path/to/img.jpg)
+![Alt text](/path/to/img.jpg "Optional title")
+
+
+reference images:
+
+## to be implemented
+
+    ![Alt text][id]
+
+    [id]: url/to/image  "Optional title attribute"
+
+
+
+
+<http://example.com/>
+
+<a href="http://example.com/">http://example.com/</a>
+
+
+
+
+<address@example.com>
+
+<a href="&#x6D;&#x61;i&#x6C;&#x74;&#x6F;:&#x61;&#x64;&#x64;&#x72;&#x65;
+&#115;&#115;&#64;&#101;&#120;&#x61;&#109;&#x70;&#x6C;e&#x2E;&#99;&#111;
+&#109;">&#x61;&#x64;&#x64;&#x72;&#x65;&#115;&#115;&#64;&#101;&#120;&#x61;
+&#109;&#x70;&#x6C;e&#x2E;&#99;&#111;&#109;</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## to be implemented
+
+    a / b;
+    // comment
+    var c = a / 5;
+    ////////
+    /^\s+|\s+$/.test("   hello, world!   ");
+    a/b/c
+
+
+
