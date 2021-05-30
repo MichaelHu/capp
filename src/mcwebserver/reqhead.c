@@ -283,21 +283,23 @@ void InitReqInfo(struct ReqInfo * reqinfo) {
 }
 
 void PrintReqInfo(struct ReqInfo * reqinfo){
-    /*
+
     fprintf(stderr
-        ,"\tUser-Agent: %s\n"
+        ,"  Request UA: %s\n"
         ,reqinfo->useragent ? reqinfo->useragent : "");    
 
+    /*
     fprintf(stderr
         ,"\tReferer: %s\n"
         ,reqinfo->referer ? reqinfo->referer : "");    
-    */
 
     Console("Request Resource: %s"
         , reqinfo->resource ? reqinfo->resource : "");    
 
     Console("Request QueryString: %s"
         ,reqinfo->querystring ? reqinfo->querystring : "");    
+
+    */
 }
 
 /*  Frees memory allocated for a request information structure  */

@@ -63,9 +63,7 @@ int Service_Request(int conn) {
     }
     */
 
-    /*
     PrintReqInfo(&reqinfo);
-    */
 
     DoRewrite(&reqinfo);
 

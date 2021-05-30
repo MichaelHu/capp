@@ -39,7 +39,7 @@ struct ReqInfo {
 
 /*  Global macros/variables  */
 
-#define MAX_REQ_LINE         (1024)
+#define MAX_REQ_LINE         (1024 * 5) /* Cookie max size is 4K */
 #define MAX_REQ_BODY         (1024 * 1024)
 
 
