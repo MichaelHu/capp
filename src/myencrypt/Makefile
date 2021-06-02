@@ -15,9 +15,9 @@ all: myencrypt.out clean
 # 	gcc -c $< 
 
 myencrypt.out: main.o myencrypt.o
-	gcc -o $@ -L/usr/lib -lc++ $^
+	g++ -o $@ $^
 ..cpp.o:
-	gcc -c $<
+	g++ -c $<
 
 clean: 
 	rm *.o
